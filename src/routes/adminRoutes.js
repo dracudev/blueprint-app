@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const courseController = require("../controllers/courseController");
+const projectController = require("../controllers/projectController");
 
 router.get("/dashboard", function (req, res, next) {
-  return courseController.list(req, res);
+  return projectController.list(req, res);
 });
 
 module.exports = router;

@@ -9,9 +9,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node public/scripts/deploy.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "db:generate": "npx prisma generate --schema=database/prisma/schema.prisma",
+    "db:push": "npx prisma db push --schema=database/prisma/schema.prisma",
+    "db:migrate": "npx prisma migrate dev --schema=database/prisma/schema.prisma",
+    "db:migrate:deploy": "npx prisma migrate deploy --schema=database/prisma/schema.prisma",
+    "db:reset": "npx prisma migrate reset --schema=database/prisma/schema.prisma",
+    "db:studio": "npx prisma studio --schema=database/prisma/schema.prisma",
+    "db:seed": "npx prisma db seed"
   },
   "dependencies": {
+    "@prisma/client": "^6.12.0",
     "bcrypt": "^6.0.0",
     "cookie-session": "^2.1.1",
     "dotenv": "^16.5.0",
@@ -19,9 +27,13 @@
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "multer": "^2.0.2",
-    "mysql2": "^3.14.1"
+    "mysql2": "^3.14.1",
+    "prisma": "^6.12.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "prisma": {
+    "seed": "node database/prisma/seed.js"
   }
 }
