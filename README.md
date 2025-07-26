@@ -32,7 +32,7 @@ A Node.js application for web development budgeting and project estimation, buil
 ## Technologies Used
 
 - **Backend**: Node.js, Express.js
-- **Database**: MySQL with (abstracted)
+- **Database**: MySQL with Prisma ORM (abstracted)
 - **Architecture**: Database abstraction layer
 - **Authentication**: bcrypt, cookie-session
 - **View Engine**: EJS
@@ -71,7 +71,17 @@ A Node.js application for web development budgeting and project estimation, buil
 4. **Set up the database**
 
    ```bash
-   # (Database setup commands to be determined)
+   # Generate Prisma client
+   npx prisma generate
+   
+   # Push database schema (for development)
+   npx prisma db push
+   
+   # Or run migrations (for production)
+   npx prisma migrate dev
+   
+   # Seed the database with initial data
+   npx prisma db seed
    ```
 
 5. **Start the development server**
@@ -121,7 +131,11 @@ A Node.js application for web development budgeting and project estimation, buil
 
 - `npm start` - Start production server
 - `npm run dev` - Start development server with nodemon
-- (Database scripts to be determined)
+- `npx prisma generate` - Generate Prisma client
+- `npx prisma db push` - Push schema changes to database (development)
+- `npx prisma migrate dev` - Create and apply migrations
+- `npx prisma db seed` - Seed database with initial data
+- `npx prisma studio` - Open Prisma Studio (database GUI)
 
 ## File Structure
 
@@ -132,21 +146,26 @@ A Node.js application for web development budgeting and project estimation, buil
 ├── database/             # Database Abstraction Layer
 │   ├── index.js             # Database adapter (connection manager)
 │   ├── config/
-│   │   ├── database.js      # Environment configurations
-│   │   └── sequelize.js     # Sequelize instance + model creation
+│   │   └── prisma.js        # Prisma instance + model creation
 │   ├── factories/
-│   │   └── SequelizeModelFactory.js  # Schema → Sequelize converter
-│   ├── migrations/
-│   ├── seeders/
+│   │   └── PrismaModelFactory.js  # Schema → Prisma converter
+│   ├── prisma/              # Prisma configuration
+│   │   ├── schema.prisma    # Prisma schema definition
+│   │   ├── seed.js          # Database seeder
+│   │   └── generated/       # Generated Prisma client
 │   └── schemas/             # ORM-agnostic schema definitions
 │       ├── index.js
 │       ├── userSchema.js
-│       ├── courseSchema.js
-│       └── enrollmentSchema.js
+│       ├── clientSchema.js
+│       ├── orderSchema.js
+│       ├── orderItemSchema.js
+│       ├── productSchema.js
+│       └── paymentSchema.js
 ├── public/              # Static assets
 │   ├── images/
 │   ├── scripts/
-│   └── styles/
+│   ├── styles/
+│   └── uploads/
 ├── src/
 │   ├── controllers/
 │   │   ├── authController.js
@@ -167,6 +186,9 @@ A Node.js application for web development budgeting and project estimation, buil
 │   │   └── authValidation.js
 │   └── views/               # EJS templates
 │       ├── partials/
+│       │   ├── head.ejs
+│       │   ├── header.ejs
+│       │   └── footer.ejs
 │       ├── admin.ejs
 │       ├── error.ejs
 │       ├── home.ejs
@@ -177,33 +199,56 @@ A Node.js application for web development budgeting and project estimation, buil
 
 ## Database Schema
 
-### Users Table
+### Clients Table
 
-- `id` (Primary Key)
-- `name`
-- `email` (Unique)
-- `password` (Hashed)
-- `role` (public, registered, admin)
-- `profile_picture`
-- `created_at`
+- `client_id` (Primary Key)
+- `is_company` (Boolean)
+- `company_name` (String, nullable)
+- `first_name` (String, nullable)
+- `last_name` (String, nullable)
+- `email` (String)
+- `phone` (String, nullable)
+- `billing_address` (Text, nullable)
 
-### Projects Table
+### Orders Table
 
-(To be determined)
+- `order_id` (Primary Key)
+- `client_id` (Foreign Key)
+- `created_at` (DateTime)
+- `job_status` (Enum: Received, In Progress, Completed, Delivered)
+- `total_amount` (Decimal)
 
-### Budget Items Table
+### Products Table
 
-(To be determined)
+- `product_id` (Primary Key)
+- `product_name` (String)
+
+### OrderItems Table
+
+- `order_item_id` (Primary Key)
+- `order_id` (Foreign Key)
+- `product_id` (Foreign Key)
+- `quantity` (Integer)
+- `unit_price` (Decimal)
+
+### Payments Table
+
+- `payment_id` (Primary Key)
+- `order_id` (Foreign Key)
+- `payment_status` (Enum: Paid, Partially Paid, Unpaid)
+- `paid_amount` (Decimal)
+- `payment_date` (DateTime)
 
 ## Database Architecture
 
 ### **Abstraction Layers:**
 
 1. **📊 Schemas** (`/database/schemas/`): ORM-agnostic data definitions
-2. **🏭 Model Factory** (`/database/factories/`): Converts schemas to ORM models  
-3. **⚙️ Config Layer** (`/database/config/`): Environment and connection management
+2. **🏭 Model Factory** (`/database/factories/`): Converts schemas to Prisma models  
+3. **⚙️ Config Layer** (`/database/config/`): Prisma client and connection management
 4. **🔌 Database Adapter** (`/database/index.js`): Connection abstraction
 5. **📦 Models** (`/src/models/`): Clean model exports
+6. **🗄️ Prisma Layer** (`/database/prisma/`): Prisma schema, migrations, and generated client
 
 ## Contributing
 
