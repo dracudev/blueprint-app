@@ -1,0 +1,49 @@
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/styles/auth.css" />
+<%- include('partials/header') %>
+<main>
+  <h1><%= title %></h1>
+
+  <form action="/auth/signup" method="POST" class="modern-form">
+    <% if (message) { %>
+    <div class="alert alert-error">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div><%= message %></div>
+    </div>
+    <% } %>
+    <div class="form-group">
+      <label for="name" class="form-label">Name:</label>
+      <input type="text" id="name" name="name" class="form-control" required />
+    </div>
+    <div class="form-group">
+      <label for="email" class="form-label">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        class="form-control"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="password" class="form-label">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        class="form-control"
+        required
+      />
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success btn-lg">
+        <i class="fas fa-user-plus"></i>
+        Sign Up
+      </button>
+    </div>
+    <p class="auth-link">
+      Already have an account? <a href="/auth/login">Login</a>
+    </p>
+  </form>
+</main>
+<%- include('partials/footer') %>
