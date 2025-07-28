@@ -1,7 +1,6 @@
 .profile-container {
   padding: var(--space-8);
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 /* Profile Header */
@@ -45,7 +44,7 @@
 }
 
 .profile-avatar::after {
-  content: "\f044"; /* FontAwesome edit icon */
+  content: "\f044";
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   position: absolute;
