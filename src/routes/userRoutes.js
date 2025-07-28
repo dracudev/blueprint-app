@@ -2,10 +2,9 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const { uploadSingle } = require("../middleware/upload");
+const { requireAuth } = require("../middleware/auth");
 
-router.get("/profile", userController.showProfile);
-router.post("/enroll/:courseId", userController.enrollCourse);
-router.post("/unenroll/:courseId", userController.unenrollCourse);
+router.get("/profile", requireAuth, userController.showProfile);
 router.post(
   "/profile/picture",
   uploadSingle,

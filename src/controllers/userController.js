@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const models = require("../models");
 const { validationResult } = require("express-validator");
 const path = require("path");
 const fs = require("fs");
@@ -12,25 +12,38 @@ const userController = {
 
       const userId = req.session.user.id;
 
-      const user = await User.findByPk(userId, {
-        attributes: [
-          "id",
-          "name",
-          "email",
-          "role",
-          "profile_picture",
-          "created_at",
-        ],
+      const user = await models.User.findByPk(userId, {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+          profile_picture: true,
+          created_at: true,
+        },
       });
 
       if (!user) {
         return res.redirect("/auth/login");
       }
 
+      let client = null;
+      try {
+        client = await models.Client.findOne({
+          where: { email: req.session.user.email },
+        });
+      } catch (clientError) {
+        console.log("Client profile not found or error:", clientError.message);
+      }
+
+      const successMessage = req.session.successMessage;
+      delete req.session.successMessage;
+
       res.render("profile", {
         title: "My Profile",
-        user: user.toJSON(),
-        enrolledCourses: formattedCourses,
+        user: user,
+        client: client,
+        successMessage: successMessage,
       });
     } catch (error) {
       console.error("Error loading profile:", error);
@@ -39,94 +52,6 @@ const userController = {
         error: {
           status: 500,
           message: "Unable to load profile information",
-        },
-        user: req.session.user,
-      });
-    }
-  },
-
-  enrollCourse: async (req, res) => {
-    try {
-      if (!req.session.user) {
-        return res.redirect("/auth/login");
-      }
-
-      const userId = req.session.user.id;
-      const courseId = req.params.courseId;
-
-      const course = await Course.findByPk(courseId);
-
-      if (!course) {
-        return res.status(404).render("error", {
-          title: "Course Not Found",
-          error: {
-            status: 404,
-            message: "The course you're trying to enroll in doesn't exist",
-          },
-          user: req.session.user,
-        });
-      }
-
-      const existingEnrollment = await Enrollment.findOne({
-        where: {
-          user_id: userId,
-          course_id: courseId,
-        },
-        attributes: ["id", "user_id", "course_id", "created_at"],
-      });
-
-      if (existingEnrollment) {
-        return res.redirect("/courses");
-      }
-
-      await Enrollment.create({
-        user_id: userId,
-        course_id: courseId,
-      });
-
-      res.redirect("/courses");
-    } catch (err) {
-      console.error("Error enrolling in course:", err);
-      res.status(500).render("error", {
-        title: "Enrollment Error",
-        error: {
-          status: 500,
-          message: "Failed to enroll in course",
-        },
-        user: req.session.user,
-      });
-    }
-  },
-
-  unenrollCourse: async (req, res) => {
-    try {
-      if (!req.session.user) {
-        return res.redirect("/auth/login");
-      }
-
-      const userId = req.session.user.id;
-      const courseId = req.params.courseId;
-
-      await Enrollment.destroy({
-        where: {
-          user_id: userId,
-          course_id: courseId,
-        },
-      });
-
-      const referer = req.get("Referer");
-      if (referer && referer.includes("/profile")) {
-        res.redirect("/user/profile");
-      } else {
-        res.redirect("/courses");
-      }
-    } catch (err) {
-      console.error("Error unenrolling from course:", err);
-      res.status(500).render("error", {
-        title: "Unenrollment Error",
-        error: {
-          status: 500,
-          message: "Failed to unenroll from course",
         },
         user: req.session.user,
       });
@@ -144,13 +69,12 @@ const userController = {
       }
 
       const userId = req.session.user.id;
-      const user = await User.findByPk(userId);
+      const user = await models.User.findByPk(userId);
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
 
-      // Delete old profile picture if it exists
       if (
         user.profile_picture &&
         !user.profile_picture.includes("default-avatar.png")
@@ -168,7 +92,6 @@ const userController = {
       const newProfilePicturePath = `/uploads/${req.file.filename}`;
       await user.update({ profile_picture: newProfilePicturePath });
 
-      // Update session data
       req.session.user.profile_picture = newProfilePicturePath;
 
       res.json({
@@ -179,7 +102,6 @@ const userController = {
     } catch (error) {
       console.error("Error updating profile picture:", error);
 
-      // Clean up uploaded file if there was an error
       if (req.file) {
         const filePath = path.join(
           __dirname,

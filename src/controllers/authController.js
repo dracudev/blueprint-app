@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const models = require("../models");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 
@@ -34,7 +34,7 @@ const authController = {
     }
 
     try {
-      const existingUser = await User.findOne({
+      const existingUser = await models.User.findOne({
         where: { email },
       });
 
@@ -48,14 +48,24 @@ const authController = {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      await User.create({
+      const newUser = await models.User.create({
         name,
         email,
         password: hashedPassword,
         role: "registered",
       });
 
-      res.redirect("/login");
+      // Auto-login the new user
+      req.session.user = {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        profile_picture: newUser.profile_picture,
+      };
+
+      // Redirect to client setup for new users
+      res.redirect("/client/setup");
     } catch (err) {
       console.error("Error creating user:", err);
       res.render("signup", {
@@ -97,7 +107,7 @@ const authController = {
     }
 
     try {
-      const user = await User.findOne({
+      const user = await models.User.findOne({
         where: { email },
       });
 

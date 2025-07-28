@@ -1,0 +1,306 @@
+/* Client Setup Specific Styles - Reusing Global Components */
+
+.client-setup-container {
+  min-height: calc(100vh - 160px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8) var(--space-4);
+  background: linear-gradient(
+    135deg,
+    var(--bg-primary) 0%,
+    var(--bg-secondary) 100%
+  );
+}
+
+.client-setup-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-2xl);
+  max-width: 800px;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.client-setup-header {
+  background: linear-gradient(
+    135deg,
+    var(--accent-color) 0%,
+    var(--accent-hover) 100%
+  );
+  color: var(--text-white);
+  padding: var(--space-10) var(--space-8);
+  text-align: center;
+}
+
+.client-setup-header h1 {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.025em;
+}
+
+.client-setup-header p {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  opacity: 0.9;
+  font-weight: var(--font-weight-normal);
+}
+
+.client-setup-form {
+  padding: var(--space-10) var(--space-8);
+}
+
+/* Form Sections */
+.form-section {
+  margin-bottom: var(--space-10);
+}
+
+.form-section:last-child {
+  margin-bottom: 0;
+}
+
+.form-section h3 {
+  color: var(--text-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--space-6) 0;
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--accent-light);
+}
+
+/* Radio Group */
+.radio-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.radio-option {
+  display: flex;
+  align-items: flex-start;
+  padding: var(--space-6);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  background: var(--bg-white);
+  position: relative;
+}
+
+.radio-option:hover {
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.radio-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.radio-option input[type="radio"]:checked + .radio-custom::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.radio-option input[type="radio"]:checked ~ .radio-content {
+  color: var(--accent-color);
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-full);
+  margin-right: var(--space-4);
+  flex-shrink: 0;
+  position: relative;
+  transition: var(--transition-normal);
+  background: var(--bg-white);
+}
+
+.radio-custom::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--text-white);
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: var(--transition-normal);
+}
+
+.radio-content strong {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-1);
+  color: var(--text-primary);
+  transition: color var(--transition-normal);
+}
+
+.radio-content p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+/* Form Layout - Extending Global Form Styles */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+}
+
+.client-setup-form .form-group {
+  margin-bottom: var(--space-6);
+}
+
+.client-setup-form .form-group label {
+  display: block;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.025em;
+}
+
+.client-setup-form .form-control {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  transition: var(--transition-normal);
+  background: var(--bg-input);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.client-setup-form .form-control:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: var(--bg-white);
+}
+
+.client-setup-form .form-control:read-only {
+  background: var(--gray-50);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.client-setup-form .form-control::placeholder {
+  color: var(--text-light);
+}
+
+.client-setup-form textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-help {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  margin-top: var(--space-2);
+  font-style: italic;
+}
+
+/* Form Actions - Extending Global Button Styles */
+.client-setup-form .form-actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: flex-end;
+  margin-top: var(--space-10);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-color);
+}
+
+.client-setup-form .btn {
+  padding: var(--space-3) var(--space-8);
+  min-width: 140px;
+}
+
+/* Alerts - Reusing Global Alert Styles with Specific Positioning */
+.client-setup-form .alert {
+  margin-bottom: var(--space-6);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .client-setup-container {
+    padding: var(--space-4);
+  }
+
+  .client-setup-header {
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .client-setup-header h1 {
+    font-size: var(--font-size-3xl);
+  }
+
+  .client-setup-form {
+    padding: var(--space-8) var(--space-6);
+  }
+
+  .radio-group {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .client-setup-form .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .client-setup-form .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-setup-header {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .client-setup-header h1 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .client-setup-form {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .radio-option {
+    padding: var(--space-4);
+  }
+}
+
+/* Animation for field transitions */
+.individual-fields,
+.company-fields {
+  transition: opacity var(--transition-normal),
+    transform var(--transition-normal);
+}
+
+.individual-fields[style*="none"],
+.company-fields[style*="none"] {
+  opacity: 0;
+  transform: translateY(-10px);
+}

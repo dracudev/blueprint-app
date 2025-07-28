@@ -31,10 +31,8 @@
         </p>
         <div class="profile-stats">
           <div class="profile-stat">
-            <span class="profile-stat-value"
-              ><%= enrolledCourses ? enrolledCourses.length : 0 %></span
-            >
-            <span class="profile-stat-label">Enrolled Courses</span>
+            <span class="profile-stat-value">0</span>
+            <span class="profile-stat-label">Projects</span>
           </div>
           <div class="profile-stat">
             <span class="profile-stat-value"
@@ -47,74 +45,72 @@
       </div>
     </div>
 
-    <div class="enrolled-courses">
-      <h2><i class="fas fa-graduation-cap"></i> My Enrolled Courses</h2>
-      <% if (enrolledCourses && enrolledCourses.length > 0) { %>
-      <div class="enrolled-courses-grid">
-        <% enrolledCourses.forEach(function(course) { %>
-        <div class="enrolled-course-card">
-          <div class="enrolled-course-header">
-            <h3><a href="/courses/<%= course.id %>"><%= course.title %></a></h3>
-            <div class="enrolled-course-category">
-              <i class="fas fa-tag"></i>
-              <%= course.category %>
-            </div>
+    <!-- Success Message -->
+    <% if (typeof successMessage !== 'undefined' && successMessage) { %>
+    <div class="alert alert-success">
+      <i class="fas fa-check-circle"></i>
+      <%= successMessage %>
+    </div>
+    <% } %>
+
+    <!-- Client Information Section -->
+    <div class="client-info-section">
+      <h2><i class="fas fa-briefcase"></i> Client Information</h2>
+      <% if (client) { %>
+      <div class="client-info-card">
+        <div class="client-info-header">
+          <div class="client-type">
+            <i class="fas fa-<%= client.isCompany ? 'building' : 'user' %>"></i>
+            <%= client.isCompany ? 'Business Client' : 'Individual Client' %>
           </div>
-          <div class="enrolled-course-body">
-            <p class="enrolled-course-description"><%= course.description %></p>
-            <div class="enrolled-course-meta">
-              <span class="enrolled-date">
-                <i class="fas fa-calendar-alt"></i>
-                Enrolled: <%= new
-                Date(course.enrollment_date).toLocaleDateString() %>
-              </span>
+          <a href="/client/profile" class="btn btn-secondary btn-sm">
+            <i class="fas fa-edit"></i> Edit
+          </a>
+        </div>
+        <div class="client-info-body">
+          <div class="client-info-grid">
+            <% if (client.isCompany) { %>
+            <div class="client-info-item">
+              <label>Company Name</label>
+              <span><%= client.companyName %></span>
             </div>
-            <div
-              class="course-actions"
-              style="
-                margin-top: var(--space-4);
-                display: flex;
-                gap: var(--space-3);
-                align-items: center;
-              "
-            >
-              <a
-                href="/courses/<%= course.id %>"
-                class="btn btn-primary btn-md"
-              >
-                <i class="fas fa-eye"></i> View Course
-              </a>
-              <form
-                action="/user/unenroll/<%= course.id %>"
-                method="POST"
-                style="display: inline"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-danger btn-md"
-                  onclick="return confirm('Are you sure you want to unenroll from this course?')"
-                >
-                  <i class="fas fa-times"></i> Unenroll
-                </button>
-              </form>
+            <% } else { %>
+            <div class="client-info-item">
+              <label>Full Name</label>
+              <span><%= client.firstName %> <%= client.lastName %></span>
             </div>
+            <% } %>
+            <div class="client-info-item">
+              <label>Email</label>
+              <span><%= client.email %></span>
+            </div>
+            <% if (client.phone) { %>
+            <div class="client-info-item">
+              <label>Phone</label>
+              <span><%= client.phone %></span>
+            </div>
+            <% } %> <% if (client.billingAddress) { %>
+            <div class="client-info-item full-width">
+              <label>Billing Address</label>
+              <span><%= client.billingAddress %></span>
+            </div>
+            <% } %>
           </div>
         </div>
-        <% }) %>
       </div>
       <% } else { %>
-      <div class="no-enrolled-courses">
-        <div class="no-enrolled-courses-icon">
-          <i class="fas fa-book-open"></i>
+      <div class="no-client-info">
+        <div class="no-client-content">
+          <i class="fas fa-user-plus"></i>
+          <h3>Complete Your Client Profile</h3>
+          <p>
+            Set up your client information to access all our services and manage
+            your orders.
+          </p>
+          <a href="/client/setup" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Setup Client Profile
+          </a>
         </div>
-        <h3>No Courses Enrolled Yet</h3>
-        <p>
-          Start your learning journey by exploring our available courses and
-          enrolling in the ones that interest you.
-        </p>
-        <a href="/courses" class="btn-primary btn-lg">
-          <i class="fas fa-search"></i> Browse Courses
-        </a>
       </div>
       <% } %>
     </div>

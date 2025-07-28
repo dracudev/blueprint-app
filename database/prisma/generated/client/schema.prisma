@@ -11,6 +11,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id              Int      @id @default(autoincrement())
+  name            String   @db.VarChar(100)
+  email           String   @unique @db.VarChar(100)
+  password        String   @db.VarChar(255)
+  role            Role     @default(registered)
+  profile_picture String?  @map("profile_picture") @db.VarChar(255)
+  created_at      DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
 model Client {
   clientId       Int     @id @default(autoincrement()) @map("client_id")
   isCompany      Boolean @map("is_company")
@@ -24,6 +36,7 @@ model Client {
   // Relations
   orders Order[]
 
+  @@index([email], map: "idx_client_email")
   @@map("Clients")
 }
 
@@ -80,6 +93,12 @@ model Payment {
 }
 
 // Enums
+enum Role {
+  public
+  registered
+  admin
+}
+
 enum JobStatus {
   RECEIVED    @map("Received")
   IN_PROGRESS @map("In Progress")

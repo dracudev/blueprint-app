@@ -12,9 +12,9 @@
       <h1 class="hero-title">LearnHub</h1>
       <p class="hero-subtitle">Professional Development Made Simple</p>
       <div class="hero-actions">
-        <a href="/courses" class="btn btn-primary btn-lg">
+        <a href="/services" class="btn btn-primary btn-lg">
           <i class="fas fa-book-open"></i>
-          Explore Courses
+          Explore services
         </a>
         <% if (!user) { %>
         <a href="/auth/signup" class="btn btn-outline btn-lg">
@@ -119,13 +119,14 @@
           Start Learning Today
         </a>
         <% } else { %>
-        <a href="/courses" class="btn btn-success btn-lg">
+        <a href="/services" class="btn btn-success btn-lg">
           <i class="fas fa-search"></i>
-          Browse Courses
+          Browse Services
         </a>
         <% } %>
       </div>
     </div>
+    feat: add client setup flow and refactor user/client profile separation
   </section>
 </main>
 

@@ -1,6 +1,16 @@
 -- Create the database
 CREATE DATABASE codecost;
 USE codecost;
+-- Users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('public', 'registered', 'admin') DEFAULT 'registered',
+    profile_picture VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 -- Clients table
 CREATE TABLE Clients (
     client_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -10,7 +20,8 @@ CREATE TABLE Clients (
     last_name VARCHAR(100),
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(50),
-    billing_address TEXT
+    billing_address TEXT,
+    INDEX idx_client_email (email)
 );
 -- Orders table
 CREATE TABLE Orders (

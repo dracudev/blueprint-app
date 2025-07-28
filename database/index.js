@@ -1,5 +1,3 @@
-// Database Abstraction Layer - Prisma Only
-
 class DatabaseAdapter {
   constructor() {
     this.orm = null;
@@ -8,15 +6,13 @@ class DatabaseAdapter {
 
   async connect() {
     try {
-      // Load Prisma configuration
       const prismaConfig = require("./config/prisma");
       this.orm = prismaConfig.prisma;
       this.models = prismaConfig.models;
-      
-      // Test the connection
+
       await this.orm.$connect();
       console.log("✅ Prisma database connected successfully.");
-      
+
       return this.orm;
     } catch (error) {
       console.error("❌ Database connection failed:", error);
@@ -36,13 +32,18 @@ class DatabaseAdapter {
   }
 
   getModels() {
-    return this.models || {
-      Client: this.models?.Client,
-      Order: this.models?.Order,
-      Product: this.models?.Product,
-      OrderItem: this.models?.OrderItem,
-      Payment: this.models?.Payment,
-    };
+    if (!this.models || Object.keys(this.models).length === 0) {
+      // If models aren't loaded yet, try to load them synchronously
+      try {
+        const prismaConfig = require("./config/prisma");
+        this.models = prismaConfig.models;
+      } catch (error) {
+        console.error("Error loading models synchronously:", error);
+        return {};
+      }
+    }
+
+    return this.models || {};
   }
 
   async runMigrations() {

@@ -1,0 +1,205 @@
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/styles/client-setup.css" />
+<%- include('partials/header') %>
+
+<main class="client-setup-container">
+  <div class="client-setup-card">
+    <div class="client-setup-header">
+      <h1>
+        <%= typeof isEdit !== 'undefined' && isEdit ? 'Edit Your Profile' :
+        'Complete Your Profile' %>
+      </h1>
+      <p>
+        <%= typeof isEdit !== 'undefined' && isEdit ? 'Update your client
+        information' : 'Set up your client information to start using our
+        services' %>
+      </p>
+    </div>
+
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+    <div class="alert alert-danger">
+      <ul>
+        <% errors.forEach(function(error) { %>
+        <li><%= error.msg %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <% } %> <% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success"><%= success %></div>
+    <% } %>
+
+    <form
+      action="<%= typeof isEdit !== 'undefined' && isEdit ? '/client/profile' : '/client/setup' %>"
+      method="POST"
+      class="client-setup-form"
+    >
+      <!-- Client Type Selection -->
+      <div class="form-section">
+        <h3>Client Type</h3>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="isCompany" value="false" id="individual"
+            <%= (typeof formData !== 'undefined' && formData.isCompany ===
+            'false') ? 'checked' : 'checked' %> />
+            <span class="radio-custom"></span>
+            <div class="radio-content">
+              <strong>Individual</strong>
+              <p>Personal client account</p>
+            </div>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="isCompany" value="true" id="company" <%=
+            (typeof formData !== 'undefined' && formData.isCompany === 'true') ?
+            'checked' : '' %> />
+            <span class="radio-custom"></span>
+            <div class="radio-content">
+              <strong>Company</strong>
+              <p>Business client account</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Individual Fields -->
+      <div class="form-section individual-fields">
+        <h3>Personal Information</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              class="form-control"
+              value="<%= typeof formData !== 'undefined' ? formData.firstName || '' : '' %>"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              class="form-control"
+              value="<%= typeof formData !== 'undefined' ? formData.lastName || '' : '' %>"
+              required
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Company Fields -->
+      <div class="form-section company-fields" style="display: none">
+        <h3>Company Information</h3>
+        <div class="form-group">
+          <label for="companyName">Company Name *</label>
+          <input
+            type="text"
+            id="companyName"
+            name="companyName"
+            class="form-control"
+            value="<%= typeof formData !== 'undefined' ? formData.companyName || '' : '' %>"
+          />
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="form-section">
+        <h3>Contact Information</h3>
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            value="<%= typeof user !== 'undefined' ? user.email : (typeof formData !== 'undefined' ? formData.email || '' : '') %>"
+            readonly
+          />
+          <small class="form-help"
+            >This email is linked to your user account</small
+          >
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            class="form-control"
+            value="<%= typeof formData !== 'undefined' ? formData.phone || '' : '' %>"
+            placeholder="+1 (555) 123-4567"
+          />
+        </div>
+      </div>
+
+      <!-- Billing Information -->
+      <div class="form-section">
+        <h3>Billing Information</h3>
+        <div class="form-group">
+          <label for="billingAddress">Billing Address</label>
+          <textarea
+            id="billingAddress"
+            name="billingAddress"
+            class="form-control"
+            rows="4"
+            placeholder="Street address, city, state, postal code, country"
+          >
+<%= typeof formData !== 'undefined' ? formData.billingAddress || '' : '' %></textarea
+          >
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <% if (typeof isEdit === 'undefined' || !isEdit) { %>
+        <button type="button" class="btn btn-secondary" href="/">
+          Skip for Now
+        </button>
+        <% } else { %>
+        <a href="/client/profile" class="btn btn-secondary"> Cancel </a>
+        <% } %>
+        <button type="submit" class="btn btn-primary">
+          <%= typeof isEdit !== 'undefined' && isEdit ? 'Update Profile' :
+          'Complete Setup' %>
+        </button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const individualRadio = document.getElementById("individual");
+    const companyRadio = document.getElementById("company");
+    const individualFields = document.querySelector(".individual-fields");
+    const companyFields = document.querySelector(".company-fields");
+    const firstNameInput = document.getElementById("firstName");
+    const lastNameInput = document.getElementById("lastName");
+    const companyNameInput = document.getElementById("companyName");
+
+    function toggleFields() {
+      if (companyRadio.checked) {
+        individualFields.style.display = "none";
+        companyFields.style.display = "block";
+        firstNameInput.removeAttribute("required");
+        lastNameInput.removeAttribute("required");
+        companyNameInput.setAttribute("required", "required");
+      } else {
+        individualFields.style.display = "block";
+        companyFields.style.display = "none";
+        firstNameInput.setAttribute("required", "required");
+        lastNameInput.setAttribute("required", "required");
+        companyNameInput.removeAttribute("required");
+      }
+    }
+
+    individualRadio.addEventListener("change", toggleFields);
+    companyRadio.addEventListener("change", toggleFields);
+
+    toggleFields();
+  });
+</script>
+
+<%- include('partials/footer') %>

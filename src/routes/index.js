@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const authRoutes = require("./authRoutes");
 const userRoutes = require("./userRoutes");
+const clientRoutes = require("./clientRoutes");
 const { requireAdmin, requireAuth } = require("../middleware/auth");
 
 router.get("/", function (req, res) {
@@ -20,5 +21,6 @@ router.get("/", function (req, res) {
 
 router.use("/auth", authRoutes);
 router.use("/user", requireAuth, userRoutes);
+router.use("/client", clientRoutes);
 
 module.exports = router;

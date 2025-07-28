@@ -120,6 +120,16 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  role: 'role',
+  profile_picture: 'profile_picture',
+  created_at: 'created_at'
+};
+
 exports.Prisma.ClientScalarFieldEnum = {
   clientId: 'clientId',
   isCompany: 'isCompany',
@@ -170,6 +180,13 @@ exports.Prisma.NullsOrder = {
   last: 'last'
 };
 
+exports.Prisma.UserOrderByRelevanceFieldEnum = {
+  name: 'name',
+  email: 'email',
+  password: 'password',
+  profile_picture: 'profile_picture'
+};
+
 exports.Prisma.ClientOrderByRelevanceFieldEnum = {
   companyName: 'companyName',
   firstName: 'firstName',
@@ -182,6 +199,12 @@ exports.Prisma.ClientOrderByRelevanceFieldEnum = {
 exports.Prisma.ProductOrderByRelevanceFieldEnum = {
   productName: 'productName'
 };
+exports.Role = exports.$Enums.Role = {
+  public: 'public',
+  registered: 'registered',
+  admin: 'admin'
+};
+
 exports.JobStatus = exports.$Enums.JobStatus = {
   RECEIVED: 'RECEIVED',
   IN_PROGRESS: 'IN_PROGRESS',
@@ -196,6 +219,7 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
 };
 
 exports.Prisma.ModelName = {
+  User: 'User',
   Client: 'Client',
   Order: 'Order',
   Product: 'Product',
