@@ -9,7 +9,7 @@ const clientController = {
       });
 
       if (existingClient) {
-        return res.redirect("/client/profile");
+        return res.redirect("/user/profile");
       }
 
       res.render("client-setup", {
@@ -246,7 +246,7 @@ const clientController = {
         });
       } else {
         req.session.successMessage = "Client profile updated successfully!";
-        res.redirect("/client/profile");
+        res.redirect("/user/profile");
       }
     } catch (error) {
       console.error("Error updating client profile:", error);

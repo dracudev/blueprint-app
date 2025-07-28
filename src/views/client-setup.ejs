@@ -10,7 +10,7 @@
         'Complete Your Profile' %>
       </h1>
       <p>
-        <%= typeof isEdit !== 'undefined' && isEdit ? 'Update your client information' : 'Set up your client information to start using ourservices' %>
+        <%= typeof isEdit !== 'undefined' && isEdit ? 'Update your client information' : 'Set up your client information to start using our services' %>
       </p>
     </div>
 
@@ -27,7 +27,7 @@
     <% } %>
 
     <form
-      action="<%= typeof isEdit !== 'undefined' && isEdit ? '/client/profile' : '/client/setup' %>"
+      action="<%= typeof isEdit !== 'undefined' && isEdit ? '/client/edit' : '/client/setup' %>"
       method="POST"
       class="client-setup-form"
     >
@@ -156,7 +156,7 @@
           Skip for Now
         </button>
         <% } else { %>
-        <a href="/client/profile" class="btn btn-secondary"> Cancel </a>
+        <a href="/user/profile" class="btn btn-secondary"> Cancel </a>
         <% } %>
         <button type="submit" class="btn btn-primary">
           <%= typeof isEdit !== 'undefined' && isEdit ? 'Update Profile' :
@@ -181,15 +181,24 @@
       if (companyRadio.checked) {
         individualFields.style.display = "none";
         companyFields.style.display = "block";
+
         firstNameInput.removeAttribute("required");
         lastNameInput.removeAttribute("required");
+
         companyNameInput.setAttribute("required", "required");
+
+        firstNameInput.value = "";
+        lastNameInput.value = "";
       } else {
         individualFields.style.display = "block";
         companyFields.style.display = "none";
+
         firstNameInput.setAttribute("required", "required");
         lastNameInput.setAttribute("required", "required");
+
         companyNameInput.removeAttribute("required");
+
+        companyNameInput.value = "";
       }
     }
 
@@ -197,6 +206,44 @@
     companyRadio.addEventListener("change", toggleFields);
 
     toggleFields();
+
+    const form = document.querySelector(".client-setup-form");
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        const existingHiddenFields = form.querySelectorAll(
+          "input[data-override]"
+        );
+        existingHiddenFields.forEach((field) => field.remove());
+
+        if (companyRadio.checked) {
+          firstNameInput.value = "";
+          lastNameInput.value = "";
+
+          const hiddenFirstName = document.createElement("input");
+          hiddenFirstName.type = "hidden";
+          hiddenFirstName.name = "firstName";
+          hiddenFirstName.value = "";
+          hiddenFirstName.setAttribute("data-override", "true");
+          form.appendChild(hiddenFirstName);
+
+          const hiddenLastName = document.createElement("input");
+          hiddenLastName.type = "hidden";
+          hiddenLastName.name = "lastName";
+          hiddenLastName.value = "";
+          hiddenLastName.setAttribute("data-override", "true");
+          form.appendChild(hiddenLastName);
+        } else {
+          companyNameInput.value = "";
+
+          const hiddenCompanyName = document.createElement("input");
+          hiddenCompanyName.type = "hidden";
+          hiddenCompanyName.name = "companyName";
+          hiddenCompanyName.value = "";
+          hiddenCompanyName.setAttribute("data-override", "true");
+          form.appendChild(hiddenCompanyName);
+        }
+      });
+    }
   });
 </script>
 

@@ -9,7 +9,9 @@ const clientValidation = {
       .withMessage("Invalid client type"),
 
     body("companyName")
-      .optional()
+      .if(body("isCompany").equals("true"))
+      .notEmpty()
+      .withMessage("Company name is required for business accounts")
       .trim()
       .isLength({ min: 2, max: 100 })
       .withMessage("Company name must be between 2 and 100 characters")
@@ -17,7 +19,9 @@ const clientValidation = {
       .withMessage("Company name contains invalid characters"),
 
     body("firstName")
-      .optional()
+      .if(body("isCompany").equals("false"))
+      .notEmpty()
+      .withMessage("First name is required for individual accounts")
       .trim()
       .isLength({ min: 2, max: 50 })
       .withMessage("First name must be between 2 and 50 characters")
@@ -27,7 +31,9 @@ const clientValidation = {
       ),
 
     body("lastName")
-      .optional()
+      .if(body("isCompany").equals("false"))
+      .notEmpty()
+      .withMessage("Last name is required for individual accounts")
       .trim()
       .isLength({ min: 2, max: 50 })
       .withMessage("Last name must be between 2 and 50 characters")
@@ -46,25 +52,6 @@ const clientValidation = {
       .trim()
       .isLength({ max: 500 })
       .withMessage("Billing address cannot exceed 500 characters"),
-
-    body().custom((value, { req }) => {
-      const { isCompany, companyName, firstName, lastName } = req.body;
-
-      if (isCompany === "true") {
-        if (!companyName || companyName.trim().length === 0) {
-          throw new Error("Company name is required for business accounts");
-        }
-      } else {
-        if (!firstName || firstName.trim().length === 0) {
-          throw new Error("First name is required for individual accounts");
-        }
-        if (!lastName || lastName.trim().length === 0) {
-          throw new Error("Last name is required for individual accounts");
-        }
-      }
-
-      return true;
-    }),
   ],
 
   validateClientUpdate: [

@@ -12,7 +12,10 @@ const userController = {
 
       const userId = req.session.user.id;
 
-      const user = await models.User.findByPk(userId, {
+      const user = await models.User.findUnique({
+        where: {
+          id: userId,
+        },
         select: {
           id: true,
           name: true,
@@ -29,7 +32,7 @@ const userController = {
 
       let client = null;
       try {
-        client = await models.Client.findOne({
+        client = await models.Client.findFirst({
           where: { email: req.session.user.email },
         });
       } catch (clientError) {
@@ -69,7 +72,9 @@ const userController = {
       }
 
       const userId = req.session.user.id;
-      const user = await models.User.findByPk(userId);
+      const user = await models.User.findUnique({
+        where: { id: userId },
+      });
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
@@ -90,7 +95,10 @@ const userController = {
       }
 
       const newProfilePicturePath = `/uploads/${req.file.filename}`;
-      await user.update({ profile_picture: newProfilePicturePath });
+      const updatedUser = await models.User.update({
+        where: { id: userId },
+        data: { profile_picture: newProfilePicturePath },
+      });
 
       req.session.user.profile_picture = newProfilePicturePath;
 

@@ -1,17 +1,31 @@
 let express = require("express");
 let app = express();
 let path = require("path");
+let ejs = require("ejs");
 require("dotenv").config({ path: "./.env" });
 
 const { configureSession } = require("./src/middleware/session");
 const database = require("./database");
 const routes = require("./src/routes/index");
 
+// Configure EJS
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "src", "views"));
+app.engine("ejs", (filePath, data, callback) => {
+  ejs.renderFile(
+    filePath,
+    data,
+    {
+      views: [path.join(__dirname, "src", "views")],
+      filename: filePath,
+    },
+    callback
+  );
+});
+
 // Middlewares
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "src", "views"));
 app.use(configureSession());
 
 // Routes

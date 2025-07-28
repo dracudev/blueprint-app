@@ -237,9 +237,48 @@
   min-width: 140px;
 }
 
-/* Alerts - Reusing Global Alert Styles with Specific Positioning */
+/* Alerts - Enhanced styling for client setup */
+.client-setup-card .alert,
 .client-setup-form .alert {
-  margin-bottom: var(--space-6);
+  margin: var(--space-6) var(--space-8);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  font-size: var(--font-size-sm);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+
+.client-setup-card .alert-danger,
+.client-setup-form .alert-danger {
+  background-color: var(--danger-light);
+  color: var(--danger-hover);
+  border-color: var(--danger-color);
+}
+
+.client-setup-card .alert-success,
+.client-setup-form .alert-success {
+  background-color: var(--success-light);
+  color: var(--success-hover);
+  border-color: var(--success-color);
+}
+
+.client-setup-card .alert ul,
+.client-setup-form .alert ul {
+  margin: 0;
+  padding-left: var(--space-4);
+  list-style-type: disc;
+}
+
+.client-setup-card .alert li,
+.client-setup-form .alert li {
+  margin-bottom: var(--space-1);
+  line-height: var(--line-height-relaxed);
+}
+
+.client-setup-card .alert li:last-child,
+.client-setup-form .alert li:last-child {
+  margin-bottom: 0;
 }
 
 /* Responsive Design */
