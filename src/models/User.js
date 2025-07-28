@@ -1,5 +1,3 @@
-const database = require("../../database");
+const models = require("./index");
 
-const User = database.getModels().User;
-
-module.exports = User;
+module.exports = models.User;

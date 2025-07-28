@@ -18,6 +18,10 @@ const clientValidation = {
       .matches(/^[a-zA-Z0-9\s\.\-&']+$/)
       .withMessage("Company name contains invalid characters"),
 
+    body("companyName")
+      .if(body("isCompany").equals("false"))
+      .optional({ nullable: true, checkFalsy: true }),
+
     body("firstName")
       .if(body("isCompany").equals("false"))
       .notEmpty()
@@ -30,6 +34,10 @@ const clientValidation = {
         "First name can only contain letters, spaces, hyphens, and apostrophes"
       ),
 
+    body("firstName")
+      .if(body("isCompany").equals("true"))
+      .optional({ nullable: true, checkFalsy: true }),
+
     body("lastName")
       .if(body("isCompany").equals("false"))
       .notEmpty()
@@ -41,6 +49,10 @@ const clientValidation = {
       .withMessage(
         "Last name can only contain letters, spaces, hyphens, and apostrophes"
       ),
+
+    body("lastName")
+      .if(body("isCompany").equals("true"))
+      .optional({ nullable: true, checkFalsy: true }),
 
     body("phone")
       .optional({ nullable: true, checkFalsy: true })
@@ -61,15 +73,23 @@ const clientValidation = {
       .withMessage("Invalid client type"),
 
     body("companyName")
-      .optional({ nullable: true, checkFalsy: true })
+      .if(body("isCompany").equals("true"))
+      .notEmpty()
+      .withMessage("Company name is required for business accounts")
       .trim()
       .isLength({ min: 2, max: 100 })
       .withMessage("Company name must be between 2 and 100 characters")
       .matches(/^[a-zA-Z0-9\s\.\-&']+$/)
       .withMessage("Company name contains invalid characters"),
 
+    body("companyName")
+      .if(body("isCompany").equals("false"))
+      .optional({ nullable: true, checkFalsy: true }),
+
     body("firstName")
-      .optional({ nullable: true, checkFalsy: true })
+      .if(body("isCompany").equals("false"))
+      .notEmpty()
+      .withMessage("First name is required for individual accounts")
       .trim()
       .isLength({ min: 2, max: 50 })
       .withMessage("First name must be between 2 and 50 characters")
@@ -78,8 +98,14 @@ const clientValidation = {
         "First name can only contain letters, spaces, hyphens, and apostrophes"
       ),
 
+    body("firstName")
+      .if(body("isCompany").equals("true"))
+      .optional({ nullable: true, checkFalsy: true }),
+
     body("lastName")
-      .optional({ nullable: true, checkFalsy: true })
+      .if(body("isCompany").equals("false"))
+      .notEmpty()
+      .withMessage("Last name is required for individual accounts")
       .trim()
       .isLength({ min: 2, max: 50 })
       .withMessage("Last name must be between 2 and 50 characters")
@@ -87,6 +113,10 @@ const clientValidation = {
       .withMessage(
         "Last name can only contain letters, spaces, hyphens, and apostrophes"
       ),
+
+    body("lastName")
+      .if(body("isCompany").equals("true"))
+      .optional({ nullable: true, checkFalsy: true }),
 
     body("phone")
       .optional({ nullable: true, checkFalsy: true })

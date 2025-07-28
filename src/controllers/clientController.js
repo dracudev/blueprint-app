@@ -4,7 +4,7 @@ const models = require("../models");
 const clientController = {
   showSetup: async (req, res) => {
     try {
-      const existingClient = await models.Client.findOne({
+      const existingClient = await models.Client.findFirst({
         where: { email: req.session.user.email },
       });
 
@@ -77,7 +77,7 @@ const clientController = {
         });
       }
 
-      const existingClient = await models.Client.findOne({
+      const existingClient = await models.Client.findFirst({
         where: { email: req.session.user.email },
       });
 
@@ -100,7 +100,9 @@ const clientController = {
         billingAddress: billingAddress || null,
       };
 
-      const client = await models.Client.create(clientData);
+      const client = await models.Client.create({
+        data: clientData,
+      });
 
       console.log("Client created successfully:", client);
 
@@ -121,7 +123,7 @@ const clientController = {
 
   showEdit: async (req, res) => {
     try {
-      const client = await models.Client.findOne({
+      const client = await models.Client.findFirst({
         where: { email: req.session.user.email },
       });
 
@@ -171,7 +173,7 @@ const clientController = {
         });
       }
 
-      const client = await Client.findOne({
+      const client = await models.Client.findFirst({
         where: { email: req.session.user.email },
       });
 
@@ -230,8 +232,9 @@ const clientController = {
         billingAddress: billingAddress || null,
       };
 
-      await Client.update(updateData, {
+      await models.Client.update({
         where: { email: req.session.user.email },
+        data: updateData,
       });
 
       console.log("Client updated successfully:", updateData);
@@ -275,7 +278,7 @@ const clientController = {
 
   getClientData: async (req, res) => {
     try {
-      const client = await models.Client.findOne({
+      const client = await models.Client.findFirst({
         where: { email: req.session.user.email },
         include: {
           orders: {

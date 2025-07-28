@@ -1,17 +1,15 @@
 class DatabaseAdapter {
   constructor() {
     this.orm = null;
-    this.models = {};
   }
 
   async connect() {
     try {
       const prismaConfig = require("./config/prisma");
       this.orm = prismaConfig.prisma;
-      this.models = prismaConfig.models;
 
       await this.orm.$connect();
-      console.log("✅ Prisma database connected successfully.");
+      console.log("✅ Database connected successfully.");
 
       return this.orm;
     } catch (error) {
@@ -23,7 +21,7 @@ class DatabaseAdapter {
   async disconnect() {
     try {
       if (this.orm && this.orm.$disconnect) {
-        console.log("🛑 Closing Prisma database connection...");
+        console.log("🛑 Closing database connection...");
         await this.orm.$disconnect();
       }
     } catch (error) {
@@ -31,19 +29,29 @@ class DatabaseAdapter {
     }
   }
 
-  getModels() {
-    if (!this.models || Object.keys(this.models).length === 0) {
-      // If models aren't loaded yet, try to load them synchronously
+  getORM() {
+    if (!this.orm) {
+      // If ORM isn't loaded yet, try to load it synchronously
       try {
         const prismaConfig = require("./config/prisma");
-        this.models = prismaConfig.models;
+        this.orm = prismaConfig.prisma;
       } catch (error) {
-        console.error("Error loading models synchronously:", error);
-        return {};
+        console.error("Error loading ORM synchronously:", error);
+        return null;
       }
     }
 
-    return this.models || {};
+    return this.orm;
+  }
+
+  getModels() {
+    try {
+      const prismaConfig = require("./config/prisma");
+      return prismaConfig.models;
+    } catch (error) {
+      console.error("Error loading models:", error);
+      return {};
+    }
   }
 
   async runMigrations() {
@@ -55,7 +63,7 @@ class DatabaseAdapter {
     console.log("📊 Use: npx prisma db seed");
   }
 
-  async generatePrismaClient() {
+  async generateClient() {
     console.log("📊 Use: npx prisma generate");
   }
 }

@@ -13,17 +13,7 @@ const userController = {
       const userId = req.session.user.id;
 
       const user = await models.User.findUnique({
-        where: {
-          id: userId,
-        },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          profile_picture: true,
-          created_at: true,
-        },
+        where: { id: userId },
       });
 
       if (!user) {

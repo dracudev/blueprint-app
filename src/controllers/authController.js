@@ -34,7 +34,7 @@ const authController = {
     }
 
     try {
-      const existingUser = await models.User.findOne({
+      const existingUser = await models.User.findFirst({
         where: { email },
       });
 
@@ -49,13 +49,14 @@ const authController = {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = await models.User.create({
-        name,
-        email,
-        password: hashedPassword,
-        role: "registered",
+        data: {
+          name,
+          email,
+          password: hashedPassword,
+          role: "registered",
+        },
       });
 
-      // Auto-login the new user
       req.session.user = {
         id: newUser.id,
         name: newUser.name,
@@ -64,7 +65,6 @@ const authController = {
         profile_picture: newUser.profile_picture,
       };
 
-      // Redirect to client setup for new users
       res.redirect("/client/setup");
     } catch (err) {
       console.error("Error creating user:", err);
@@ -107,7 +107,7 @@ const authController = {
     }
 
     try {
-      const user = await models.User.findOne({
+      const user = await models.User.findFirst({
         where: { email },
       });
 
