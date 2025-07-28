@@ -17,17 +17,22 @@
 
 ## Description
 
-A Node.js application for web development budgeting and project estimation, built with Express.js and a database abstraction layer that supports easy ORM switching.
+A comprehensive Node.js web application for managing web development projects and client relationships. Built with Express.js and featuring a sophisticated database abstraction layer, this application provides complete project lifecycle management from client onboarding to order fulfillment and payment tracking.
+
+The application supports both individual and company clients, tracks project orders with detailed status updates, manages product catalogs, and provides comprehensive payment tracking functionality. Built with a modular architecture that supports easy ORM switching through database abstraction layers.
 
 ## Features
 
 - 🔐 User authentication (sign up, login, logout)
 - 👥 Role-based access (public, registered, admin)
-- � Budget management (CRUD operations)
-- � Project cost estimation
-- 🛠️ Admin dashboard
 - 👤 User profiles
+- 🏢 Client management (company/individual clients)
+- 📋 Order management system
+- 📦 Product catalog management
+- � Payment tracking system
+- � Job status tracking (Received, In Progress, Completed, Delivered)
 - 🗄️ Database abstraction layer (easy ORM switching)
+- 🌐 Service pages for business presentation
 
 ## Technologies Used
 
@@ -37,7 +42,17 @@ A Node.js application for web development budgeting and project estimation, buil
 - **Authentication**: bcrypt, cookie-session
 - **View Engine**: EJS
 - **Validation**: express-validator
-- **File Upload**: Multer
+- **Database**: MySQL with Prisma ORM
+- **Styling**: Custom CSS
+
+### Dependencies
+
+- **Core**: Express.js 5.1.0, Node.js
+- **Database**: Prisma 6.12.0, @prisma/client 6.12.0, mysql2 3.14.1
+- **Authentication**: bcrypt 6.0.0, cookie-session 2.1.1
+- **Validation**: express-validator 7.2.1
+- **Environment**: dotenv 16.5.0
+- **Development**: nodemon 3.1.10
 
 ## Setup Instructions
 
@@ -58,30 +73,31 @@ A Node.js application for web development budgeting and project estimation, buil
    Create a `.env` file in the root directory:
 
    ```env
+   # Server Configuration
    PORT=3000
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASS=your_mysql_password
-   DB_NAME=codecost
-   DB_PORT=3306
-   SESSION_SECRET=your_secret_key_here
    NODE_ENV=development
+   
+   # Database Configuration
+   DATABASE_URL="mysql://username:password@localhost:3306/codecost"
+   
+   # Session Configuration
+   SESSION_SECRET=your_secret_key_here
    ```
 
 4. **Set up the database**
 
    ```bash
    # Generate Prisma client
-   npx prisma generate
+   npm run db:generate
    
    # Push database schema (for development)
-   npx prisma db push
+   npm run db:push
    
    # Or run migrations (for production)
-   npx prisma migrate dev
+   npm run db:migrate
    
    # Seed the database with initial data
-   npx prisma db seed
+   npm run db:seed
    ```
 
 5. **Start the development server**
@@ -114,28 +130,36 @@ A Node.js application for web development budgeting and project estimation, buil
 - `POST /auth/login` - Authenticate user
 - `POST /auth/logout` - Logout user
 
-### Budget Management
+### Client Management
 
-(Budget routes to be determined)
+- `GET /client/setup` - Client setup form
+- `POST /client/setup` - Create new client profile
+- `GET /client/profile` - View client profile
+- `POST /client/profile` - Update client profile
+- `GET /client/edit` - Edit client information
+- `PUT /client/edit` - Update client data
+- `GET /client/data` - Get client data (API)
 
 ### User Profile
 
-- `GET /user/profile` - User profile and budget information
-- (Additional user routes to be determined)
+- `GET /user/profile` - User profile and information
 
-### Admin
+### General
 
-- `GET /admin/dashboard` - Admin dashboard
+- `GET /` - Home page
+- `GET /services` - Services information page
 
 ## Scripts
 
-- `npm start` - Start production server
+- `npm start` - Start production server (with deployment script)
 - `npm run dev` - Start development server with nodemon
-- `npx prisma generate` - Generate Prisma client
-- `npx prisma db push` - Push schema changes to database (development)
-- `npx prisma migrate dev` - Create and apply migrations
-- `npx prisma db seed` - Seed database with initial data
-- `npx prisma studio` - Open Prisma Studio (database GUI)
+- `npm run db:generate` - Generate Prisma client
+- `npm run db:push` - Push schema changes to database (development)
+- `npm run db:migrate` - Create and apply migrations (development)
+- `npm run db:migrate:deploy` - Deploy migrations (production)
+- `npm run db:reset` - Reset database and run migrations
+- `npm run db:seed` - Seed database with initial data
+- `npm run db:studio` - Open Prisma Studio (database GUI)
 
 ## File Structure
 
@@ -164,39 +188,59 @@ A Node.js application for web development budgeting and project estimation, buil
 ├── public/              # Static assets
 │   ├── images/
 │   ├── scripts/
-│   ├── styles/
-│   └── uploads/
+│   │   ├── deploy.js
+│   │   └── reset-db.js
+│   └── styles/
+│       ├── auth.css
+│       ├── client-setup.css
+│       ├── error.css
+│       ├── global.css
+│       ├── home.css
+│       ├── profile.css
+│       └── services.css
 ├── src/
 │   ├── controllers/
 │   │   ├── authController.js
+│   │   ├── clientController.js
 │   │   └── userController.js
 │   ├── middleware/
 │   │   ├── auth.js
-│   │   ├── session.js
-│   │   └── upload.js
+│   │   └── session.js
 │   ├── models/          # (Abstracted)
 │   │   ├── index.js
+│   │   ├── Client.js
 │   │   └── User.js
 │   ├── routes/
 │   │   ├── index.js
-│   │   ├── adminRoutes.js
 │   │   ├── authRoutes.js
+│   │   ├── clientRoutes.js
 │   │   └── userRoutes.js
 │   ├── validations/
-│   │   └── authValidation.js
+│   │   ├── authValidation.js
+│   │   └── clientValidation.js
 │   └── views/               # EJS templates
 │       ├── partials/
 │       │   ├── head.ejs
 │       │   └── header.ejs
-│       ├── admin.ejs
+│       ├── client-setup.ejs
 │       ├── error.ejs
 │       ├── home.ejs
 │       ├── login.ejs
 │       ├── profile.ejs
+│       ├── services.ejs
 │       └── signup.ejs
 ```
 
 ## Database Schema
+
+### Users Table
+
+- `id` (Primary Key)
+- `name` (String)
+- `email` (String, unique)
+- `password` (String, hashed)
+- `role` (Enum: public, registered, admin)
+- `created_at` (DateTime)
 
 ### Clients Table
 
@@ -205,7 +249,7 @@ A Node.js application for web development budgeting and project estimation, buil
 - `company_name` (String, nullable)
 - `first_name` (String, nullable)
 - `last_name` (String, nullable)
-- `email` (String)
+- `email` (String, unique)
 - `phone` (String, nullable)
 - `billing_address` (Text, nullable)
 
