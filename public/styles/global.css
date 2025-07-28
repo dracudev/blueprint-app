@@ -453,7 +453,6 @@ a:hover {
   flex-direction: column;
 }
 
-/* Body adjustments */
 body.sidebar-open {
   overflow: hidden;
 }
@@ -478,7 +477,7 @@ body.sidebar-open {
 
   .main-wrapper {
     margin-left: 0;
-    padding-top: 70px; /* Account for mobile header */
+    padding-top: 70px;
   }
 
   body.sidebar-open .main-wrapper {
