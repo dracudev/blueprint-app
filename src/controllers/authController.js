@@ -62,7 +62,6 @@ const authController = {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
-        profile_picture: newUser.profile_picture,
       };
 
       res.redirect("/client/setup");
@@ -134,7 +133,6 @@ const authController = {
         name: user.name,
         email: user.email,
         role: user.role,
-        profile_picture: user.profile_picture,
       };
       res.redirect("/");
     } catch (err) {

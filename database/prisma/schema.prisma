@@ -17,7 +17,6 @@ model User {
   email           String   @unique @db.VarChar(100)
   password        String   @db.VarChar(255)
   role            Role     @default(registered)
-  profile_picture String?  @map("profile_picture") @db.VarChar(255)
   created_at      DateTime @default(now()) @map("created_at")
 
   @@map("users")

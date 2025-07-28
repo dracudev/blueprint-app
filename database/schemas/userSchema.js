@@ -30,11 +30,6 @@ const userSchema = {
       values: ["public", "registered", "admin"],
       default: "registered",
     },
-    profile_picture: {
-      type: "STRING",
-      maxLength: 255,
-      required: false,
-    },
   },
   timestamps: {
     createdAt: "created_at",

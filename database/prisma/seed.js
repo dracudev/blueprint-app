@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const { PrismaClient } = require("./generated/client");
 
 const prisma = new PrismaClient();
 
@@ -67,7 +67,7 @@ async function main() {
     create: {
       clientId: client1.clientId,
       jobStatus: "IN_PROGRESS",
-      totalAmount: 5000.00,
+      totalAmount: 5000.0,
     },
   });
 
@@ -77,7 +77,7 @@ async function main() {
     create: {
       clientId: client2.clientId,
       jobStatus: "RECEIVED",
-      totalAmount: 3000.00,
+      totalAmount: 3000.0,
     },
   });
 
@@ -91,7 +91,7 @@ async function main() {
       orderId: order1.orderId,
       productId: webDevelopment.productId,
       quantity: 1,
-      unitPrice: 5000.00,
+      unitPrice: 5000.0,
     },
   });
 
@@ -102,7 +102,7 @@ async function main() {
       orderId: order2.orderId,
       productId: mobileApp.productId,
       quantity: 1,
-      unitPrice: 3000.00,
+      unitPrice: 3000.0,
     },
   });
 
@@ -115,7 +115,7 @@ async function main() {
     create: {
       orderId: order1.orderId,
       paymentStatus: "PARTIALLY_PAID",
-      paidAmount: 2500.00,
+      paidAmount: 2500.0,
     },
   });
 
@@ -125,7 +125,7 @@ async function main() {
     create: {
       orderId: order2.orderId,
       paymentStatus: "UNPAID",
-      paidAmount: 0.00,
+      paidAmount: 0.0,
     },
   });
 
