@@ -550,43 +550,6 @@ main p {
   margin-right: auto;
 }
 
-/* Footer */
-footer {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color) 0%,
-    var(--primary-light) 100%
-  );
-  color: var(--text-white);
-  text-align: center;
-  padding: var(--space-8) var(--space-4);
-  margin-top: auto;
-  position: relative;
-  overflow: hidden;
-}
-
-footer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-}
-
-footer p {
-  margin: 0;
-  opacity: 1;
-  font-size: var(--font-size-sm);
-  color: var(--text-on-dark);
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
   nav ul {

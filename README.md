@@ -187,8 +187,7 @@ A Node.js application for web development budgeting and project estimation, buil
 │   └── views/               # EJS templates
 │       ├── partials/
 │       │   ├── head.ejs
-│       │   ├── header.ejs
-│       │   └── footer.ejs
+│       │   └── header.ejs
 │       ├── admin.ejs
 │       ├── error.ejs
 │       ├── home.ejs
