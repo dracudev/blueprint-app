@@ -107,8 +107,9 @@
             Set up your client information to access all our services and manage
             your orders.
           </p>
-          <a href="/client/setup" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Setup Client Profile
+          <a href="/client/setup" class="btn btn-primary btn-md">
+            <i class="fas fa-plus" style="font-size: 0.875rem"></i> Setup Client
+            Profile
           </a>
         </div>
       </div>
@@ -174,7 +175,6 @@
 </div>
 
 <script>
-  // Profile picture upload functionality
   function openUploadModal() {
     document.getElementById("uploadModal").style.display = "block";
   }
@@ -212,7 +212,6 @@
     messageEl.style.display = "none";
   }
 
-  // Handle form submission
   document
     .getElementById("uploadForm")
     .addEventListener("submit", async function (e) {
@@ -244,7 +243,6 @@
         if (result.success) {
           showUploadMessage(result.message, "success");
 
-          // Update the profile picture in the page
           document.querySelector(".avatar-img").src = result.profilePicture;
 
           setTimeout(() => {
@@ -262,7 +260,6 @@
       }
     });
 
-  // Close modal when clicking outside
   window.onclick = function (event) {
     const modal = document.getElementById("uploadModal");
     if (event.target === modal) {
