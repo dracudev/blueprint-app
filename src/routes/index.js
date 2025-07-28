@@ -19,6 +19,13 @@ router.get("/", function (req, res) {
   });
 });
 
+router.get("/services", function (req, res) {
+  res.render("services", {
+    title: "Our Services",
+    user: req.session.user,
+  });
+});
+
 router.use("/auth", authRoutes);
 router.use("/user", requireAuth, userRoutes);
 router.use("/client", clientRoutes);

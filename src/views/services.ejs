@@ -1,0 +1,177 @@
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/styles/services.css" />
+<%- include('partials/header') %>
+
+<main>
+    <div class="services-header">
+        <h1>Our Services</h1>
+        <p>Professional development solutions tailored to your business needs</p>
+    </div>
+
+    <div class="services-grid">
+        <!-- Website Development Service -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-globe-americas"></i>
+            </div>
+            <div class="service-content">
+                <h3>Website Development</h3>
+                <p>Custom websites built with modern technologies. From simple landing pages to complex web applications, we create responsive and user-friendly websites that drive results.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Responsive Design</li>
+                    <li><i class="fas fa-check"></i> SEO Optimized</li>
+                    <li><i class="fas fa-check"></i> Modern Technologies</li>
+                    <li><i class="fas fa-check"></i> Content Management</li>
+                </ul>
+                <div class="service-pricing">
+                    <span class="price-label">Starting from</span>
+                    <span class="price">$2,999</span>
+                </div>
+                <div class="service-actions">
+                    <button class="btn btn-primary btn-md">Get Quote</button>
+                    <button class="btn btn-outline btn-md">Learn More</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile App Development Service -->
+        <div class="service-card featured">
+            <div class="featured-badge">
+                <i class="fas fa-star"></i>
+                <span>Most Popular</span>
+            </div>
+            <div class="service-icon">
+                <i class="fas fa-mobile-alt"></i>
+            </div>
+            <div class="service-content">
+                <h3>Mobile App Development</h3>
+                <p>Native and cross-platform mobile applications for iOS and Android. We build high-performance apps that provide excellent user experience across all devices.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> iOS & Android</li>
+                    <li><i class="fas fa-check"></i> Cross-platform Support</li>
+                    <li><i class="fas fa-check"></i> Native Performance</li>
+                    <li><i class="fas fa-check"></i> App Store Deployment</li>
+                </ul>
+                <div class="service-pricing">
+                    <span class="price-label">Starting from</span>
+                    <span class="price">$4,999</span>
+                </div>
+                <div class="service-actions">
+                    <button class="btn btn-primary btn-md">Get Quote</button>
+                    <button class="btn btn-outline btn-md">Learn More</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- E-commerce Platform Service -->
+        <div class="service-card">
+            <div class="service-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="service-content">
+                <h3>E-commerce Platform</h3>
+                <p>Complete e-commerce solutions that drive sales and growth. From product catalogs to payment processing, we build comprehensive online stores.</p>
+                <ul class="service-features">
+                    <li><i class="fas fa-check"></i> Payment Integration</li>
+                    <li><i class="fas fa-check"></i> Inventory Management</li>
+                    <li><i class="fas fa-check"></i> Order Processing</li>
+                    <li><i class="fas fa-check"></i> Analytics Dashboard</li>
+                </ul>
+                <div class="service-pricing">
+                    <span class="price-label">Starting from</span>
+                    <span class="price">$6,999</span>
+                </div>
+                <div class="service-actions">
+                    <button class="btn btn-primary btn-md">Get Quote</button>
+                    <button class="btn btn-outline btn-md">Learn More</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Process Section -->
+    <div class="process-section">
+        <h2>Our Development Process</h2>
+        <div class="process-grid">
+            <div class="process-step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h4>Discovery & Planning</h4>
+                    <p>We analyze your requirements and create a detailed project roadmap.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h4>Design & Prototyping</h4>
+                    <p>Creating wireframes and prototypes to visualize your solution.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h4>Development</h4>
+                    <p>Building your solution with modern technologies and best practices.</p>
+                </div>
+            </div>
+            <div class="process-step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h4>Testing & Launch</h4>
+                    <p>Thorough testing and smooth deployment to production.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <div class="cta-content">
+            <h2>Ready to Start Your Project?</h2>
+            <p>Let's discuss your requirements and create something amazing together.</p>
+            <div class="cta-actions">
+                <% if (user) { %>
+                    <a href="/client/setup" class="btn btn-primary btn-lg">Start Project</a>
+                <% } else { %>
+                    <a href="/auth/signup" class="btn btn-primary btn-lg">Get Started</a>
+                <% } %>
+                <a href="mailto:contact@codecost.com" class="btn btn-outline btn-lg">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Include mobile navigation script if needed -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth scrolling for anchor links
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Service card hover animations
+    const serviceCards = document.querySelectorAll('.service-card');
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-4px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+
+</div>
+</body>
+</html>
