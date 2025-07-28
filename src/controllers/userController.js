@@ -1,4 +1,4 @@
-const { User, Course, Enrollment } = require("../models");
+const { User } = require("../models");
 const { validationResult } = require("express-validator");
 const path = require("path");
 const fs = require("fs");
@@ -26,26 +26,6 @@ const userController = {
       if (!user) {
         return res.redirect("/auth/login");
       }
-
-      const enrolledCourses = await Course.findAll({
-        include: [
-          {
-            model: Enrollment,
-            as: "enrollments",
-            where: { user_id: userId },
-            attributes: ["id", "user_id", "course_id", "created_at"],
-          },
-        ],
-        order: [["enrollments", "created_at", "DESC"]],
-      });
-
-      // Format the data for the view
-      const formattedCourses = enrolledCourses.map((course) => {
-        const courseData = course.toJSON();
-        courseData.enrollment_date = courseData.enrollments[0].created_at;
-        delete courseData.enrollments;
-        return courseData;
-      });
 
       res.render("profile", {
         title: "My Profile",
