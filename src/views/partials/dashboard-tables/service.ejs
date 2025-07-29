@@ -1,15 +1,14 @@
-<% /* products.ejs - Products table partial for dashboard */ %>
-<section class="dashboard-section" data-tab="products">
+<% /* service.ejs - Services table partial for dashboard */ %>
+<section class="dashboard-section" data-tab="services">
   <div class="dashboard-table-header">
-    <h2>Products</h2>
+    <h2>Services</h2>
     <% if (user.canCreateProducts) { %>
     <a
-      href="/product/create"
+      href="/service/create"
       class="crud-btn btn-primary"
       data-action="create"
-      data-entity="product"
-      >Add New Product</a
-    >
+      data-entity="service"
+      >Add New Service</a>
     <% } %>
   </div>
   <table class="dashboard-table dashboard-table-main">
@@ -20,26 +19,26 @@
       </tr>
     </thead>
     <tbody>
-      <% products.forEach(p => { %>
+      <% services.forEach(s => { %>
       <tr>
-        <td><%= p.product_name %></td>
+        <td><%= s.service_name %></td>
         <td>
           <% if (user.canEditProducts) { %>
           <a
-            href="/product/edit/<%= p.product_id %>"
+            href="/service/edit/<%= s.service_id %>"
             class="crud-btn btn-secondary"
             data-action="edit"
-            data-entity="product"
-            data-id="<%= p.product_id %>"
-            >Edit</a
-          >
-          <% } %> <% if (user.canDeleteProducts) { %>
+            data-entity="service"
+            data-id="<%= s.service_id %>"
+            >Edit</a>
+          <% } %>
+          <% if (user.canDeleteProducts) { %>
           <button
             type="button"
             class="crud-btn btn-danger"
             data-action="delete"
-            data-entity="product"
-            data-id="<%= p.product_id %>"
+            data-entity="service"
+            data-id="<%= s.service_id %>"
           >
             Delete
           </button>

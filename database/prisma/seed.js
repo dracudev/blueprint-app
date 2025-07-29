@@ -34,31 +34,31 @@ async function main() {
   console.log("👤 Created users:", { adminUser, regularUser });
 
   // Create sample products
-  const webDevelopment = await prisma.product.upsert({
-    where: { productId: 1 },
+  const webDevelopment = await prisma.service.upsert({
+    where: { serviceId: 1 },
     update: {},
     create: {
-      productName: "Website Development",
+      serviceName: "Website Development",
     },
   });
 
-  const mobileApp = await prisma.product.upsert({
-    where: { productId: 2 },
+  const mobileApp = await prisma.service.upsert({
+    where: { serviceId: 2 },
     update: {},
     create: {
-      productName: "Mobile App Development",
+      serviceName: "Mobile App Development",
     },
   });
 
-  const ecommerce = await prisma.product.upsert({
-    where: { productId: 3 },
+  const ecommerce = await prisma.service.upsert({
+    where: { serviceId: 3 },
     update: {},
     create: {
-      productName: "E-commerce Platform",
+      serviceName: "E-commerce Platform",
     },
   });
 
-  console.log("📦 Created products:", { webDevelopment, mobileApp, ecommerce });
+  console.log("📦 Created services:", { webDevelopment, mobileApp, ecommerce });
 
   // Create sample clients
   const client1 = await prisma.client.upsert({
@@ -89,8 +89,10 @@ async function main() {
   console.log("👥 Created clients:", { client1, client2 });
 
   // Create sample orders
-  const order1 = await prisma.order.upsert({
-    where: { orderId: 1 },
+
+  // Create sample projects
+  const project1 = await prisma.project.upsert({
+    where: { projectId: 1 },
     update: {},
     create: {
       clientId: client1.clientId,
@@ -99,8 +101,8 @@ async function main() {
     },
   });
 
-  const order2 = await prisma.order.upsert({
-    where: { orderId: 2 },
+  const project2 = await prisma.project.upsert({
+    where: { projectId: 2 },
     update: {},
     create: {
       clientId: client2.clientId,
@@ -109,39 +111,43 @@ async function main() {
     },
   });
 
-  console.log("📋 Created orders:", { order1, order2 });
+  console.log("📋 Created projects:", { project1, project2 });
 
   // Create order items
-  const orderItem1 = await prisma.orderItem.upsert({
-    where: { orderItemId: 1 },
+
+  // Create project items
+  const projectItem1 = await prisma.projectItem.upsert({
+    where: { projectItemId: 1 },
     update: {},
     create: {
-      orderId: order1.orderId,
-      productId: webDevelopment.productId,
+      projectId: project1.projectId,
+      serviceId: webDevelopment.serviceId,
       quantity: 1,
       unitPrice: 5000.0,
     },
   });
 
-  const orderItem2 = await prisma.orderItem.upsert({
-    where: { orderItemId: 2 },
+  const projectItem2 = await prisma.projectItem.upsert({
+    where: { projectItemId: 2 },
     update: {},
     create: {
-      orderId: order2.orderId,
-      productId: mobileApp.productId,
+      projectId: project2.projectId,
+      serviceId: mobileApp.serviceId,
       quantity: 1,
       unitPrice: 3000.0,
     },
   });
 
-  console.log("📝 Created order items:", { orderItem1, orderItem2 });
+  console.log("📝 Created project items:", { projectItem1, projectItem2 });
+
+  // Create payments
 
   // Create payments
   const payment1 = await prisma.payment.upsert({
     where: { paymentId: 1 },
     update: {},
     create: {
-      orderId: order1.orderId,
+      projectId: project1.projectId,
       paymentStatus: "PARTIALLY_PAID",
       paidAmount: 2500.0,
     },
@@ -151,7 +157,7 @@ async function main() {
     where: { paymentId: 2 },
     update: {},
     create: {
-      orderId: order2.orderId,
+      projectId: project2.projectId,
       paymentStatus: "UNPAID",
       paidAmount: 0.0,
     },

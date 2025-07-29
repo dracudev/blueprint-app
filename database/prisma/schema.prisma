@@ -33,14 +33,14 @@ model Client {
   billingAddress  String?  @map("billing_address") @db.Text
 
   // Relations
-  orders          Order[]
+  projects        Project[]
 
   @@index([email], map: "idx_client_email")
   @@map("Clients")
 }
 
-model Order {
-  orderId       Int         @id @default(autoincrement()) @map("order_id")
+model Project {
+  projectId     Int         @id @default(autoincrement()) @map("project_id")
   clientId      Int         @map("client_id")
   createdAt     DateTime    @default(now()) @map("created_at")
   jobStatus     JobStatus   @default(RECEIVED) @map("job_status")
@@ -48,45 +48,45 @@ model Order {
 
   // Relations
   client        Client      @relation(fields: [clientId], references: [clientId])
-  orderItems    OrderItem[]
+  projectItems  ProjectItem[]
   payments      Payment[]
 
-  @@map("Orders")
+  @@map("Projects")
 }
 
-model Product {
-  productId     Int         @id @default(autoincrement()) @map("product_id")
-  productName   String      @map("product_name") @db.VarChar(255)
+model Service {
+  serviceId     Int         @id @default(autoincrement()) @map("service_id")
+  serviceName   String      @map("service_name") @db.VarChar(255)
 
   // Relations
-  orderItems    OrderItem[]
+  projectItems  ProjectItem[]
 
-  @@map("Products")
+  @@map("Services")
 }
 
-model OrderItem {
-  orderItemId   Int         @id @default(autoincrement()) @map("order_item_id")
-  orderId       Int         @map("order_id")
-  productId     Int         @map("product_id")
+model ProjectItem {
+  projectItemId Int         @id @default(autoincrement()) @map("project_item_id")
+  projectId     Int         @map("project_id")
+  serviceId     Int         @map("service_id")
   quantity      Int
   unitPrice     Decimal     @map("unit_price") @db.Decimal(10, 2)
 
   // Relations
-  order         Order       @relation(fields: [orderId], references: [orderId])
-  product       Product     @relation(fields: [productId], references: [productId])
+  project       Project     @relation(fields: [projectId], references: [projectId])
+  service       Service     @relation(fields: [serviceId], references: [serviceId])
 
-  @@map("OrderItems")
+  @@map("ProjectItems")
 }
 
 model Payment {
   paymentId     Int           @id @default(autoincrement()) @map("payment_id")
-  orderId       Int           @map("order_id")
+  projectId     Int           @map("project_id")
   paymentStatus PaymentStatus @default(UNPAID) @map("payment_status")
   paidAmount    Decimal       @default(0.00) @map("paid_amount") @db.Decimal(10, 2)
   paymentDate   DateTime      @default(now()) @map("payment_date")
 
   // Relations
-  order         Order         @relation(fields: [orderId], references: [orderId])
+  project       Project       @relation(fields: [projectId], references: [projectId])
 
   @@map("Payments")
 }

@@ -22,9 +22,9 @@ CREATE TABLE Clients (
     billing_address TEXT,
     INDEX idx_client_email (email)
 );
--- Orders table
-CREATE TABLE Orders (
-    order_id INT AUTO_INCREMENT PRIMARY KEY,
+-- Projects table
+CREATE TABLE Projects (
+    project_id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     job_status ENUM(
@@ -36,27 +36,27 @@ CREATE TABLE Orders (
     total_amount DECIMAL(10, 2) DEFAULT 0.00,
     FOREIGN KEY (client_id) REFERENCES Clients(client_id)
 );
--- Products table
-CREATE TABLE Products (
-    product_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_name VARCHAR(255) NOT NULL
+-- Services table
+CREATE TABLE Services (
+    service_id INT AUTO_INCREMENT PRIMARY KEY,
+    service_name VARCHAR(255) NOT NULL
 );
--- OrderItems table
-CREATE TABLE OrderItems (
-    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
-    product_id INT NOT NULL,
+-- ProjectItems table
+CREATE TABLE ProjectItems (
+    project_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    project_id INT NOT NULL,
+    service_id INT NOT NULL,
     quantity INT NOT NULL,
     unit_price DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
-    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+    FOREIGN KEY (project_id) REFERENCES Projects(project_id),
+    FOREIGN KEY (service_id) REFERENCES Services(service_id)
 );
 -- Payments table
 CREATE TABLE Payments (
     payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT NOT NULL,
+    project_id INT NOT NULL,
     payment_status ENUM('Paid', 'Partially Paid', 'Unpaid') DEFAULT 'Unpaid',
     paid_amount DECIMAL(10, 2) DEFAULT 0.00,
     payment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES Orders(order_id)
+    FOREIGN KEY (project_id) REFERENCES Projects(project_id)
 );

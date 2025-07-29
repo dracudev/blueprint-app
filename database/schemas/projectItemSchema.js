@@ -1,26 +1,26 @@
 module.exports = {
-  name: "OrderItem",
+  name: "ProjectItem",
   fields: {
-    orderItemId: {
+    projectItemId: {
       type: "INTEGER",
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-    orderId: {
+    projectId: {
       type: "INTEGER",
       allowNull: false,
       references: {
-        model: "Order",
-        key: "orderId",
+        model: "Project",
+        key: "projectId",
       },
     },
-    productId: {
+    serviceId: {
       type: "INTEGER",
       allowNull: false,
       references: {
-        model: "Product",
-        key: "productId",
+        model: "Service",
+        key: "serviceId",
       },
     },
     quantity: {
@@ -37,16 +37,16 @@ module.exports = {
   associations: {
     belongsTo: [
       {
-        model: "Order",
-        foreignKey: "orderId",
-        as: "order",
+        model: "Project",
+        foreignKey: "projectId",
+        as: "project",
       },
       {
-        model: "Product",
-        foreignKey: "productId",
-        as: "product",
+        model: "Service",
+        foreignKey: "serviceId",
+        as: "service",
       },
     ],
   },
-  tableName: "OrderItems",
+  tableName: "ProjectItems",
 };

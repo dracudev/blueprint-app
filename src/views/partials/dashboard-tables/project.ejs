@@ -1,21 +1,21 @@
-<% /* orders.ejs - Orders table partial for dashboard */ %>
-<section class="dashboard-section" data-tab="orders">
+<% /* project.ejs - Projects table partial for dashboard */ %>
+<section class="dashboard-section" data-tab="projects">
   <div class="dashboard-table-header">
-    <h2>Orders</h2>
+    <h2>Projects</h2>
     <% if (user.canCreateOrders) { %>
     <a
-      href="/order/create"
+      href="/project/create"
       class="crud-btn btn-primary"
       data-action="create"
-      data-entity="order"
-      >Add New Order</a
+      data-entity="project"
+      >Add New Project</a
     >
     <% } %>
   </div>
   <table class="dashboard-table dashboard-table-main">
     <thead>
       <tr>
-        <th>Order ID</th>
+        <th>Project ID</th>
         <th>Client</th>
         <th>Status</th>
         <th>Total</th>
@@ -23,20 +23,20 @@
       </tr>
     </thead>
     <tbody>
-      <% orders.forEach(o => { %>
+      <% projects.forEach(p => { %>
       <tr>
-        <td><%= o.order_id %></td>
-        <td><%= o.client_name %></td>
-        <td><%= o.job_status %></td>
-        <td><%= o.total_amount %></td>
+        <td><%= p.project_id %></td>
+        <td><%= p.client_name %></td>
+        <td><%= p.job_status %></td>
+        <td><%= p.total_amount %></td>
         <td>
           <% if (user.canEditOrders) { %>
           <a
-            href="/order/edit/<%= o.order_id %>"
+            href="/project/edit/<%= p.project_id %>"
             class="crud-btn btn-secondary"
             data-action="edit"
-            data-entity="order"
-            data-id="<%= o.order_id %>"
+            data-entity="project"
+            data-id="<%= p.project_id %>"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteOrders) { %>
@@ -44,8 +44,8 @@
             type="button"
             class="crud-btn btn-danger"
             data-action="delete"
-            data-entity="order"
-            data-id="<%= o.order_id %>"
+            data-entity="project"
+            data-id="<%= p.project_id %>"
           >
             Delete
           </button>

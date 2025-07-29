@@ -1,7 +1,7 @@
 module.exports = {
-  name: "Order",
+  name: "Project",
   fields: {
-    orderId: {
+    projectId: {
       type: "INTEGER",
       primaryKey: true,
       autoIncrement: true,
@@ -44,16 +44,11 @@ module.exports = {
     ],
     hasMany: [
       {
-        model: "OrderItem",
-        foreignKey: "orderId",
-        as: "orderItems",
-      },
-      {
-        model: "Payment",
-        foreignKey: "orderId",
-        as: "payments",
+        model: "ProjectItem",
+        foreignKey: "projectId",
+        as: "projectItems",
       },
     ],
   },
-  tableName: "Orders",
+  tableName: "Projects",
 };

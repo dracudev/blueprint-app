@@ -9,9 +9,9 @@ class PrismaModelFactory {
     this.models = {
       User: this.createUserModel(),
       Client: this.createClientModel(),
-      Order: this.createOrderModel(),
-      Product: this.createProductModel(),
-      OrderItem: this.createOrderItemModel(),
+      Project: this.createProjectModel(),
+      Service: this.createServiceModel(),
+      ProjectItem: this.createProjectItemModel(),
       Payment: this.createPaymentModel(),
     };
   }
@@ -46,48 +46,48 @@ class PrismaModelFactory {
     };
   }
 
-  createOrderModel() {
+  createProjectModel() {
     return {
-      findMany: (options = {}) => this.prisma.order.findMany(options),
-      findUnique: (options) => this.prisma.order.findUnique(options),
-      findFirst: (options) => this.prisma.order.findFirst(options),
-      create: (options) => this.prisma.order.create(options),
-      update: (options) => this.prisma.order.update(options),
-      delete: (options) => this.prisma.order.delete(options),
-      count: (options = {}) => this.prisma.order.count(options),
-      upsert: (options) => this.prisma.order.upsert(options),
-      deleteMany: (options = {}) => this.prisma.order.deleteMany(options),
-      updateMany: (options) => this.prisma.order.updateMany(options),
+      findMany: (options = {}) => this.prisma.project.findMany(options),
+      findUnique: (options) => this.prisma.project.findUnique(options),
+      findFirst: (options) => this.prisma.project.findFirst(options),
+      create: (options) => this.prisma.project.create(options),
+      update: (options) => this.prisma.project.update(options),
+      delete: (options) => this.prisma.project.delete(options),
+      count: (options = {}) => this.prisma.project.count(options),
+      upsert: (options) => this.prisma.project.upsert(options),
+      deleteMany: (options = {}) => this.prisma.project.deleteMany(options),
+      updateMany: (options) => this.prisma.project.updateMany(options),
     };
   }
 
-  createProductModel() {
+  createServiceModel() {
     return {
-      findMany: (options = {}) => this.prisma.product.findMany(options),
-      findUnique: (options) => this.prisma.product.findUnique(options),
-      findFirst: (options) => this.prisma.product.findFirst(options),
-      create: (options) => this.prisma.product.create(options),
-      update: (options) => this.prisma.product.update(options),
-      delete: (options) => this.prisma.product.delete(options),
-      count: (options = {}) => this.prisma.product.count(options),
-      upsert: (options) => this.prisma.product.upsert(options),
-      deleteMany: (options = {}) => this.prisma.product.deleteMany(options),
-      updateMany: (options) => this.prisma.product.updateMany(options),
+      findMany: (options = {}) => this.prisma.service.findMany(options),
+      findUnique: (options) => this.prisma.service.findUnique(options),
+      findFirst: (options) => this.prisma.service.findFirst(options),
+      create: (options) => this.prisma.service.create(options),
+      update: (options) => this.prisma.service.update(options),
+      delete: (options) => this.prisma.service.delete(options),
+      count: (options = {}) => this.prisma.service.count(options),
+      upsert: (options) => this.prisma.service.upsert(options),
+      deleteMany: (options = {}) => this.prisma.service.deleteMany(options),
+      updateMany: (options) => this.prisma.service.updateMany(options),
     };
   }
 
-  createOrderItemModel() {
+  createProjectItemModel() {
     return {
-      findMany: (options = {}) => this.prisma.orderItem.findMany(options),
-      findUnique: (options) => this.prisma.orderItem.findUnique(options),
-      findFirst: (options) => this.prisma.orderItem.findFirst(options),
-      create: (options) => this.prisma.orderItem.create(options),
-      update: (options) => this.prisma.orderItem.update(options),
-      delete: (options) => this.prisma.orderItem.delete(options),
-      count: (options = {}) => this.prisma.orderItem.count(options),
-      upsert: (options) => this.prisma.orderItem.upsert(options),
-      deleteMany: (options = {}) => this.prisma.orderItem.deleteMany(options),
-      updateMany: (options) => this.prisma.orderItem.updateMany(options),
+      findMany: (options = {}) => this.prisma.projectItem.findMany(options),
+      findUnique: (options) => this.prisma.projectItem.findUnique(options),
+      findFirst: (options) => this.prisma.projectItem.findFirst(options),
+      create: (options) => this.prisma.projectItem.create(options),
+      update: (options) => this.prisma.projectItem.update(options),
+      delete: (options) => this.prisma.projectItem.delete(options),
+      count: (options = {}) => this.prisma.projectItem.count(options),
+      upsert: (options) => this.prisma.projectItem.upsert(options),
+      deleteMany: (options = {}) => this.prisma.projectItem.deleteMany(options),
+      updateMany: (options) => this.prisma.projectItem.updateMany(options),
     };
   }
 

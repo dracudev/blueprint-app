@@ -25,31 +25,32 @@ const clients = [
   { client_id: 2, name: 'Jane Doe', email: 'jane@example.com', type: 'Individual' },
   { client_id: 3, name: 'Beta LLC', email: 'info@beta.com', type: 'Company' }
 ];
-const products = [
-  { product_id: 1, product_name: 'Website Redesign' },
-  { product_id: 2, product_name: 'SEO Optimization' },
-  { product_id: 3, product_name: 'E-commerce Integration' }
+
+const services = [
+  { service_id: 1, service_name: 'Website Redesign' },
+  { service_id: 2, service_name: 'SEO Optimization' },
+  { service_id: 3, service_name: 'E-commerce Integration' }
 ];
-const orders = [
-  { order_id: 101, client_name: 'Acme Corp', job_status: 'In Progress', total_amount: '$2,500' },
-  { order_id: 102, client_name: 'Beta LLC', job_status: 'Completed', total_amount: '$1,200' },
-  { order_id: 103, client_name: 'Jane Doe', job_status: 'Received', total_amount: '$3,000' }
+const projects = [
+  { project_id: 101, client_name: 'Acme Corp', job_status: 'In Progress', total_amount: '$2,500' },
+  { project_id: 102, client_name: 'Beta LLC', job_status: 'Completed', total_amount: '$1,200' },
+  { project_id: 103, client_name: 'Jane Doe', job_status: 'Received', total_amount: '$3,000' }
 ];
 const currentTab = 'clients'; %>
 
 <main data-current-tab="<%= currentTab || 'clients' %>">
   <nav class="dashboard-tabs">
     <a href="#" class="dashboard-tab" data-tab="clients">Clients</a>
-    <a href="#" class="dashboard-tab" data-tab="products">Products</a>
-    <a href="#" class="dashboard-tab" data-tab="orders">Orders</a>
+    <a href="#" class="dashboard-tab" data-tab="services">Services</a>
+    <a href="#" class="dashboard-tab" data-tab="projects">Projects</a>
   </nav>
 
   <div class="dashboard-main">
-    <%- include('partials/dashboard-tables/clients', { clients: clients, user: user }) %>
+    <%- include('partials/dashboard-tables/client', { clients: clients, user: user }) %>
 
-    <%- include('partials/dashboard-tables/products', { products: products, user: user }) %>
+    <%- include('partials/dashboard-tables/service', { services: services, user: user }) %>
 
-    <%- include('partials/dashboard-tables/orders', { orders: orders, user: user }) %>
+    <%- include('partials/dashboard-tables/project', { projects: projects, user: user }) %>
   </div>
 </main>
 

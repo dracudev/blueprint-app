@@ -1,13 +1,13 @@
 module.exports = {
-  name: "Product",
+  name: "Service",
   fields: {
-    productId: {
+    serviceId: {
       type: "INTEGER",
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
     },
-    productName: {
+    serviceName: {
       type: "STRING",
       allowNull: false,
     },
@@ -15,11 +15,11 @@ module.exports = {
   associations: {
     hasMany: [
       {
-        model: "OrderItem",
-        foreignKey: "productId",
-        as: "orderItems",
+        model: "ProjectItem",
+        foreignKey: "serviceId",
+        as: "projectItems",
       },
     ],
   },
-  tableName: "Products",
+  tableName: "Services",
 };
