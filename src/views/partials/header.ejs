@@ -50,13 +50,15 @@
                 </a>
             </li>
             <% } %>
-            <% if (user && user.role === 'registered') { %>
+            <% if (user) { %>
+               <% if (user.role === 'registered') { %>
             <li class="nav-item">
                 <a href="/client/profile" class="nav-link">
                     <i class="fas fa-user"></i>
                     <span class="nav-text">Profile</span>
                 </a>
             </li>
+            <% } %>
             <li class="nav-item nav-item-bottom">
                 <a href="/auth/logout" class="nav-link logout-link">
                     <i class="fas fa-sign-out-alt"></i>

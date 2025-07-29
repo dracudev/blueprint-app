@@ -128,10 +128,6 @@ After seeding, you can log in with:
 - `PUT /client/edit` - Update client data
 - `GET /client/data` - Get client data (API)
 
-### User Profile
-
-- `GET /user/profile` - User profile and information
-
 ### General
 
 - `GET /` - Home page

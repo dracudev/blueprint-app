@@ -44,7 +44,7 @@ const clientController = {
       });
 
       if (existingClient) {
-        return res.redirect("/user/profile");
+        return res.redirect("/client/profile");
       }
 
       res.render("client-setup", {
@@ -142,7 +142,7 @@ const clientController = {
       console.log("Client created successfully:", client);
 
       req.session.successMessage = "Client profile created successfully!";
-      res.redirect("/user/profile");
+      res.redirect("/client/profile");
     } catch (error) {
       console.error("Error processing client setup:", error);
       res.status(500).render("client-setup", {
@@ -284,7 +284,7 @@ const clientController = {
         });
       } else {
         req.session.successMessage = "Client profile updated successfully!";
-        res.redirect("/user/profile");
+        res.redirect("/client/profile");
       }
     } catch (error) {
       console.error("Error updating client profile:", error);
