@@ -447,12 +447,27 @@ a:hover {
 /* Main Content Layout */
 .main-wrapper {
   margin-left: 260px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-light) 100%
+  );
   min-height: 100vh;
   transition: margin-left var(--transition-normal);
   display: flex;
   flex-direction: column;
 }
 
+.main-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+  opacity: 0.3;
+}
 body.sidebar-open {
   overflow: hidden;
 }
@@ -613,9 +628,9 @@ main p {
   }
 
   main {
-    margin: var(--space-2) auto;
+    margin: var(--space-4) auto;
     padding: var(--space-2);
-    width: calc(100% - var(--space-2));
+    width: calc(100% - var(--space-4));
     max-width: none;
   }
 
