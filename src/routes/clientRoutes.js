@@ -11,8 +11,8 @@ router.post("/setup", validateClientSetup, clientController.processSetup);
 
 router.get("/profile", clientController.showProfile);
 router.post("/profile", validateClientUpdate, clientController.updateProfile);
+router.get("/profile/edit", clientController.showEdit);
 
-router.get("/edit", clientController.showEdit);
 router.get("/data", clientController.getClientData);
 router.put("/edit", validateClientUpdate, clientController.updateProfile);
 router.post("/edit", validateClientUpdate, clientController.updateProfile);
