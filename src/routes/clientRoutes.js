@@ -5,9 +5,6 @@ const {
   validateClientSetup,
   validateClientUpdate,
 } = require("../validations/clientValidation");
-const { requireAuth } = require("../middleware/auth");
-
-router.use(requireAuth);
 
 router.get("/setup", clientController.showSetup);
 router.post("/setup", validateClientSetup, clientController.processSetup);

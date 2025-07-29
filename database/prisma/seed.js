@@ -1,9 +1,37 @@
-const { PrismaClient } = require("./generated/client");
-
+const { PrismaClient, Role } = require("./generated/client");
 const prisma = new PrismaClient();
+
+const bcrypt = require("bcrypt");
 
 async function main() {
   console.log("🌱 Seeding database...");
+  // Create sample users
+  const adminPassword = await bcrypt.hash("admin", 10);
+  const userPassword = await bcrypt.hash("user", 10);
+
+  const adminUser = await prisma.user.upsert({
+    where: { email: "admin@admin.com" },
+    update: {},
+    create: {
+      name: "Admin",
+      email: "admin@admin.com",
+      password: adminPassword,
+      role: Role.ADMIN,
+    },
+  });
+
+  const regularUser = await prisma.user.upsert({
+    where: { email: "user@user.com" },
+    update: {},
+    create: {
+      name: "User",
+      email: "user@user.com",
+      password: userPassword,
+      role: Role.USER,
+    },
+  });
+
+  console.log("👤 Created users:", { adminUser, regularUser });
 
   // Create sample products
   const webDevelopment = await prisma.product.upsert({

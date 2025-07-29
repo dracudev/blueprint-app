@@ -3,7 +3,7 @@ const router = express.Router();
 const authRoutes = require("./authRoutes");
 const userRoutes = require("./userRoutes");
 const clientRoutes = require("./clientRoutes");
-const { requireAdmin, requireAuth } = require("../middleware/auth");
+const { jwtAuth } = require("../middleware/auth");
 
 router.get("/", function (req, res) {
   let message;
@@ -27,7 +27,7 @@ router.get("/services", function (req, res) {
 });
 
 router.use("/auth", authRoutes);
-router.use("/user", requireAuth, userRoutes);
-router.use("/client", clientRoutes);
+router.use("/user", jwtAuth, userRoutes);
+router.use("/client", jwtAuth, clientRoutes);
 
 module.exports = router;
