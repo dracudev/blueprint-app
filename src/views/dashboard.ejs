@@ -37,26 +37,23 @@ const orders = [
 ];
 const currentTab = 'clients'; %>
 
-
-<main>
-<div class="dashboard-container" data-current-tab="<%= currentTab || 'clients' %>">
+<main data-current-tab="<%= currentTab || 'clients' %>">
   <nav class="dashboard-tabs">
     <a href="#" class="dashboard-tab" data-tab="clients">Clients</a>
     <a href="#" class="dashboard-tab" data-tab="products">Products</a>
     <a href="#" class="dashboard-tab" data-tab="orders">Orders</a>
   </nav>
 
-  <main class="dashboard-main">
+  <div class="dashboard-main">
     <%- include('partials/dashboard-tables/clients', { clients: clients, user: user }) %>
 
     <%- include('partials/dashboard-tables/products', { products: products, user: user }) %>
 
     <%- include('partials/dashboard-tables/orders', { orders: orders, user: user }) %>
-  </main>
-</div>
-
-
+  </div>
 </main>
+
+
 <script src="/scripts/dashboard.js"></script>
 </body>
 </html>

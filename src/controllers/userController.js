@@ -1,7 +1,4 @@
 const models = require("../models");
-const { validationResult } = require("express-validator");
-const path = require("path");
-const fs = require("fs");
 
 const userController = {
   showProfile: async (req, res) => {
