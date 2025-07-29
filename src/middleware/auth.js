@@ -9,6 +9,15 @@ const jwtAuth = (req, res, next) => {
   if (!user) {
     return res.redirect("/login");
   }
+
+  // Refresh JWT while session is valid
+  const newToken = signJwt({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+  });
+  req.session.jwt = newToken;
   req.user = user;
   next();
 };
