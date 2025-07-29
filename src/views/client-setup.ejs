@@ -152,9 +152,7 @@
       <!-- Form Actions -->
       <div class="form-actions">
         <% if (typeof isEdit === 'undefined' || !isEdit) { %>
-        <button type="button" class="btn btn-secondary" href="/">
-          Skip for Now
-        </button>
+        <a href="/" class="btn btn-secondary">Skip for Now</a>
         <% } else { %>
         <a href="/user/profile" class="btn btn-secondary"> Cancel </a>
         <% } %>
