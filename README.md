@@ -11,7 +11,6 @@
 - [Scripts](#scripts)
 - [File Structure](#file-structure)
 - [Database Schema](#database-schema)
-- [Database Architecture](#database-architecture)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -23,36 +22,25 @@ The application supports both individual and company clients, tracks project ord
 
 ## Features
 
-- 🔐 User authentication (sign up, login, logout)
+- 🔑 JWT authentication (secure API/session tokens)
 - 👥 Role-based access (public, registered, admin)
-- 👤 User profiles
 - 🏢 Client management (company/individual clients)
-- 📋 Order management system
-- 📦 Product catalog management
-- � Payment tracking system
-- � Job status tracking (Received, In Progress, Completed, Delivered)
+- 📋 Order, Client and Product management system
+- 💸 Payment tracking system
+- 📊 Job status tracking (Received, In Progress, Completed, Delivered)
 - 🗄️ Database abstraction layer (easy ORM switching)
-- 🌐 Service pages for business presentation
+- 🛡️ Security middleware: helmet, express-rate-limit
 
 ## Technologies Used
 
 - **Backend**: Node.js, Express.js
 - **Database**: MySQL with Prisma ORM (abstracted)
 - **Architecture**: Database abstraction layer
-- **Authentication**: bcrypt, cookie-session
+- **Authentication**: bcrypt, cookie-session, JWT (jsonwebtoken)
+- **Security**: Helmet, express-rate-limit
 - **View Engine**: EJS
 - **Validation**: express-validator
-- **Database**: MySQL with Prisma ORM
 - **Styling**: Custom CSS
-
-### Dependencies
-
-- **Core**: Express.js 5.1.0, Node.js
-- **Database**: Prisma 6.12.0, @prisma/client 6.12.0, mysql2 3.14.1
-- **Authentication**: bcrypt 6.0.0, cookie-session 2.1.1
-- **Validation**: express-validator 7.2.1
-- **Environment**: dotenv 16.5.0
-- **Development**: nodemon 3.1.10
 
 ## Setup Instructions
 
@@ -108,17 +96,17 @@ The application supports both individual and company clients, tracks project ord
 
 ## Default Users
 
-(Default users to be determined)
+After seeding, you can log in with:
 
 **Admin User:**
 
-- Email:
-- Password:
+- Email: <admin@admin.com>
+- Password: admin
 
 **Regular User:**
 
-- Email:
-- Password:
+- Email: <user@user.com>
+- Password: user
 
 ## API Routes
 
@@ -164,134 +152,91 @@ The application supports both individual and company clients, tracks project ord
 ## File Structure
 
 ```tree
-├── app.js                 # Main application file
+├── app.js
 ├── package.json
 ├── .env
-├── database/             # Database Abstraction Layer
-│   ├── index.js             # Database adapter (connection manager)
+├── database/
 │   ├── config/
-│   │   └── prisma.js        # Prisma instance + model creation
 │   ├── factories/
-│   │   └── PrismaModelFactory.js  # Schema → Prisma converter
-│   ├── prisma/              # Prisma configuration
-│   │   ├── schema.prisma    # Prisma schema definition
-│   │   ├── seed.js          # Database seeder
-│   │   └── generated/       # Generated Prisma client
-│   └── schemas/             # ORM-agnostic schema definitions
-│       ├── index.js
-│       ├── userSchema.js
-│       ├── clientSchema.js
-│       ├── orderSchema.js
-│       ├── orderItemSchema.js
-│       ├── productSchema.js
-│       └── paymentSchema.js
-├── public/              # Static assets
+│   ├── prisma/
+│   ├── schemas/
+│   └── index.js
+├── public/
 │   ├── images/
 │   ├── scripts/
-│   │   ├── deploy.js
-│   │   └── reset-db.js
 │   └── styles/
-│       ├── auth.css
-│       ├── client-setup.css
-│       ├── error.css
-│       ├── global.css
-│       ├── home.css
-│       ├── profile.css
-│       └── services.css
 ├── src/
 │   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── clientController.js
-│   │   └── userController.js
 │   ├── middleware/
-│   │   ├── auth.js
-│   │   └── session.js
-│   ├── models/          # (Abstracted)
-│   │   ├── index.js
-│   │   ├── Client.js
-│   │   └── User.js
+│   ├── models/
 │   ├── routes/
-│   │   ├── index.js
-│   │   ├── authRoutes.js
-│   │   ├── clientRoutes.js
-│   │   └── userRoutes.js
 │   ├── validations/
-│   │   ├── authValidation.js
-│   │   └── clientValidation.js
-│   └── views/               # EJS templates
-│       ├── partials/
-│       │   ├── head.ejs
-│       │   └── header.ejs
-│       ├── client-setup.ejs
-│       ├── error.ejs
-│       ├── home.ejs
-│       ├── login.ejs
-│       ├── profile.ejs
-│       ├── services.ejs
-│       └── signup.ejs
+│   └── views/
+└── README.md
 ```
 
 ## Database Schema
 
-### Users Table
+### Users
 
-- `id` (Primary Key)
-- `name` (String)
-- `email` (String, unique)
-- `password` (String, hashed)
-- `role` (Enum: public, registered, admin)
-- `created_at` (DateTime)
+| Column      | Type    | Description                        |
+|-------------|---------|------------------------------------|
+| id          | PK      | Primary Key                        |
+| name        | String  |                                    |
+| email       | String  | Unique                             |
+| password    | String  | Hashed                             |
+| role        | Enum    | public, registered, admin          |
+| created_at  | DateTime|                                    |
 
-### Clients Table
+### Clients
 
-- `client_id` (Primary Key)
-- `is_company` (Boolean)
-- `company_name` (String, nullable)
-- `first_name` (String, nullable)
-- `last_name` (String, nullable)
-- `email` (String, unique)
-- `phone` (String, nullable)
-- `billing_address` (Text, nullable)
+| Column         | Type     | Description         |
+|----------------|----------|---------------------|
+| client_id      | PK       | Primary Key         |
+| is_company     | Boolean  |                     |
+| company_name   | String   | Nullable            |
+| first_name     | String   | Nullable            |
+| last_name      | String   | Nullable            |
+| email          | String   | Unique              |
+| phone          | String   | Nullable            |
+| billing_address| Text     | Nullable            |
 
-### Orders Table
+### Orders
 
-- `order_id` (Primary Key)
-- `client_id` (Foreign Key)
-- `created_at` (DateTime)
-- `job_status` (Enum: Received, In Progress, Completed, Delivered)
-- `total_amount` (Decimal)
+| Column      | Type     | Description                        |
+|-------------|----------|------------------------------------|
+| order_id    | PK       | Primary Key                        |
+| client_id   | FK       | Foreign Key                        |
+| created_at  | DateTime |                                    |
+| job_status  | Enum     | Received, In Progress, Completed, Delivered |
+| total_amount| Decimal  |                                    |
 
-### Products Table
+### Products
 
-- `product_id` (Primary Key)
-- `product_name` (String)
+| Column        | Type    | Description                        |
+|---------------|---------|------------------------------------|
+| product_id    | PK      | Primary Key                        |
+| product_name  | String  |                                    |
 
-### OrderItems Table
+### OrderItems
 
-- `order_item_id` (Primary Key)
-- `order_id` (Foreign Key)
-- `product_id` (Foreign Key)
-- `quantity` (Integer)
-- `unit_price` (Decimal)
+| Column         | Type    | Description                        |
+|----------------|---------|------------------------------------|
+| order_item_id  | PK      | Primary Key                        |
+| order_id       | FK      | Foreign Key                        |
+| product_id     | FK      | Foreign Key                        |
+| quantity       | Integer |                                    |
+| unit_price     | Decimal |                                    |
 
-### Payments Table
+### Payments
 
-- `payment_id` (Primary Key)
-- `order_id` (Foreign Key)
-- `payment_status` (Enum: Paid, Partially Paid, Unpaid)
-- `paid_amount` (Decimal)
-- `payment_date` (DateTime)
-
-## Database Architecture
-
-### **Abstraction Layers:**
-
-1. **📊 Schemas** (`/database/schemas/`): ORM-agnostic data definitions
-2. **🏭 Model Factory** (`/database/factories/`): Converts schemas to Prisma models  
-3. **⚙️ Config Layer** (`/database/config/`): Prisma client and connection management
-4. **🔌 Database Adapter** (`/database/index.js`): Connection abstraction
-5. **📦 Models** (`/src/models/`): Clean model exports
-6. **🗄️ Prisma Layer** (`/database/prisma/`): Prisma schema, migrations, and generated client
+| Column         | Type     | Description                        |
+|----------------|----------|------------------------------------|
+| payment_id     | PK       | Primary Key                        |
+| order_id       | FK       | Foreign Key                        |
+| payment_status | Enum     | Paid, Partially Paid, Unpaid       |
+| paid_amount    | Decimal  |                                    |
+| payment_date   | DateTime |                                    |
 
 ## Contributing
 
