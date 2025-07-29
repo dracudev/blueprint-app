@@ -5,6 +5,7 @@ let ejs = require("ejs");
 require("dotenv").config({ path: "./.env" });
 
 const { configureSession } = require("./src/middleware/session");
+const { helmetMiddleware, limiter } = require("./src/middleware/security");
 const database = require("./database");
 const routes = require("./src/routes/index");
 
@@ -24,9 +25,12 @@ app.engine("ejs", (filePath, data, callback) => {
 });
 
 // Middlewares
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(configureSession());
+app.use(helmetMiddleware);
+app.use(limiter);
 
 // Routes
 app.use("/", routes);
