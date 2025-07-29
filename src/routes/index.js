@@ -34,7 +34,6 @@ router.get("/dashboard", function (req, res) {
 });
 
 router.use("/auth", authRoutes);
-router.use("/user", jwtAuth, userRoutes);
 router.use("/client", jwtAuth, clientRoutes);
 
 module.exports = router;

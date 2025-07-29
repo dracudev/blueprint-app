@@ -9,7 +9,7 @@ const {
 router.get("/setup", clientController.showSetup);
 router.post("/setup", validateClientSetup, clientController.processSetup);
 
-router.get("/profile", clientController.showEdit);
+router.get("/profile", clientController.showProfile);
 router.post("/profile", validateClientUpdate, clientController.updateProfile);
 
 router.get("/edit", clientController.showEdit);

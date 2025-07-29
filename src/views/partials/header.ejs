@@ -42,7 +42,7 @@
                 </a>
             </li>
             <% } %>
-            <% if (user && user.role === 'admin') { %>
+            <% if (user) { %>
             <li class="nav-item">
                 <a href="/dashboard" class="nav-link">
                     <i class="fas fa-tachometer-alt"></i>
@@ -50,9 +50,9 @@
                 </a>
             </li>
             <% } %>
-            <% if (user) { %>
+            <% if (user && user.role === 'registered') { %>
             <li class="nav-item">
-                <a href="/user/profile" class="nav-link">
+                <a href="/client/profile" class="nav-link">
                     <i class="fas fa-user"></i>
                     <span class="nav-text">Profile</span>
                 </a>

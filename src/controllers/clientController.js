@@ -2,6 +2,41 @@ const { validationResult } = require("express-validator");
 const models = require("../models");
 
 const clientController = {
+  showProfile: async (req, res) => {
+    try {
+      if (!req.session.user) {
+        return res.redirect("/auth/login");
+      }
+
+      const client = await models.Client.findFirst({
+        where: { email: req.session.user.email },
+      });
+
+      if (!client) {
+        return res.redirect("/client/setup");
+      }
+
+      const successMessage = req.session.successMessage;
+      delete req.session.successMessage;
+
+      res.render("profile", {
+        title: "My Profile",
+        user: req.session.user,
+        client: client,
+        successMessage: successMessage,
+      });
+    } catch (error) {
+      console.error("Error loading profile:", error);
+      res.status(500).render("error", {
+        title: "Error",
+        error: {
+          status: 500,
+          message: "Unable to load profile information",
+        },
+        user: req.session.user,
+      });
+    }
+  },
   showSetup: async (req, res) => {
     try {
       const existingClient = await models.Client.findFirst({
