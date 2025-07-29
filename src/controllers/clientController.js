@@ -132,7 +132,7 @@ const clientController = {
       }
 
       res.render("client-setup", {
-        title: "Edit Client Profile",
+        title: "Edit Profile",
         user: req.session.user,
         formData: {
           isCompany: client.isCompany.toString(),
@@ -165,7 +165,7 @@ const clientController = {
 
       if (!errors.isEmpty()) {
         return res.status(400).render("client-setup", {
-          title: "Edit Client Profile",
+          title: "Edit Profile",
           user: req.session.user,
           formData: req.body,
           errors: errors.array(),
@@ -201,7 +201,7 @@ const clientController = {
 
       if (isCompanyBool && !companyName) {
         return res.status(400).render("client-setup", {
-          title: "Edit Client Profile",
+          title: "Edit Profile",
           user: req.session.user,
           formData: req.body,
           errors: [{ msg: "Company name is required for business accounts" }],

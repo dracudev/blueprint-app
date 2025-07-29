@@ -16,7 +16,7 @@ const authController = {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.render("signup", {
-        title: "CodeCost | Sign Up",
+        title: "Sign Up",
         message: errors
           .array()
           .map((e) => e.msg)
@@ -28,7 +28,7 @@ const authController = {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res.render("signup", {
-        title: "CodeCost | Sign Up",
+        title: "Sign Up",
         message: "Please fill in all fields.",
         user: req.session.user,
       });
