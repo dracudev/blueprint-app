@@ -1,0 +1,170 @@
+/* Dashboard Layout Styles - uses only variables from global.css */
+
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  min-height: 80vh;
+}
+
+.dashboard-tabs {
+  display: flex;
+  gap: var(--space-2);
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: var(--space-6);
+}
+
+.dashboard-tab {
+  padding: var(--space-3) var(--space-6);
+  color: var(--primary-color);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  border: none;
+  background: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+}
+
+.dashboard-tab.active,
+.dashboard-tab:hover {
+  background: var(--primary-light);
+  color: var(--text-white);
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.dashboard-main {
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.dashboard-section {
+  display: none;
+  animation: fadeIn 0.3s;
+}
+
+.dashboard-section[style*="display: block"] {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Table Styles */
+.dashboard-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+/* Main dashboard tables fill available space */
+.dashboard-table-main {
+  min-width: 100%;
+  min-height: 40vh;
+  height: 100%;
+  table-layout: auto;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  padding: var(--space-3);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-table th {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.dashboard-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Button Styles */
+.crud-btn {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  margin-right: var(--space-2);
+}
+.btn-primary {
+  background: var(--primary-color);
+  color: var(--text-white);
+}
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+.btn-secondary {
+  background: var(--secondary-color);
+  color: var(--text-white);
+}
+.btn-secondary:hover {
+  background: var(--primary-light);
+}
+.btn-danger {
+  background: var(--danger-color);
+  color: var(--text-white);
+}
+.btn-danger:hover {
+  background: var(--danger-hover);
+}
+
+/* Responsive Styles */
+@media (max-width: 900px) {
+  .dashboard-container {
+    padding: var(--space-4) var(--space-2);
+  }
+  .dashboard-table th,
+  .dashboard-table td {
+    padding: var(--space-2);
+  }
+}
+@media (max-width: 600px) {
+  .dashboard-container {
+    padding: var(--space-2) var(--space-1);
+  }
+  .dashboard-tabs {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .dashboard-table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .dashboard-table {
+    font-size: var(--font-size-xs);
+  }
+}

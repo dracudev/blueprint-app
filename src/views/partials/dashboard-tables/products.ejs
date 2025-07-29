@@ -1,0 +1,52 @@
+<% /* products.ejs - Products table partial for dashboard */ %>
+<section class="dashboard-section" data-tab="products">
+  <div class="dashboard-table-header">
+    <h2>Products</h2>
+    <% if (user.canCreateProducts) { %>
+    <a
+      href="/product/create"
+      class="crud-btn btn-primary"
+      data-action="create"
+      data-entity="product"
+      >Add New Product</a
+    >
+    <% } %>
+  </div>
+  <table class="dashboard-table dashboard-table-main">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% products.forEach(p => { %>
+      <tr>
+        <td><%= p.product_name %></td>
+        <td>
+          <% if (user.canEditProducts) { %>
+          <a
+            href="/product/edit/<%= p.product_id %>"
+            class="crud-btn btn-secondary"
+            data-action="edit"
+            data-entity="product"
+            data-id="<%= p.product_id %>"
+            >Edit</a
+          >
+          <% } %> <% if (user.canDeleteProducts) { %>
+          <button
+            type="button"
+            class="crud-btn btn-danger"
+            data-action="delete"
+            data-entity="product"
+            data-id="<%= p.product_id %>"
+          >
+            Delete
+          </button>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</section>

@@ -26,6 +26,13 @@ router.get("/services", function (req, res) {
   });
 });
 
+router.get("/dashboard", function (req, res) {
+  res.render("dashboard", {
+    title: "Our Services",
+    user: req.session.user,
+  });
+});
+
 router.use("/auth", authRoutes);
 router.use("/user", jwtAuth, userRoutes);
 router.use("/client", jwtAuth, clientRoutes);

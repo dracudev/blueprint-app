@@ -1,0 +1,56 @@
+<% /* clients.ejs - Clients table partial for dashboard */ %>
+<section class="dashboard-section" data-tab="clients">
+  <div class="dashboard-table-header">
+    <h2>Clients</h2>
+    <% if (user.canCreateClients) { %>
+    <a
+      href="/client/create"
+      class="crud-btn btn-primary"
+      data-action="create"
+      data-entity="client"
+      >Add New Client</a
+    >
+    <% } %>
+  </div>
+  <table class="dashboard-table dashboard-table-main">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% clients.forEach(c => { %>
+      <tr>
+        <td><%= c.name %></td>
+        <td><%= c.email %></td>
+        <td><%= c.type %></td>
+        <td>
+          <% if (user.canEditClients) { %>
+          <a
+            href="/client/edit/<%= c.client_id %>"
+            class="crud-btn btn-secondary"
+            data-action="edit"
+            data-entity="client"
+            data-id="<%= c.client_id %>"
+            >Edit</a
+          >
+          <% } %> <% if (user.canDeleteClients) { %>
+          <button
+            type="button"
+            class="crud-btn btn-danger"
+            data-action="delete"
+            data-entity="client"
+            data-id="<%= c.client_id %>"
+          >
+            Delete
+          </button>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</section>

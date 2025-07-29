@@ -1,0 +1,62 @@
+
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/styles/dashboard.css" />
+<%- include('partials/header') %>
+
+
+
+<% /* MOCK DATA FOR STYLE PREVIEW - REMOVE FOR PRODUCTION */ %>
+<% const user = {
+  name: 'Admin User',
+  email: 'admin@admin.com',
+  role: 'admin',
+  canCreateClients: true,
+  canEditClients: true,
+  canDeleteClients: true,
+  canCreateProducts: true,
+  canEditProducts: true,
+  canDeleteProducts: true,
+  canCreateOrders: true,
+  canEditOrders: true,
+  canDeleteOrders: true
+};
+const clients = [
+  { client_id: 1, name: 'Acme Corp', email: 'contact@acme.com', type: 'Company' },
+  { client_id: 2, name: 'Jane Doe', email: 'jane@example.com', type: 'Individual' },
+  { client_id: 3, name: 'Beta LLC', email: 'info@beta.com', type: 'Company' }
+];
+const products = [
+  { product_id: 1, product_name: 'Website Redesign' },
+  { product_id: 2, product_name: 'SEO Optimization' },
+  { product_id: 3, product_name: 'E-commerce Integration' }
+];
+const orders = [
+  { order_id: 101, client_name: 'Acme Corp', job_status: 'In Progress', total_amount: '$2,500' },
+  { order_id: 102, client_name: 'Beta LLC', job_status: 'Completed', total_amount: '$1,200' },
+  { order_id: 103, client_name: 'Jane Doe', job_status: 'Received', total_amount: '$3,000' }
+];
+const currentTab = 'clients'; %>
+
+
+<main>
+<div class="dashboard-container" data-current-tab="<%= currentTab || 'clients' %>">
+  <nav class="dashboard-tabs">
+    <a href="#" class="dashboard-tab" data-tab="clients">Clients</a>
+    <a href="#" class="dashboard-tab" data-tab="products">Products</a>
+    <a href="#" class="dashboard-tab" data-tab="orders">Orders</a>
+  </nav>
+
+  <main class="dashboard-main">
+    <%- include('partials/dashboard-tables/clients', { clients: clients, user: user }) %>
+
+    <%- include('partials/dashboard-tables/products', { products: products, user: user }) %>
+
+    <%- include('partials/dashboard-tables/orders', { orders: orders, user: user }) %>
+  </main>
+</div>
+
+
+</main>
+<script src="/scripts/dashboard.js"></script>
+</body>
+</html>

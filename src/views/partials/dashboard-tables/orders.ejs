@@ -1,0 +1,58 @@
+<% /* orders.ejs - Orders table partial for dashboard */ %>
+<section class="dashboard-section" data-tab="orders">
+  <div class="dashboard-table-header">
+    <h2>Orders</h2>
+    <% if (user.canCreateOrders) { %>
+    <a
+      href="/order/create"
+      class="crud-btn btn-primary"
+      data-action="create"
+      data-entity="order"
+      >Add New Order</a
+    >
+    <% } %>
+  </div>
+  <table class="dashboard-table dashboard-table-main">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Client</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% orders.forEach(o => { %>
+      <tr>
+        <td><%= o.order_id %></td>
+        <td><%= o.client_name %></td>
+        <td><%= o.job_status %></td>
+        <td><%= o.total_amount %></td>
+        <td>
+          <% if (user.canEditOrders) { %>
+          <a
+            href="/order/edit/<%= o.order_id %>"
+            class="crud-btn btn-secondary"
+            data-action="edit"
+            data-entity="order"
+            data-id="<%= o.order_id %>"
+            >Edit</a
+          >
+          <% } %> <% if (user.canDeleteOrders) { %>
+          <button
+            type="button"
+            class="crud-btn btn-danger"
+            data-action="delete"
+            data-entity="order"
+            data-id="<%= o.order_id %>"
+          >
+            Delete
+          </button>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</section>
