@@ -58,13 +58,15 @@ const authController = {
         },
       });
 
-      req.session.user = {
+      const userPayload = {
         id: newUser.id,
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
       };
-
+      req.session.user = userPayload;
+      const token = signJwt(userPayload);
+      req.session.jwt = token;
       res.redirect("/client/setup");
     } catch (err) {
       console.error("Error creating user:", err);
