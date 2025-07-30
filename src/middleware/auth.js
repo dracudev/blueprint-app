@@ -41,16 +41,21 @@ const requireAdmin = (req, res, next) => {
 
 const requireRole = (role) => {
   return (req, res, next) => {
-    if (!req.session.user || req.session.user.role !== role) {
-      return res.status(403).render("error", {
-        title: "Access Denied",
-        message: `You need ${role} role to access this page.`,
-        user: req.session.user,
-      });
-    }
-    next();
+    if (req.user && req.user.role === role) return next();
+    return res.status(403).send("Forbidden");
   };
 };
+
+const can = (action) => {
+  return (req, res, next) => {
+    if (req.user && req.user[`can${capitalize(action)}`]) return next();
+    return res.status(403).send("Forbidden");
+  };
+};
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 const redirectIfAuthenticated = (req, res, next) => {
   if (req.session.user) {
@@ -62,6 +67,7 @@ const redirectIfAuthenticated = (req, res, next) => {
 module.exports = {
   requireAdmin,
   requireRole,
+  can,
   redirectIfAuthenticated,
   jwtAuth,
 };
