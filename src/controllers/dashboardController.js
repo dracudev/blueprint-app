@@ -2,8 +2,8 @@ const ClientService = require("../services/ClientService");
 const ServiceService = require("../services/ServiceService");
 const ProjectService = require("../services/ProjectService");
 
-module.exports = {
-  async renderDashboard(req, res) {
+const dashboardController = {
+  renderDashboard: async (req, res) => {
     const user = req.user;
     let clients = [],
       services = [],
@@ -36,6 +36,8 @@ module.exports = {
     });
   },
 };
+
+module.exports = dashboardController;
 
 function getDashboardPermissions(user) {
   if (user.role === "admin") {

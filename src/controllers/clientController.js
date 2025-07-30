@@ -38,7 +38,9 @@ const clientController = {
   },
   showSetup: async (req, res) => {
     try {
-      const existingClient = await ClientService.findByEmail(req.session.user.email);
+      const existingClient = await ClientService.findByEmail(
+        req.session.user.email
+      );
 
       if (existingClient) {
         return res.redirect("/client/profile");
@@ -109,7 +111,9 @@ const clientController = {
         });
       }
 
-      const existingClient = await ClientService.findByEmail(req.session.user.email);
+      const existingClient = await ClientService.findByEmail(
+        req.session.user.email
+      );
 
       if (existingClient) {
         return res.status(400).render("client-setup", {
@@ -129,7 +133,6 @@ const clientController = {
         phone: phone || null,
         billingAddress: billingAddress || null,
       };
-
 
       const client = await ClientService.create(clientData);
       // Update user role to 'client' in DB and session
@@ -303,7 +306,9 @@ const clientController = {
 
   getClientData: async (req, res) => {
     try {
-      const client = await ClientService.findWithOrdersByEmail(req.session.user.email);
+      const client = await ClientService.findWithOrdersByEmail(
+        req.session.user.email
+      );
 
       if (!client) {
         return res.status(404).json({
