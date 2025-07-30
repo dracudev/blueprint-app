@@ -1,17 +1,17 @@
-const models = require("../models");
+const { models } = require("../../database/config/prisma");
 const bcrypt = require("bcrypt");
 
 module.exports = {
   findUserByEmail: async (email) => {
-    return await models.User.findFirst({ where: { email } });
+    return models.User.findFirst({ where: { email } });
   },
   createUser: async ({ name, email, password, role = "registered" }) => {
     const hashedPassword = await bcrypt.hash(password, 10);
-    return await models.User.create({
+    return models.User.create({
       data: { name, email, password: hashedPassword, role },
     });
   },
   validatePassword: async (password, hash) => {
-    return await bcrypt.compare(password, hash);
+    return bcrypt.compare(password, hash);
   },
 };

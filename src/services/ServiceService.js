@@ -1,21 +1,24 @@
+const db = require("../../database");
+const { models } = require("../../database/config/prisma");
+
 const ServiceService = {
   getAll: async () => {
-    return await require("../models").Service.findMany();
+    return models.Service.findMany();
   },
   getByUser: async (user) => {
-    return await require("../models").Service.findMany();
+    return models.Service.findMany();
   },
   create: async (data) => {
-    return await require("../models").Service.create({ data });
+    return models.Service.create({ data });
   },
   update: async (id, data) => {
-    return await require("../models").Service.update({
+    return models.Service.update({
       where: { id: Number(id) },
       data,
     });
   },
   remove: async (id) => {
-    return await require("../models").Service.delete({
+    return models.Service.delete({
       where: { id: Number(id) },
     });
   },

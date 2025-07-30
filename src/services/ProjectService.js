@@ -1,29 +1,24 @@
+const { models } = require("../../database/config/prisma");
+
 const ProjectService = {
   getAll: async () => {
-    return await require("../models").Project.findMany();
+    return models.Project.findMany();
   },
   getByUser: async (user) => {
-    const client = await require("../models").Client.findFirst({
+    const client = await models.Client.findFirst({
       where: { email: user.email },
     });
     if (!client) return [];
-    return await require("../models").Project.findMany({
-      where: { clientId: client.clientId },
-    });
+    return models.Project.findMany({ where: { clientId: client.clientId } });
   },
   create: async (data) => {
-    return await require("../models").Project.create({ data });
+    return models.Project.create({ data });
   },
   update: async (id, data) => {
-    return await require("../models").Project.update({
-      where: { id: Number(id) },
-      data,
-    });
+    return models.Project.update({ where: { id: Number(id) }, data });
   },
   remove: async (id) => {
-    return await require("../models").Project.delete({
-      where: { id: Number(id) },
-    });
+    return models.Project.delete({ where: { id: Number(id) } });
   },
 };
 

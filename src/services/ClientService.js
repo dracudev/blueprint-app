@@ -1,4 +1,4 @@
-const models = require("../models");
+const { models } = require("../../database/config/prisma");
 
 module.exports = {
   async getAll() {
