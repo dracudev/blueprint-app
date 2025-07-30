@@ -1,4 +1,3 @@
-<% /* project.ejs - Projects table partial for dashboard */ %>
 <section class="dashboard-section" data-tab="projects">
   <div class="dashboard-table-header">
     <h2>Projects</h2>
@@ -51,17 +50,25 @@
             Delete
           </button>
           <% } %>
-          <a href="/project/status/<%= p.project_id %>" class="btn btn-info btn-md"
+          <a
+            href="/project/status/<%= p.project_id %>"
+            class="btn btn-info btn-md"
             >Change Status</a
           >
-          <a href="/project/payment/<%= p.project_id %>" class="btn btn-success btn-md"
+          <a
+            href="/project/payment/<%= p.project_id %>"
+            class="btn btn-success btn-md"
             >Update Payment</a
           >
           <% } %> <% if (user.role === 'client') { %>
-          <a href="/project/view/<%= p.project_id %>" class="btn btn-info btn-md"
+          <a
+            href="/project/view/<%= p.project_id %>"
+            class="btn btn-info btn-md"
             >View</a
           >
-          <a href="/project/payment/<%= p.project_id %>" class="btn btn-success btn-md"
+          <a
+            href="/project/payment/<%= p.project_id %>"
+            class="btn btn-success btn-md"
             >View Payment</a
           >
           <% } %>
