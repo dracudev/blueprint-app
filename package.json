@@ -16,7 +16,8 @@
     "db:migrate:deploy": "npx prisma migrate deploy --schema=database/prisma/schema.prisma",
     "db:reset": "npx prisma migrate reset --schema=database/prisma/schema.prisma",
     "db:studio": "npx prisma studio --schema=database/prisma/schema.prisma",
-    "db:seed": "npx prisma db seed"
+    "db:seed": "npx prisma db seed",
+    "db:fullreset": "node .\\public\\scripts\\reset-db.js"
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
