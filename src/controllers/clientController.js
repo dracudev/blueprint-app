@@ -135,9 +135,12 @@ const clientController = {
       };
 
       const client = await ClientService.create(clientData);
-      // Update user role to 'client' in DB and session
+      // Update user role to 'client' in DB, session and JWT
       await UserService.updateRoleByEmail(req.session.user.email, "client");
       req.session.user.role = "client";
+      const { signJwt } = require("../utils/jwt");
+      const { exp, iat, ...userPayload } = req.session.user;
+      req.session.jwt = signJwt(userPayload);
 
       console.log("Client created successfully:", client);
 

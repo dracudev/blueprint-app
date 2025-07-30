@@ -1,4 +1,4 @@
-const { verifyJwt, signJwt } = require("../utils/jwt");
+const { verifyJwt } = require("../utils/jwt");
 
 const jwtAuth = (req, res, next) => {
   const token = req.session && req.session.jwt;
@@ -13,18 +13,7 @@ const jwtAuth = (req, res, next) => {
     return;
   }
 
-  // Sync session user with JWT user
-  req.session.user = user;
-
-  // Refresh JWT while session is valid
-  const newToken = signJwt({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  });
-  req.session.jwt = newToken;
-  req.user = user;
+  req.user = req.session.user;
   next();
 };
 

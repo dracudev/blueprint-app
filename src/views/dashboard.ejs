@@ -1,22 +1,46 @@
 
 <%- include('partials/head') %>
 <link rel="stylesheet" href="/styles/dashboard.css" />
+<link rel="stylesheet" href="/styles/profile.css" />
 <%- include('partials/header') %>
 
 <main data-current-tab="<%= currentTab || 'clients' %>">
-  <nav class="dashboard-tabs">
-    <a href="#" class="dashboard-tab" data-tab="clients">Clients</a>
-    <a href="#" class="dashboard-tab" data-tab="services">Services</a>
-    <a href="#" class="dashboard-tab" data-tab="projects">Projects</a>
-  </nav>
+  <% if (user) { %>
+    <nav class="dashboard-tabs">
+      <% if (user.role === 'client') { %>
+        <a href="#" class="dashboard-tab" data-tab="projects">Projects</a>
+      <% } else if (user.role === 'admin') { %>
+        <a href="#" class="dashboard-tab" data-tab="clients">Clients</a>
+        <a href="#" class="dashboard-tab" data-tab="services">Services</a>
+        <a href="#" class="dashboard-tab" data-tab="projects">Projects</a>
+      <% } %>
+    </nav>
 
-  <div class="dashboard-main">
-    <%- include('partials/dashboard-tables/client', { clients: clients, user: user }) %>
-
-    <%- include('partials/dashboard-tables/service', { services: services, user: user }) %>
-
-    <%- include('partials/dashboard-tables/project', { projects: projects, user: user }) %>
-  </div>
+    <div class="dashboard-main">
+      <% if (user.role === 'client') { %>
+        <%- include('partials/dashboard-tables/project', { projects: projects, user: user }) %>
+      <% } else if (user.role === 'admin') { %>
+        <%- include('partials/dashboard-tables/client', { clients: clients, user: user }) %>
+        <%- include('partials/dashboard-tables/service', { services: services, user: user }) %>
+        <%- include('partials/dashboard-tables/project', { projects: projects, user: user }) %>
+      <% } else { %>
+        <% if (user.role === 'registered') { %>
+          <div class="no-client-info">
+            <div class="no-client-content">
+              <i class="fas fa-user-plus"></i>
+              <h3>Complete Your Client Profile</h3>
+              <p>
+                You must complete your client information to access the dashboard features.
+              </p>
+              <a href="/client/setup" class="btn btn-primary btn-md">
+                <i class="fas fa-plus" style="font-size: 0.875rem"></i> Setup Client Profile
+              </a>
+            </div>
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+  <% } %>
 </main>
 
 
