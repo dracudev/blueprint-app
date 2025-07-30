@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
-const models = require("../models");
+const UserService = require("../services/UserService");
+const ClientService = require("../services/ClientService");
 
 const clientController = {
   showProfile: async (req, res) => {
@@ -8,9 +9,7 @@ const clientController = {
         return res.redirect("/auth/login");
       }
 
-      const client = await models.Client.findFirst({
-        where: { email: req.session.user.email },
-      });
+      const client = await ClientService.findByEmail(req.session.user.email);
 
       if (!client) {
         return res.redirect("/client/setup");
@@ -39,9 +38,7 @@ const clientController = {
   },
   showSetup: async (req, res) => {
     try {
-      const existingClient = await models.Client.findFirst({
-        where: { email: req.session.user.email },
-      });
+      const existingClient = await ClientService.findByEmail(req.session.user.email);
 
       if (existingClient) {
         return res.redirect("/client/profile");
@@ -112,9 +109,7 @@ const clientController = {
         });
       }
 
-      const existingClient = await models.Client.findFirst({
-        where: { email: req.session.user.email },
-      });
+      const existingClient = await ClientService.findByEmail(req.session.user.email);
 
       if (existingClient) {
         return res.status(400).render("client-setup", {
@@ -135,9 +130,11 @@ const clientController = {
         billingAddress: billingAddress || null,
       };
 
-      const client = await models.Client.create({
-        data: clientData,
-      });
+
+      const client = await ClientService.create(clientData);
+      // Update user role to 'client' in DB and session
+      await UserService.updateRoleByEmail(req.session.user.email, "client");
+      req.session.user.role = "client";
 
       console.log("Client created successfully:", client);
 
@@ -158,9 +155,7 @@ const clientController = {
 
   showEdit: async (req, res) => {
     try {
-      const client = await models.Client.findFirst({
-        where: { email: req.session.user.email },
-      });
+      const client = await ClientService.findByEmail(req.session.user.email);
 
       if (!client) {
         return res.redirect("/client/setup");
@@ -208,9 +203,7 @@ const clientController = {
         });
       }
 
-      const client = await models.Client.findFirst({
-        where: { email: req.session.user.email },
-      });
+      const client = await ClientService.findByEmail(req.session.user.email);
 
       if (!client) {
         return res.status(404).render("error", {
@@ -267,10 +260,7 @@ const clientController = {
         billingAddress: billingAddress || null,
       };
 
-      await models.Client.update({
-        where: { email: req.session.user.email },
-        data: updateData,
-      });
+      await ClientService.updateByEmail(req.session.user.email, updateData);
 
       console.log("Client updated successfully:", updateData);
 
@@ -313,21 +303,7 @@ const clientController = {
 
   getClientData: async (req, res) => {
     try {
-      const client = await models.Client.findFirst({
-        where: { email: req.session.user.email },
-        include: {
-          orders: {
-            include: {
-              orderItems: {
-                include: {
-                  product: true,
-                },
-              },
-              payments: true,
-            },
-          },
-        },
-      });
+      const client = await ClientService.findWithOrdersByEmail(req.session.user.email);
 
       if (!client) {
         return res.status(404).json({
@@ -346,6 +322,72 @@ const clientController = {
         success: false,
         message: "Unable to fetch client data",
       });
+    }
+  },
+
+  list: async (req, res) => {
+    try {
+      const user = req.user;
+      let clients;
+      if (user.role === "admin") {
+        clients = await ClientService.getAll();
+      } else {
+        clients = await ClientService.getByUser(user.id);
+      }
+      res.json({ success: true, clients });
+    } catch (error) {
+      console.error("Error listing clients:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Unable to fetch clients" });
+    }
+  },
+
+  create: async (req, res) => {
+    try {
+      if (!req.user.canCreateClients)
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      const clientData = req.body;
+      const client = await ClientService.create(clientData);
+      res
+        .status(201)
+        .json({ success: true, message: "Client created", client });
+    } catch (error) {
+      console.error("Error creating client:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Unable to create client" });
+    }
+  },
+
+  update: async (req, res) => {
+    try {
+      if (!req.user.canEditClients)
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      const clientId = req.params.id;
+      const updateData = req.body;
+      const updated = await ClientService.update(clientId, updateData);
+      res.json({ success: true, message: "Client updated", client: updated });
+    } catch (error) {
+      console.error("Error updating client:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Unable to update client" });
+    }
+  },
+
+  remove: async (req, res) => {
+    try {
+      if (!req.user.canDeleteClients)
+        return res.status(403).json({ success: false, message: "Forbidden" });
+      const clientId = req.params.id;
+      await ClientService.remove(clientId);
+      res.json({ success: true, message: "Client deleted" });
+    } catch (error) {
+      console.error("Error deleting client:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Unable to delete client" });
     }
   },
 };

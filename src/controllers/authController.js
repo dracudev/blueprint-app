@@ -1,6 +1,5 @@
-const models = require("../models");
+const AuthService = require("../services/AuthService");
 const { validationResult } = require("express-validator");
-const bcrypt = require("bcrypt");
 const { signJwt } = require("../utils/jwt");
 
 const authController = {
@@ -35,10 +34,7 @@ const authController = {
     }
 
     try {
-      const existingUser = await models.User.findFirst({
-        where: { email },
-      });
-
+      const existingUser = await AuthService.findUserByEmail(email);
       if (existingUser) {
         return res.render("signup", {
           title: "Sign Up",
@@ -46,18 +42,7 @@ const authController = {
           user: req.session.user,
         });
       }
-
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      const newUser = await models.User.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          role: "registered",
-        },
-      });
-
+      const newUser = await AuthService.createUser({ name, email, password });
       const userPayload = {
         id: newUser.id,
         name: newUser.name,
@@ -109,10 +94,7 @@ const authController = {
     }
 
     try {
-      const user = await models.User.findFirst({
-        where: { email },
-      });
-
+      const user = await AuthService.findUserByEmail(email);
       if (!user) {
         return res.render("login", {
           title: "Login",
@@ -120,9 +102,10 @@ const authController = {
           user: req.session.user,
         });
       }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-
+      const isMatch = await AuthService.validatePassword(
+        password,
+        user.password
+      );
       if (!isMatch) {
         return res.render("login", {
           title: "Login",
@@ -130,7 +113,6 @@ const authController = {
           user: req.session.user,
         });
       }
-
       const userPayload = {
         id: user.id,
         name: user.name,
