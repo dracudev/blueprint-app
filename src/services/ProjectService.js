@@ -3,7 +3,6 @@ const ProjectService = {
     return await require("../models").Project.findMany();
   },
   getByUser: async (user) => {
-    // Find projects by client email (get clientId first)
     const client = await require("../models").Client.findFirst({
       where: { email: user.email },
     });

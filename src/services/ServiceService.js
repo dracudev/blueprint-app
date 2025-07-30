@@ -1,11 +1,8 @@
-// Business logic for services
-// Add methods as needed for CRUD
-module.exports = {
+const ServiceService = {
   getAll: async () => {
     return await require("../models").Service.findMany();
   },
   getByUser: async (user) => {
-    // Clients can view all services; admins can manage
     return await require("../models").Service.findMany();
   },
   create: async (data) => {
@@ -23,3 +20,5 @@ module.exports = {
     });
   },
 };
+
+module.exports = ServiceService;

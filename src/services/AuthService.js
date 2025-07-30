@@ -1,4 +1,3 @@
-// Business logic for authentication and user management
 const models = require("../models");
 const bcrypt = require("bcrypt");
 
@@ -15,5 +14,4 @@ module.exports = {
   validatePassword: async (password, hash) => {
     return await bcrypt.compare(password, hash);
   },
-  // Add more auth-related business logic as needed
 };

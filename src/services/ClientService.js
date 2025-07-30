@@ -1,6 +1,3 @@
-// Business logic for clients
-const Client = require("../models/Client");
-
 const models = require("../models");
 
 module.exports = {
@@ -8,7 +5,6 @@ module.exports = {
     return models.Client.findMany();
   },
   async getByUser(user) {
-    // Filter by email, since Client does not have a userId field
     return models.Client.findMany({ where: { email: user.email } });
   },
   async findByEmail(email) {

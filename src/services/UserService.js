@@ -7,7 +7,6 @@ const UserService = {
       data: { role },
     });
   },
-  // Add more user-related service methods as needed
 };
 
 module.exports = UserService;
