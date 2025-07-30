@@ -5,7 +5,6 @@ const bcrypt = require("bcrypt");
 
 async function main() {
   console.log("🌱 Seeding database...");
-  // Create sample users
   const adminPassword = await bcrypt.hash("admin", 10);
   const userPassword = await bcrypt.hash("user", 10);
 
@@ -16,7 +15,7 @@ async function main() {
       name: "Admin",
       email: "admin@admin.com",
       password: adminPassword,
-      role: Role.ADMIN,
+      role: Role.admin,
     },
   });
 
@@ -27,13 +26,12 @@ async function main() {
       name: "User",
       email: "user@user.com",
       password: userPassword,
-      role: Role.USER,
+      role: Role.registered,
     },
   });
 
   console.log("👤 Created users:", { adminUser, regularUser });
 
-  // Create sample products
   const webDevelopment = await prisma.service.upsert({
     where: { serviceId: 1 },
     update: {},
@@ -60,7 +58,6 @@ async function main() {
 
   console.log("📦 Created services:", { webDevelopment, mobileApp, ecommerce });
 
-  // Create sample clients
   const client1 = await prisma.client.upsert({
     where: { clientId: 1 },
     update: {},
@@ -88,9 +85,6 @@ async function main() {
 
   console.log("👥 Created clients:", { client1, client2 });
 
-  // Create sample orders
-
-  // Create sample projects
   const project1 = await prisma.project.upsert({
     where: { projectId: 1 },
     update: {},
@@ -113,9 +107,6 @@ async function main() {
 
   console.log("📋 Created projects:", { project1, project2 });
 
-  // Create order items
-
-  // Create project items
   const projectItem1 = await prisma.projectItem.upsert({
     where: { projectItemId: 1 },
     update: {},
@@ -140,9 +131,6 @@ async function main() {
 
   console.log("📝 Created project items:", { projectItem1, projectItem2 });
 
-  // Create payments
-
-  // Create payments
   const payment1 = await prisma.payment.upsert({
     where: { paymentId: 1 },
     update: {},

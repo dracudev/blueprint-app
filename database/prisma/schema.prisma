@@ -93,8 +93,8 @@ model Payment {
 
 // Enums
 enum Role {
-  public
   registered
+  client
   admin
 }
 
