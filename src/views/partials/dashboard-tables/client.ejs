@@ -2,7 +2,7 @@
 <section class="dashboard-section" data-tab="clients">
   <div class="dashboard-table-header">
     <h2>Clients</h2>
-    <% if (user.canCreateClients) { %>
+    <% if (user.role === 'admin' && user.canCreateClients) { %>
     <a
       href="/client/create"
       class="crud-btn btn-primary"
@@ -28,7 +28,7 @@
         <td><%= c.email %></td>
         <td><%= c.type %></td>
         <td>
-          <% if (user.canEditClients) { %>
+          <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
           <a
             href="/client/edit/<%= c.client_id %>"
             class="crud-btn btn-secondary"
@@ -47,6 +47,10 @@
           >
             Delete
           </button>
+          <% } %>
+          <a href="/client/orders/<%= c.client_id %>" class="crud-btn btn-info"
+            >Order History</a
+          >
           <% } %>
         </td>
       </tr>

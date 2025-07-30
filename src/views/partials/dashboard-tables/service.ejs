@@ -2,13 +2,14 @@
 <section class="dashboard-section" data-tab="services">
   <div class="dashboard-table-header">
     <h2>Services</h2>
-    <% if (user.canCreateProducts) { %>
+    <% if (user.role === 'admin' && user.canCreateProducts) { %>
     <a
       href="/service/create"
       class="crud-btn btn-primary"
       data-action="create"
       data-entity="service"
-      >Add New Service</a>
+      >Add New Service</a
+    >
     <% } %>
   </div>
   <table class="dashboard-table dashboard-table-main">
@@ -23,16 +24,16 @@
       <tr>
         <td><%= s.service_name %></td>
         <td>
-          <% if (user.canEditProducts) { %>
+          <% if (user.role === 'admin') { %> <% if (user.canEditProducts) { %>
           <a
             href="/service/edit/<%= s.service_id %>"
             class="crud-btn btn-secondary"
             data-action="edit"
             data-entity="service"
             data-id="<%= s.service_id %>"
-            >Edit</a>
-          <% } %>
-          <% if (user.canDeleteProducts) { %>
+            >Edit</a
+          >
+          <% } %> <% if (user.canDeleteProducts) { %>
           <button
             type="button"
             class="crud-btn btn-danger"
@@ -42,7 +43,7 @@
           >
             Delete
           </button>
-          <% } %>
+          <% } %> <% } %>
         </td>
       </tr>
       <% }) %>

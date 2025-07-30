@@ -2,7 +2,8 @@
 <section class="dashboard-section" data-tab="projects">
   <div class="dashboard-table-header">
     <h2>Projects</h2>
-    <% if (user.canCreateOrders) { %>
+    <% if ((user.role === 'admin' && user.canCreateOrders) || (user.role ===
+    'client')) { %>
     <a
       href="/project/create"
       class="crud-btn btn-primary"
@@ -30,7 +31,7 @@
         <td><%= p.job_status %></td>
         <td><%= p.total_amount %></td>
         <td>
-          <% if (user.canEditOrders) { %>
+          <% if (user.role === 'admin') { %> <% if (user.canEditOrders) { %>
           <a
             href="/project/edit/<%= p.project_id %>"
             class="crud-btn btn-secondary"
@@ -49,6 +50,26 @@
           >
             Delete
           </button>
+          <% } %>
+          <a
+            href="/project/status/<%= p.project_id %>"
+            class="crud-btn btn-info"
+            >Change Status</a
+          >
+          <a
+            href="/project/payment/<%= p.project_id %>"
+            class="crud-btn btn-success"
+            >Update Payment</a
+          >
+          <% } %> <% if (user.role === 'client') { %>
+          <a href="/project/view/<%= p.project_id %>" class="crud-btn btn-info"
+            >View</a
+          >
+          <a
+            href="/project/payment/<%= p.project_id %>"
+            class="crud-btn btn-success"
+            >View Payment</a
+          >
           <% } %>
         </td>
       </tr>
