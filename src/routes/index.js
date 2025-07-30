@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const authRoutes = require("./authRoutes");
-const userRoutes = require("./userRoutes");
-const clientRoutes = require("./clientRoutes");
 const { jwtAuth } = require("../middleware/auth");
+
+const authRoutes = require("./authRoutes");
+const clientRoutes = require("./clientRoutes");
+const dashboardRoutes = require("./dashboardRoutes");
+const clientApiRoutes = require("./api/clientApiRoutes");
+const serviceApiRoutes = require("./api/serviceApiRoutes");
+const projectApiRoutes = require("./api/projectApiRoutes");
 
 router.get("/", function (req, res) {
   let message;
@@ -26,14 +30,12 @@ router.get("/services", function (req, res) {
   });
 });
 
-router.get("/dashboard", function (req, res) {
-  res.render("dashboard", {
-    title: "Our Services",
-    user: req.session.user,
-  });
-});
-
 router.use("/auth", authRoutes);
 router.use("/client", jwtAuth, clientRoutes);
+router.use("/dashboard", dashboardRoutes);
+
+router.use("/api/clients", clientApiRoutes);
+router.use("/api/services", serviceApiRoutes);
+router.use("/api/projects", projectApiRoutes);
 
 module.exports = router;
