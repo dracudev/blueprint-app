@@ -1,4 +1,3 @@
-<% /* clients.ejs - Clients table partial for dashboard */ %>
 <section class="dashboard-section" data-tab="clients">
   <div class="dashboard-table-header">
     <h2>Clients</h2>
@@ -48,7 +47,9 @@
             Delete
           </button>
           <% } %>
-          <a href="/client/orders/<%= c.client_id %>" class="btn btn-info btn-md"
+          <a
+            href="/client/orders/<%= c.client_id %>"
+            class="btn btn-info btn-md"
             >Order History</a
           >
           <% } %>

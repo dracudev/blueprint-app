@@ -3,10 +3,6 @@
 <link rel="stylesheet" href="/styles/dashboard.css" />
 <%- include('partials/header') %>
 
-
-
-<% /* Data is now passed from the controller: user, clients, services, projects, currentTab */ %>
-
 <main data-current-tab="<%= currentTab || 'clients' %>">
   <nav class="dashboard-tabs">
     <a href="#" class="dashboard-tab" data-tab="clients">Clients</a>
