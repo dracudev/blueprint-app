@@ -5,7 +5,7 @@
     <% if (user.role === 'admin' && user.canCreateClients) { %>
     <a
       href="/client/create"
-      class="crud-btn btn-primary"
+      class="btn btn-primary btn-md"
       data-action="create"
       data-entity="client"
       >Add New Client</a
@@ -31,7 +31,7 @@
           <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
           <a
             href="/client/edit/<%= c.client_id %>"
-            class="crud-btn btn-secondary"
+            class="btn btn-secondary btn-md"
             data-action="edit"
             data-entity="client"
             data-id="<%= c.client_id %>"
@@ -40,7 +40,7 @@
           <% } %> <% if (user.canDeleteClients) { %>
           <button
             type="button"
-            class="crud-btn btn-danger"
+            class="btn btn-danger btn-md"
             data-action="delete"
             data-entity="client"
             data-id="<%= c.client_id %>"
@@ -48,7 +48,7 @@
             Delete
           </button>
           <% } %>
-          <a href="/client/orders/<%= c.client_id %>" class="crud-btn btn-info"
+          <a href="/client/orders/<%= c.client_id %>" class="btn btn-info btn-md"
             >Order History</a
           >
           <% } %>

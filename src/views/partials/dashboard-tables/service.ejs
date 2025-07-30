@@ -5,7 +5,7 @@
     <% if (user.role === 'admin' && user.canCreateProducts) { %>
     <a
       href="/service/create"
-      class="crud-btn btn-primary"
+      class="btn btn-primary btn-md"
       data-action="create"
       data-entity="service"
       >Add New Service</a
@@ -27,7 +27,7 @@
           <% if (user.role === 'admin') { %> <% if (user.canEditProducts) { %>
           <a
             href="/service/edit/<%= s.service_id %>"
-            class="crud-btn btn-secondary"
+            class="btn btn-secondary btn-md"
             data-action="edit"
             data-entity="service"
             data-id="<%= s.service_id %>"
@@ -36,7 +36,7 @@
           <% } %> <% if (user.canDeleteProducts) { %>
           <button
             type="button"
-            class="crud-btn btn-danger"
+            class="btn btn-danger btn-md"
             data-action="delete"
             data-entity="service"
             data-id="<%= s.service_id %>"

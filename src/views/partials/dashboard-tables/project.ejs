@@ -6,7 +6,7 @@
     'client')) { %>
     <a
       href="/project/create"
-      class="crud-btn btn-primary"
+      class="btn btn-primary btn-md"
       data-action="create"
       data-entity="project"
       >Add New Project</a
@@ -34,7 +34,7 @@
           <% if (user.role === 'admin') { %> <% if (user.canEditOrders) { %>
           <a
             href="/project/edit/<%= p.project_id %>"
-            class="crud-btn btn-secondary"
+            class="btn btn-secondary btn-md"
             data-action="edit"
             data-entity="project"
             data-id="<%= p.project_id %>"
@@ -43,7 +43,7 @@
           <% } %> <% if (user.canDeleteOrders) { %>
           <button
             type="button"
-            class="crud-btn btn-danger"
+            class="btn btn-danger btn-md"
             data-action="delete"
             data-entity="project"
             data-id="<%= p.project_id %>"
@@ -51,23 +51,17 @@
             Delete
           </button>
           <% } %>
-          <a
-            href="/project/status/<%= p.project_id %>"
-            class="crud-btn btn-info"
+          <a href="/project/status/<%= p.project_id %>" class="btn btn-info btn-md"
             >Change Status</a
           >
-          <a
-            href="/project/payment/<%= p.project_id %>"
-            class="crud-btn btn-success"
+          <a href="/project/payment/<%= p.project_id %>" class="btn btn-success btn-md"
             >Update Payment</a
           >
           <% } %> <% if (user.role === 'client') { %>
-          <a href="/project/view/<%= p.project_id %>" class="crud-btn btn-info"
+          <a href="/project/view/<%= p.project_id %>" class="btn btn-info btn-md"
             >View</a
           >
-          <a
-            href="/project/payment/<%= p.project_id %>"
-            class="crud-btn btn-success"
+          <a href="/project/payment/<%= p.project_id %>" class="btn btn-success btn-md"
             >View Payment</a
           >
           <% } %>

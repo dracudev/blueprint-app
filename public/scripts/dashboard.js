@@ -1,9 +1,4 @@
-// dashboard.js
-// Handles tab navigation and CRUD button interactivity for the dashboard
-// This script assumes the presence of .dashboard-tab and .dashboard-section elements
-
 document.addEventListener("DOMContentLoaded", function () {
-  // Tab switching logic
   const tabs = document.querySelectorAll(".dashboard-tab");
   const sections = document.querySelectorAll(".dashboard-section");
 
@@ -24,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Initial tab (from server or default)
   const initialTab = document.body.dataset.currentTab || "users";
   activateTab(initialTab);
 
@@ -33,11 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
       e.preventDefault();
       const tabName = this.dataset.tab;
       activateTab(tabName);
-      // Optionally update URL or history here
     });
   });
 
-  // CRUD button interactivity (demo only)
   document.querySelectorAll(".crud-btn").forEach((btn) => {
     btn.addEventListener("click", function (e) {
       const action = this.dataset.action;

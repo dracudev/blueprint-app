@@ -69,7 +69,6 @@
   overflow: hidden;
 }
 
-/* Main dashboard tables fill available space */
 .dashboard-table-main {
   min-width: 100%;
   min-height: 40vh;
@@ -92,41 +91,6 @@
 
 .dashboard-table tr:last-child td {
   border-bottom: none;
-}
-
-/* Button Styles */
-.crud-btn {
-  display: inline-block;
-  padding: var(--space-2) var(--space-4);
-  border-radius: var(--radius-sm);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
-  margin-right: var(--space-2);
-}
-.btn-primary {
-  background: var(--primary-color);
-  color: var(--text-white);
-}
-.btn-primary:hover {
-  background: var(--primary-dark);
-}
-.btn-secondary {
-  background: var(--secondary-color);
-  color: var(--text-white);
-}
-.btn-secondary:hover {
-  background: var(--primary-light);
-}
-.btn-danger {
-  background: var(--danger-color);
-  color: var(--text-white);
-}
-.btn-danger:hover {
-  background: var(--danger-hover);
 }
 
 /* Responsive Styles */
