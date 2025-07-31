@@ -1,5 +1,21 @@
 document.addEventListener("DOMContentLoaded", function () {
   const tabs = document.querySelectorAll(".dashboard-tab");
+  const crudForm = document.querySelector(".dashboard-crud-form-container");
+  if (crudForm) {
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", function (e) {
+        e.preventDefault();
+        const tabName = tab.getAttribute("data-tab");
+        if (tabName) {
+          window.location.href = `/dashboard?tab=${tabName}`;
+        }
+      });
+    });
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const tabs = document.querySelectorAll(".dashboard-tab");
   const sections = document.querySelectorAll(".dashboard-section");
 
   function activateTab(tabName) {

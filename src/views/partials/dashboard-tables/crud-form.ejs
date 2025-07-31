@@ -1,0 +1,49 @@
+<form action="<%= typeof action !== 'undefined' ? action : '' %>" method="<%= typeof method !== 'undefined' ? method : 'POST' %>" class="crud-form client-setup-form">
+  <% if (typeof fields !== 'undefined' && Array.isArray(fields)) { %>
+    <% fields.forEach(function(field) { %>
+      <div class="form-group <%= field.fullWidth ? 'full-width' : '' %>">
+        <label for="<%= field.name %>"><%= field.label %><%= field.required ? ' *' : '' %></label>
+        <% if (field.type === 'textarea') { %>
+          <textarea
+            id="<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            rows="<%= field.rows || 4 %>"
+            placeholder="<%= field.placeholder || '' %>"
+            <%= field.required ? 'required' : '' %>
+            <%= field.readonly ? 'readonly' : '' %>
+          ><%= values && values[field.name] ? values[field.name] : '' %></textarea>
+        <% } else if (field.type === 'select') { %>
+          <select id="<%= field.name %>" name="<%= field.name %>" class="form-control" <%= field.required ? 'required' : '' %> <%= field.readonly ? 'readonly' : '' %>>
+            <% (field.options || []).forEach(function(opt) { %>
+              <option value="<%= opt.value %>" <%= values && values[field.name] == opt.value ? 'selected' : '' %>><%= opt.label %></option>
+            <% }) %>
+          </select>
+        <% } else { %>
+          <input
+            type="<%= field.type || 'text' %>"
+            id="<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            value="<%= values && values[field.name] ? values[field.name] : '' %>"
+            placeholder="<%= field.placeholder || '' %>"
+            <%= field.required ? 'required' : '' %>
+            <%= field.readonly ? 'readonly' : '' %>
+            <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
+          />
+        <% } %>
+        <% if (field.help) { %>
+          <small class="form-help"><%= field.help %></small>
+        <% } %>
+      </div>
+    <% }) %>
+  <% } %>
+  <div class="form-actions">
+    <% if (typeof cancelUrl !== 'undefined' && cancelUrl) { %>
+      <a href="<%= cancelUrl %>" class="btn btn-secondary">Cancel</a>
+    <% } %>
+    <button type="submit" class="btn btn-primary">
+      <%= typeof submitLabel !== 'undefined' ? submitLabel : (isEdit ? 'Update' : 'Create') %>
+    </button>
+  </div>
+</form>

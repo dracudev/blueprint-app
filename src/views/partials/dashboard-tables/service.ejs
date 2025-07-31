@@ -3,10 +3,8 @@
     <h2>Services</h2>
     <% if (user.role === 'admin' && user.canCreateProducts) { %>
     <a
-      href="/service/create"
+      href="/dashboard?action=create&entity=service&tab=services"
       class="btn btn-primary btn-md"
-      data-action="create"
-      data-entity="service"
       >Add New Service</a
     >
     <% } %>
@@ -25,11 +23,8 @@
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditProducts) { %>
           <a
-            href="/service/edit/<%= s.service_id %>"
+            href="/dashboard?action=edit&entity=service&id=<%= s.service_id %>&tab=services"
             class="btn btn-secondary btn-md"
-            data-action="edit"
-            data-entity="service"
-            data-id="<%= s.service_id %>"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteProducts) { %>

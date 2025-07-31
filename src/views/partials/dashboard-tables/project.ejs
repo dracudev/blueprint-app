@@ -4,10 +4,8 @@
     <% if ((user.role === 'admin' && user.canCreateOrders) || (user.role ===
     'client')) { %>
     <a
-      href="/project/create"
+      href="/dashboard?action=create&entity=project&tab=projects"
       class="btn btn-primary btn-md"
-      data-action="create"
-      data-entity="project"
       >Add New Project</a
     >
     <% } %>
@@ -32,11 +30,8 @@
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditOrders) { %>
           <a
-            href="/project/edit/<%= p.project_id %>"
+            href="/dashboard?action=edit&entity=project&id=<%= p.project_id %>&tab=projects"
             class="btn btn-secondary btn-md"
-            data-action="edit"
-            data-entity="project"
-            data-id="<%= p.project_id %>"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteOrders) { %>

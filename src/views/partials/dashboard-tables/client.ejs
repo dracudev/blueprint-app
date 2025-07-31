@@ -3,10 +3,8 @@
     <h2>Clients</h2>
     <% if (user.role === 'admin' && user.canCreateClients) { %>
     <a
-      href="/client/create"
+      href="/dashboard?action=create&entity=client&tab=clients"
       class="btn btn-primary btn-md"
-      data-action="create"
-      data-entity="client"
       >Add New Client</a
     >
     <% } %>
@@ -29,11 +27,8 @@
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
           <a
-            href="/client/edit/<%= c.client_id %>"
+            href="/dashboard?action=edit&entity=client&id=<%= c.client_id %>&tab=clients"
             class="btn btn-secondary btn-md"
-            data-action="edit"
-            data-entity="client"
-            data-id="<%= c.client_id %>"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteClients) { %>

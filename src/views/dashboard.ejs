@@ -2,6 +2,7 @@
 <%- include('partials/head') %>
 <link rel="stylesheet" href="/styles/dashboard.css" />
 <link rel="stylesheet" href="/styles/profile.css" />
+<link rel="stylesheet" href="/styles/client-setup.css" />
 <%- include('partials/header') %>
 
 <main data-current-tab="<%= currentTab || 'clients' %>">
@@ -17,7 +18,11 @@
     </nav>
 
     <div class="dashboard-main">
-      <% if (user.role === 'client') { %>
+      <% if (crudForm) { %>
+        <div class="dashboard-crud-form-container">
+          <%- include('partials/dashboard-tables/crud-form', crudForm) %>
+        </div>
+      <% } else if (user.role === 'client') { %>
         <%- include('partials/dashboard-tables/project', { projects: projects, user: user }) %>
       <% } else if (user.role === 'admin') { %>
         <%- include('partials/dashboard-tables/client', { clients: clients, user: user }) %>
