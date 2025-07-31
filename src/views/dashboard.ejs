@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="/styles/client-setup.css" />
 <%- include('partials/header') %>
 
+<script src="/scripts/dashboard-crud-form.js"></script>
+
 <main data-current-tab="<%= currentTab || 'clients' %>">
   <% if (user) { %>
     <nav class="dashboard-tabs">

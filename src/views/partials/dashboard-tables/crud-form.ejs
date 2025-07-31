@@ -1,4 +1,7 @@
+<main class="client-setup-container">
+<% var formData = typeof formData !== 'undefined' ? formData : {}; %>
 <form action="<%= typeof action !== 'undefined' ? action : '' %>" method="<%= typeof method !== 'undefined' ? method : 'POST' %>" class="crud-form client-setup-form">
+  <div class="crud-form-errors alert alert-danger" style="display:none"></div>
   <% if (typeof fields !== 'undefined' && Array.isArray(fields)) { %>
     <% fields.forEach(function(field) { %>
       <div class="form-group <%= field.fullWidth ? 'full-width' : '' %>">
@@ -12,11 +15,54 @@
             placeholder="<%= field.placeholder || '' %>"
             <%= field.required ? 'required' : '' %>
             <%= field.readonly ? 'readonly' : '' %>
-          ><%= values && values[field.name] ? values[field.name] : '' %></textarea>
+          ><%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %></textarea>
+        <% } else if (field.type === 'select' && field.name === 'isCompany') { %>
+   <div >
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="isCompany" value="false" id="individual"
+              <%= (typeof formData !== 'undefined' && formData.isCompany === 'false') ? 'checked' : '' %> />
+            <span class="radio-custom"></span>
+            <div class="radio-content">
+              <strong>Individual</strong>
+              <p>Personal client account</p>
+            </div>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="isCompany" value="true" id="company"
+              <%= (typeof formData !== 'undefined' && formData.isCompany === 'true') ? 'checked' : '' %> />
+            <span class="radio-custom"></span>
+            <div class="radio-content">
+              <strong>Company</strong>
+              <p>Business client account</p>
+            </div>
+          </label>
+        </div>
+      </div>
+        <% } else if (
+          (field.name === 'companyName' && formData && formData.isCompany === 'true') ||
+          (field.name === 'firstName' && (!formData || formData.isCompany === 'false' || typeof formData.isCompany === 'undefined')) ||
+          (field.name === 'lastName' && (!formData || formData.isCompany === 'false' || typeof formData.isCompany === 'undefined')) ||
+          (field.name !== 'companyName' && field.name !== 'firstName' && field.name !== 'lastName' && field.type !== 'select')
+        ) { %>
+          <% if (field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number') { %>
+            <input
+              type="<%= field.type || 'text' %>"
+              id="<%= field.name %>"
+              name="<%= field.name %>"
+              class="form-control"
+              value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
+              placeholder="<%= field.placeholder || '' %>"
+              <%= field.required ? 'required' : '' %>
+              <%= field.readonly ? 'readonly' : '' %>
+              <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
+            />
+          <% } %>
         <% } else if (field.type === 'select') { %>
-          <select id="<%= field.name %>" name="<%= field.name %>" class="form-control" <%= field.required ? 'required' : '' %> <%= field.readonly ? 'readonly' : '' %>>
+          <select id="<%= field.name %>" name="<%= field.name %>" class="form-control" <%= field.required ? 'required' : '' %>>
+            <option value="" disabled <%= (formData && (typeof formData[field.name] === 'undefined' || formData[field.name] === '')) ? 'selected' : '' %>>Select...</option>
             <% (field.options || []).forEach(function(opt) { %>
-              <option value="<%= opt.value %>" <%= values && values[field.name] == opt.value ? 'selected' : '' %>><%= opt.label %></option>
+              <option value="<%= String(opt.value) %>" <%= (formData && String(formData[field.name]) === String(opt.value)) ? 'selected' : '' %>><%= opt.label %></option>
             <% }) %>
           </select>
         <% } else { %>
@@ -25,7 +71,7 @@
             id="<%= field.name %>"
             name="<%= field.name %>"
             class="form-control"
-            value="<%= values && values[field.name] ? values[field.name] : '' %>"
+            value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
             placeholder="<%= field.placeholder || '' %>"
             <%= field.required ? 'required' : '' %>
             <%= field.readonly ? 'readonly' : '' %>
@@ -47,3 +93,4 @@
     </button>
   </div>
 </form>
+</main>

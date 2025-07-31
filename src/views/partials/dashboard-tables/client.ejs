@@ -27,24 +27,20 @@
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
           <a
-            href="/dashboard?action=edit&entity=client&id=<%= c.client_id %>&tab=clients"
+            href="/dashboard?action=edit&entity=client&id=<%= c.clientId %>&tab=clients"
             class="btn btn-secondary btn-md"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteClients) { %>
-          <button
-            type="button"
+          <a
+            href="/dashboard?action=delete&entity=client&id=<%= c.clientId %>&tab=clients"
             class="btn btn-danger btn-md"
-            data-action="delete"
-            data-entity="client"
-            data-id="<%= c.client_id %>"
+            onclick="return confirm('Are you sure you want to delete this client?');"
           >
             Delete
-          </button>
+          </a>
           <% } %>
-          <a
-            href="/client/orders/<%= c.client_id %>"
-            class="btn btn-info btn-md"
+          <a href="/client/orders/<%= c.clientId %>" class="btn btn-info btn-md"
             >Order History</a
           >
           <% } %>

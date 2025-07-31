@@ -4,6 +4,9 @@ module.exports = {
   async getAll() {
     return models.Client.findMany();
   },
+  async getById(clientId) {
+    return models.Client.findFirst({ where: { clientId: Number(clientId) } });
+  },
   async getByUser(user) {
     return models.Client.findMany({ where: { email: user.email } });
   },
@@ -14,13 +17,13 @@ module.exports = {
     return models.Client.create({ data });
   },
   async update(id, data) {
-    return models.Client.update({ where: { id: Number(id) }, data });
+    return models.Client.update({ where: { clientId: Number(id) }, data });
   },
   async updateByEmail(email, data) {
     return models.Client.update({ where: { email }, data });
   },
   async remove(id) {
-    return models.Client.delete({ where: { id: Number(id) } });
+    return models.Client.delete({ where: { clientId: Number(id) } });
   },
   async findWithOrdersByEmail(email) {
     return models.Client.findFirst({

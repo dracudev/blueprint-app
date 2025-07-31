@@ -131,4 +131,18 @@ const clientValidation = {
   ],
 };
 
-module.exports = clientValidation;
+const validateAdminClient = [
+  ...clientValidation.validateClientSetup,
+  body("email").isEmail().withMessage("Valid email required"),
+  body("password")
+    .trim()
+    .isLength({ min: 6 })
+    .withMessage(
+      "Password must be at least 6 characters (no spaces at start/end)"
+    ),
+];
+
+module.exports = {
+  ...clientValidation,
+  validateAdminClient,
+};

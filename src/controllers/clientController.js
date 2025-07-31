@@ -1,4 +1,5 @@
 const { validationResult } = require("express-validator");
+const bcrypt = require("bcrypt");
 const UserService = require("../services/UserService");
 const ClientService = require("../services/ClientService");
 
@@ -342,60 +343,257 @@ const clientController = {
       } else {
         clients = await ClientService.getByUser(user.id);
       }
-      res.json({ success: true, clients });
+      res.render("dashboard", {
+        title: user.role === "admin" ? "Manage Clients" : "My Profile",
+        user,
+        clients,
+        currentTab: "clients",
+      });
     } catch (error) {
       console.error("Error listing clients:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Unable to fetch clients" });
+      res.status(500).render("error", {
+        title: "Error",
+        message: "Unable to fetch clients.",
+        user: req.user,
+      });
     }
   },
 
   create: async (req, res) => {
     try {
-      if (!req.user.canCreateClients)
-        return res.status(403).json({ success: false, message: "Forbidden" });
+      if (!req.user.canCreateClients) {
+        return res.status(403).render("error", {
+          title: "Forbidden",
+          message: "You do not have permission to create clients.",
+          user: req.user,
+        });
+      }
       const clientData = req.body;
-      const client = await ClientService.create(clientData);
-      res
-        .status(201)
-        .json({ success: true, message: "Client created", client });
+      await ClientService.create(clientData);
+      res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error creating client:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Unable to create client" });
+      res.status(500).render("error", {
+        title: "Error",
+        message: "Unable to create client.",
+        user: req.user,
+      });
     }
   },
 
   update: async (req, res) => {
     try {
-      if (!req.user.canEditClients)
-        return res.status(403).json({ success: false, message: "Forbidden" });
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).render("dashboard", {
+          title: "Manage Clients",
+          user: req.user,
+          currentTab: "clients",
+          crudForm: {
+            ...req.body,
+            errors: errors.array(),
+            isEdit: true,
+          },
+        });
+      }
+
+      let {
+        isCompany,
+        companyName,
+        firstName,
+        lastName,
+        email,
+        phone,
+        billingAddress,
+      } = req.body;
+
+      if (typeof isCompany === "string") {
+        isCompany = isCompany === "true";
+      }
+
+      if (isCompany) {
+        if (!companyName) {
+          return res.status(400).render("dashboard", {
+            title: "Manage Clients",
+            user: req.user,
+            currentTab: "clients",
+            crudForm: {
+              ...req.body,
+              errors: [
+                { msg: "Company name is required for business accounts" },
+              ],
+              isEdit: true,
+            },
+          });
+        }
+        firstName = null;
+        lastName = null;
+      } else {
+        if (!firstName || !lastName) {
+          return res.status(400).render("dashboard", {
+            title: "Manage Clients",
+            user: req.user,
+            currentTab: "clients",
+            crudForm: {
+              ...req.body,
+              errors: [
+                {
+                  msg: "First and last name are required for individual accounts",
+                },
+              ],
+              isEdit: true,
+            },
+          });
+        }
+        companyName = null;
+      }
+
       const clientId = req.params.id;
-      const updateData = req.body;
-      const updated = await ClientService.update(clientId, updateData);
-      res.json({ success: true, message: "Client updated", client: updated });
+      const updateData = {
+        isCompany,
+        companyName,
+        firstName,
+        lastName,
+        phone,
+        billingAddress,
+        email,
+      };
+
+      await ClientService.update(clientId, updateData);
+      res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error updating client:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Unable to update client" });
+      res.status(500).render("error", {
+        title: "Error",
+        message: "Unable to update client.",
+        user: req.user,
+      });
     }
   },
 
   remove: async (req, res) => {
     try {
-      if (!req.user.canDeleteClients)
-        return res.status(403).json({ success: false, message: "Forbidden" });
+      if (!req.user.canDeleteClients) {
+        return res.status(403).render("error", {
+          title: "Forbidden",
+          message: "You do not have permission to delete clients.",
+          user: req.user,
+        });
+      }
       const clientId = req.params.id;
       await ClientService.remove(clientId);
-      res.json({ success: true, message: "Client deleted" });
+      res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error deleting client:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Unable to delete client" });
+      res.status(500).render("error", {
+        title: "Error",
+        message: "Unable to delete client.",
+        user: req.user,
+      });
+    }
+  },
+
+  adminCreateClient: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).render("dashboard", {
+          title: "Manage Clients",
+          user: req.user,
+          currentTab: "clients",
+          crudForm: {
+            ...req.body,
+            errors: errors.array(),
+            isEdit: false,
+          },
+        });
+      }
+
+      let {
+        isCompany,
+        companyName,
+        firstName,
+        lastName,
+        email,
+        password,
+        phone,
+        billingAddress,
+      } = req.body;
+
+      if (typeof isCompany === "string") {
+        isCompany = isCompany === "true";
+      }
+
+      if (isCompany) {
+        if (!companyName) {
+          return res.status(400).render("dashboard", {
+            title: "Manage Clients",
+            user: req.user,
+            currentTab: "clients",
+            crudForm: {
+              ...req.body,
+              errors: [
+                { msg: "Company name is required for business accounts" },
+              ],
+              isEdit: false,
+            },
+          });
+        }
+        firstName = null;
+        lastName = null;
+      } else {
+        if (!firstName || !lastName) {
+          return res.status(400).render("dashboard", {
+            title: "Manage Clients",
+            user: req.user,
+            currentTab: "clients",
+            crudForm: {
+              ...req.body,
+              errors: [
+                {
+                  msg: "First and last name are required for individual accounts",
+                },
+              ],
+              isEdit: false,
+            },
+          });
+        }
+        companyName = null;
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      let userName = "";
+      if (isCompany && companyName) {
+        userName = companyName;
+      } else if (firstName && lastName) {
+        userName = `${firstName} ${lastName}`;
+      }
+      await UserService.create({
+        email,
+        password: hashedPassword,
+        role: "client",
+        name: userName,
+      });
+
+      const clientData = {
+        isCompany,
+        companyName,
+        firstName,
+        lastName,
+        email,
+        phone,
+        billingAddress,
+      };
+
+      await ClientService.create(clientData);
+      res.redirect("/dashboard?tab=clients&success=1");
+    } catch (error) {
+      console.error("Error creating client:", error);
+      res.status(500).render("error", {
+        title: "Error",
+        message: "Unable to create client.",
+        user: req.user,
+      });
     }
   },
 };

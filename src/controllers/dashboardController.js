@@ -29,10 +29,41 @@ const dashboardController = {
       title = user.role === "admin" ? "Manage Projects" : "My Projects";
 
     let crudForm = null;
+    if (
+      req.query.action === "delete" &&
+      req.query.entity === "client" &&
+      req.query.id &&
+      user.role === "admin" &&
+      permissions.canDeleteClients
+    ) {
+      try {
+        await ClientService.remove(req.query.id);
+        return res.redirect(`/dashboard?tab=clients&success=1`);
+      } catch (error) {
+        console.error("Error deleting client from dashboard:", error);
+        return res.status(500).render("error", {
+          title: "Error",
+          message: "Unable to delete client.",
+          user,
+        });
+      }
+    }
+
     if (req.query.action === "create" || req.query.action === "edit") {
       let entity = req.query.entity;
       if (entity && crudFormConfigs[entity]) {
         crudForm = { ...crudFormConfigs[entity] };
+        if (entity === "client" && req.query.action === "edit") {
+          crudForm.fields = crudForm.fields.filter(
+            (f) => f.name !== "password"
+          );
+          crudForm.action = `/api/clients/${req.query.id}`;
+          crudForm.method = "POST";
+        }
+        if (entity === "client" && req.query.action !== "edit") {
+          crudForm.action = "/api/clients";
+          crudForm.method = "POST";
+        }
         if (entity === "project" && user.role === "admin") {
           crudForm.fields = crudForm.fields.map((f) =>
             f.name === "client_id"
@@ -48,11 +79,11 @@ const dashboardController = {
         }
         let cancelUrl = `/dashboard?tab=${tab}`;
         if (req.query.action === "edit" && req.query.id) {
-          let values = {};
+          let formData = {};
           if (entity === "client") {
             const client = await ClientService.getById(req.query.id);
             if (client) {
-              values = {
+              formData = {
                 isCompany: client.isCompany ? "true" : "false",
                 companyName: client.companyName || "",
                 firstName: client.firstName || "",
@@ -65,7 +96,7 @@ const dashboardController = {
           } else if (entity === "service") {
             const service = await ServiceService.getById(req.query.id);
             if (service) {
-              values = {
+              formData = {
                 service_name: service.service_name || "",
                 description: service.description || "",
                 price: service.price || "",
@@ -74,7 +105,7 @@ const dashboardController = {
           } else if (entity === "project") {
             const project = await ProjectService.getById(req.query.id);
             if (project) {
-              values = {
+              formData = {
                 client_id: project.client_id,
                 project_name: project.project_name || "",
                 description: project.description || "",
@@ -83,9 +114,9 @@ const dashboardController = {
               };
             }
           }
-          crudForm.values = values;
+          crudForm.formData = formData;
         } else {
-          crudForm.values = req.query.values || {};
+          crudForm.formData = req.query.formData || {};
         }
         crudForm.isEdit = req.query.action === "edit";
         crudForm.cancelUrl = cancelUrl;

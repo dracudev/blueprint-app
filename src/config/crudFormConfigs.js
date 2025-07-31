@@ -37,7 +37,13 @@ const crudFormConfigs = {
         label: "Email",
         type: "email",
         required: true,
-        readonly: true,
+      },
+      {
+        name: "password",
+        label: "Password",
+        type: "password",
+        required: true,
+        help: "Set an initial password for the new client user.",
       },
       { name: "phone", label: "Phone", type: "text", required: false },
       {
@@ -47,7 +53,7 @@ const crudFormConfigs = {
         required: false,
       },
     ],
-    action: "/client/setup",
+    action: "/api/clients",
     method: "POST",
     submitLabel: "Save",
   },
