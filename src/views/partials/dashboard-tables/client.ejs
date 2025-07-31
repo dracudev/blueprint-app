@@ -14,7 +14,7 @@
       <tr>
         <th>Name</th>
         <th>Email</th>
-        <th>Type</th>
+        
         <th>Actions</th>
       </tr>
     </thead>
@@ -26,9 +26,7 @@
           c.firstName %> <%= c.lastName %> <% } %>
         </td>
         <td><%= c.email %></td>
-        <td>
-          <% if (c.isCompany) { %> Company <% } else { %> Individual <% } %>
-        </td>
+        
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
           <a
@@ -44,11 +42,7 @@
           >
             Delete
           </a>
-          <% } %>
-          <a href="/client/orders/<%= c.clientId %>" class="btn btn-info btn-md"
-            >Order History</a
-          >
-          <% } %>
+          <% } %> <% } %>
         </td>
       </tr>
       <% }) %>

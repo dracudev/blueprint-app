@@ -34,7 +34,7 @@
           p.jobStatus.slice(1).toLowerCase().replace('_', ' ') %> <% } else { %>
           N/A <% } %>
         </td>
-        <td><%= p.totalAmount %></td>
+        <td><%= p.totalAmount %>€</td>
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditOrders) { %>
           <a
@@ -52,18 +52,7 @@
           >
             Delete
           </button>
-          <% } %>
-          <a
-            href="/project/status/<%= p.projectId %>"
-            class="btn btn-info btn-md"
-            >Change Status</a
-          >
-          <a
-            href="/project/payment/<%= p.projectId %>"
-            class="btn btn-success btn-md"
-            >Update Payment</a
-          >
-          <% } %> <% if (user.role === 'client') { %>
+          <% } %> <% } %> <% if (user.role === 'client') { %>
           <a href="/project/view/<%= p.projectId %>" class="btn btn-info btn-md"
             >View</a
           >
