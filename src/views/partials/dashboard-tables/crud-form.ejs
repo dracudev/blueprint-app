@@ -22,7 +22,7 @@
           <label class="radio-option">
             <input type="radio" name="isCompany" value="false" id="individual"
               <%= (typeof formData !== 'undefined' && formData.isCompany === 'false') ? 'checked' : '' %> />
-            <span class="radio-custom"></span>
+            <span class="radio-custom" style="display: inline-block;"></span>
             <div class="radio-content">
               <strong>Individual</strong>
               <p>Personal client account</p>
@@ -31,7 +31,7 @@
           <label class="radio-option">
             <input type="radio" name="isCompany" value="true" id="company"
               <%= (typeof formData !== 'undefined' && formData.isCompany === 'true') ? 'checked' : '' %> />
-            <span class="radio-custom"></span>
+            <span class="radio-custom" style="display: inline-block;"></span>
             <div class="radio-content">
               <strong>Company</strong>
               <p>Business client account</p>

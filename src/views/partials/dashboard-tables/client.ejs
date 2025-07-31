@@ -22,19 +22,12 @@
       <% clients.forEach(c => { %>
       <tr>
         <td>
-          <% if (c.isCompany) { %>
-            <%= c.companyName %>
-          <% } else { %>
-            <%= c.firstName %> <%= c.lastName %>
-          <% } %>
+          <% if (c.isCompany) { %> <%= c.companyName %> <% } else { %> <%=
+          c.firstName %> <%= c.lastName %> <% } %>
         </td>
         <td><%= c.email %></td>
         <td>
-          <% if (c.isCompany) { %>
-            Company
-          <% } else { %>
-            Individual
-          <% } %>
+          <% if (c.isCompany) { %> Company <% } else { %> Individual <% } %>
         </td>
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
