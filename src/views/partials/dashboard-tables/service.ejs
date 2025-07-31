@@ -19,11 +19,11 @@
     <tbody>
       <% services.forEach(s => { %>
       <tr>
-        <td><%= s.service_name %></td>
+        <td><%= s.serviceName %></td>
         <td>
           <% if (user.role === 'admin') { %> <% if (user.canEditProducts) { %>
           <a
-            href="/dashboard?action=edit&entity=service&id=<%= s.service_id %>&tab=services"
+            href="/dashboard?action=edit&entity=service&id=<%= s.serviceId %>&tab=services"
             class="btn btn-secondary btn-md"
             >Edit</a
           >
@@ -33,7 +33,7 @@
             class="btn btn-danger btn-md"
             data-action="delete"
             data-entity="service"
-            data-id="<%= s.service_id %>"
+            data-id="<%= s.serviceId %>"
           >
             Delete
           </button>
