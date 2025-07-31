@@ -25,22 +25,14 @@
       <tr>
         <td><%= p.projectId %></td>
         <td>
-          <% if (p.client) { %>
-            <% if (p.client.isCompany) { %>
-              <%= p.client.companyName %>
-            <% } else { %>
-              <%= p.client.firstName %> <%= p.client.lastName %>
-            <% } %>
-          <% } else { %>
-            N/A
-          <% } %>
+          <% if (p.client) { %> <% if (p.client.isCompany) { %> <%=
+          p.client.companyName %> <% } else { %> <%= p.client.firstName %> <%=
+          p.client.lastName %> <% } %> <% } else { %> N/A <% } %>
         </td>
         <td>
-          <% if (p.jobStatus) { %>
-            <%= p.jobStatus.charAt(0) + p.jobStatus.slice(1).toLowerCase().replace('_', ' ') %>
-          <% } else { %>
-            N/A
-          <% } %>
+          <% if (p.jobStatus) { %> <%= p.jobStatus.charAt(0) +
+          p.jobStatus.slice(1).toLowerCase().replace('_', ' ') %> <% } else { %>
+          N/A <% } %>
         </td>
         <td><%= p.totalAmount %></td>
         <td>
@@ -72,9 +64,7 @@
             >Update Payment</a
           >
           <% } %> <% if (user.role === 'client') { %>
-          <a
-            href="/project/view/<%= p.projectId %>"
-            class="btn btn-info btn-md"
+          <a href="/project/view/<%= p.projectId %>" class="btn btn-info btn-md"
             >View</a
           >
           <a
