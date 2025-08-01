@@ -1,0 +1,137 @@
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.notification {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  margin-bottom: 12px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  border-left: 4px solid #007bff;
+}
+
+.notification--show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.notification--hide {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.notification--success {
+  border-left-color: #28a745;
+}
+
+.notification--error {
+  border-left-color: #dc3545;
+}
+
+.notification--warning {
+  border-left-color: #ffc107;
+}
+
+.notification--info {
+  border-left-color: #17a2b8;
+}
+
+.notification__content {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+}
+
+.notification__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.notification--success .notification__icon {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.notification--error .notification__icon {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.notification--warning .notification__icon {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.notification--info .notification__icon {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.notification__message {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #333;
+}
+
+.notification__close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.notification__close:hover {
+  background-color: #f8f9fa;
+  color: #666;
+}
+
+.notification__close:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .notification-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+
+  .notification__content {
+    padding: 12px;
+  }
+
+  .notification__message {
+    font-size: 13px;
+  }
+}
