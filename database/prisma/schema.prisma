@@ -52,8 +52,10 @@ model Project {
 }
 
 model Service {
-  serviceId   Int    @id @default(autoincrement()) @map("service_id")
-  serviceName String @map("service_name") @db.VarChar(255)
+  serviceId   Int     @id @default(autoincrement()) @map("service_id")
+  serviceName String  @map("service_name") @db.VarChar(255)
+  description String? @db.Text
+  price       Decimal @default(0.00) @db.Decimal(10, 2)
 
   // Relations
   projectItems ProjectItem[]

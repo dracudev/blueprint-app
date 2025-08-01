@@ -34,32 +34,56 @@ async function main() {
 
   const webDevelopment = await prisma.service.upsert({
     where: { serviceId: 1 },
-    update: {},
+    update: {
+      serviceName: "Website Development",
+      description:
+        "Complete website development including design, frontend, and backend implementation. Includes responsive design, SEO optimization, and content management system.",
+      price: 2500.0,
+    },
     create: {
       serviceName: "Website Development",
+      description:
+        "Complete website development including design, frontend, and backend implementation. Includes responsive design, SEO optimization, and content management system.",
+      price: 2500.0,
     },
   });
 
   const mobileApp = await prisma.service.upsert({
     where: { serviceId: 2 },
-    update: {},
+    update: {
+      serviceName: "Mobile App Development",
+      description:
+        "Native and cross-platform mobile application development for iOS and Android. Includes UI/UX design, backend integration, and app store deployment.",
+      price: 4000.0,
+    },
     create: {
       serviceName: "Mobile App Development",
+      description:
+        "Native and cross-platform mobile application development for iOS and Android. Includes UI/UX design, backend integration, and app store deployment.",
+      price: 4000.0,
     },
   });
 
   const ecommerce = await prisma.service.upsert({
     where: { serviceId: 3 },
-    update: {},
+    update: {
+      serviceName: "E-commerce Platform",
+      description:
+        "Full-featured e-commerce platform with payment integration, inventory management, order tracking, and admin dashboard. Includes shopping cart and checkout functionality.",
+      price: 6000.0,
+    },
     create: {
       serviceName: "E-commerce Platform",
+      description:
+        "Full-featured e-commerce platform with payment integration, inventory management, order tracking, and admin dashboard. Includes shopping cart and checkout functionality.",
+      price: 6000.0,
     },
   });
 
   console.log("📦 Created services:", { webDevelopment, mobileApp, ecommerce });
 
   const client1 = await prisma.client.upsert({
-    where: { clientId: 1 },
+    where: { email: "contact@techsolutions.com" },
     update: {},
     create: {
       isCompany: true,
@@ -71,7 +95,7 @@ async function main() {
   });
 
   const client2 = await prisma.client.upsert({
-    where: { clientId: 2 },
+    where: { email: "john.doe@email.com" },
     update: {},
     create: {
       isCompany: false,
