@@ -1,7 +1,7 @@
 <section class="dashboard-section" data-tab="projects">
   <div class="dashboard-table-header">
     <h2>Projects</h2>
-    <% if ((user.role === 'admin' && user.canCreateOrders) || (user.role ===
+    <% if ((user.role === 'admin' && user.canCreateProjects) || (user.role ===
     'client')) { %>
     <a
       href="/dashboard?action=create&entity=project&tab=projects"
@@ -15,8 +15,10 @@
       <tr>
         <th>Project ID</th>
         <th>Client</th>
+        <th>Services</th>
         <th>Status</th>
         <th>Total</th>
+        <th>Paid</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -30,13 +32,28 @@
           p.client.lastName %> <% } %> <% } else { %> N/A <% } %>
         </td>
         <td>
+          <% if (p.projectItems && p.projectItems.length > 0) { %>
+          <div class="project-services">
+            <% p.projectItems.forEach((item, index) => { %>
+            <span class="service-item">
+              <%= item.service ? item.service.serviceName : 'Unknown Service' %>
+              <small>(x<%= item.quantity %>)</small>
+            </span>
+            <% if (index < p.projectItems.length - 1) { %>, <% } %> <% }) %>
+          </div>
+          <% } else { %>
+          <span class="text-muted">No services</span>
+          <% } %>
+        </td>
+        <td>
           <% if (p.jobStatus) { %> <%= p.jobStatus.charAt(0) +
           p.jobStatus.slice(1).toLowerCase().replace('_', ' ') %> <% } else { %>
           N/A <% } %>
         </td>
-        <td><%= p.totalAmount %>€</td>
+        <td>€<%= p.totalAmount %></td>
+        <td>€<%= p.paidAmount || 0 %></td>
         <td>
-          <% if (user.role === 'admin') { %> <% if (user.canEditOrders) { %>
+          <% if (user.role === 'admin') { %> <% if (user.canEditProjects) { %>
           <a
             href="/dashboard?action=edit&entity=project&id=<%= p.projectId %>&tab=projects"
             class="btn btn-secondary btn-md crud-btn"
@@ -45,7 +62,7 @@
             data-id="<%= p.projectId %>"
             >Edit</a
           >
-          <% } %> <% if (user.canDeleteOrders) { %>
+          <% } %> <% if (user.canDeleteProjects) { %>
           <button
             type="button"
             class="btn btn-danger btn-md crud-btn"

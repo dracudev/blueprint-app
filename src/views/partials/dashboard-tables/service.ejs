@@ -1,7 +1,7 @@
 <section class="dashboard-section" data-tab="services">
   <div class="dashboard-table-header">
     <h2>Services</h2>
-    <% if (user.role === 'admin' && user.canCreateProducts) { %>
+    <% if (user.role === 'admin' && user.canCreateServices) { %>
     <a
       href="/dashboard?action=create&entity=service&tab=services"
       class="btn btn-primary btn-md"
@@ -25,7 +25,7 @@
         <td><%= s.description || 'No description' %></td>
         <td>$<%= parseFloat(s.price).toFixed(2) %></td>
         <td>
-          <% if (user.role === 'admin') { %> <% if (user.canEditProducts) { %>
+          <% if (user.role === 'admin') { %> <% if (user.canEditServices) { %>
           <a
             href="/dashboard?action=edit&entity=service&id=<%= s.serviceId %>&tab=services"
             class="btn btn-secondary btn-md crud-btn"
@@ -34,7 +34,7 @@
             data-id="<%= s.serviceId %>"
             >Edit</a
           >
-          <% } %> <% if (user.canDeleteProducts) { %>
+          <% } %> <% if (user.canDeleteServices) { %>
           <button
             type="button"
             class="btn btn-danger btn-md crud-btn"

@@ -3,10 +3,13 @@
  * Handles form submissions via AJAX to REST API endpoints
  */
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector(".dashboard-crud-form-container form");
+  const form = document.querySelector(
+    ".dashboard-crud-form-container .crud-form"
+  );
   if (!form) return;
 
   initializeClientTypeToggle();
+  initializeServiceSelector();
   initializeFormSubmission();
 
   /**
@@ -62,6 +65,175 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     toggleFields();
+  }
+
+  /**
+   * Initialize service selector functionality (for project forms)
+   */
+  function initializeServiceSelector() {
+    const serviceContainer = form.querySelector(
+      '[data-field-type="service-selector"]'
+    );
+    if (!serviceContainer) return;
+
+    const servicesData = JSON.parse(serviceContainer.dataset.services || "[]");
+    const existingServices = JSON.parse(
+      serviceContainer.dataset.existingServices || "[]"
+    );
+
+    let selectedServices = [...existingServices];
+
+    // Create the service selector UI
+    createServiceSelectorUI(serviceContainer, servicesData, selectedServices);
+  }
+
+  /**
+   * Create service selector UI
+   */
+  function createServiceSelectorUI(
+    container,
+    availableServices,
+    selectedServices
+  ) {
+    container.innerHTML = `
+      <div class="service-selector">
+        <div class="service-selector-header">
+          <label class="form-label">Project Services</label>
+          <button type="button" class="btn btn-sm btn-secondary add-service-btn">Add Service</button>
+        </div>
+        <div class="selected-services-list"></div>
+        <input type="hidden" name="services" class="services-input" />
+      </div>
+    `;
+
+    const servicesList = container.querySelector(".selected-services-list");
+    const servicesInput = container.querySelector(".services-input");
+    const addServiceBtn = container.querySelector(".add-service-btn");
+
+    // Render existing services
+    updateServicesList();
+
+    // Add service button handler
+    addServiceBtn.addEventListener("click", () => {
+      const availableService = availableServices.find(
+        (s) => !selectedServices.some((sel) => sel.serviceId === s.serviceId)
+      );
+
+      if (availableService) {
+        selectedServices.push({
+          serviceId: availableService.serviceId,
+          service_name: availableService.serviceName,
+          quantity: 1,
+          unitPrice: availableService.price,
+        });
+        updateServicesList();
+      }
+    });
+
+    function updateServicesList() {
+      // Update hidden input
+      servicesInput.value = JSON.stringify(selectedServices);
+
+      // Render service items
+      servicesList.innerHTML = selectedServices
+        .map(
+          (service, index) => `
+        <div class="service-item" data-index="${index}">
+          <div class="service-item-content">
+            <div class="service-info">
+              <select class="form-control service-select" data-index="${index}">
+                ${availableServices
+                  .map(
+                    (s) => `
+                  <option value="${s.serviceId}" ${
+                      s.serviceId == service.serviceId ? "selected" : ""
+                    }>
+                    ${s.serviceName} - €${s.price}
+                  </option>
+                `
+                  )
+                  .join("")}
+              </select>
+            </div>
+            <div class="service-quantity">
+              <label>Qty:</label>
+              <input type="number" class="form-control quantity-input" 
+                     value="${
+                       service.quantity
+                     }" min="1" data-index="${index}" />
+            </div>
+            <div class="service-price">
+              <label>Unit Price:</label>
+              <input type="number" class="form-control price-input" 
+                     value="${
+                       service.unitPrice
+                     }" min="0" step="0.01" data-index="${index}" />
+            </div>
+            <div class="service-total">
+              <strong>€${(service.quantity * service.unitPrice).toFixed(
+                2
+              )}</strong>
+            </div>
+            <button type="button" class="btn btn-sm btn-danger remove-service-btn" data-index="${index}">
+              Remove
+            </button>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+
+      // Add event listeners
+      servicesList.querySelectorAll(".service-select").forEach((select) => {
+        select.addEventListener("change", handleServiceChange);
+      });
+
+      servicesList.querySelectorAll(".quantity-input").forEach((input) => {
+        input.addEventListener("change", handleQuantityChange);
+      });
+
+      servicesList.querySelectorAll(".price-input").forEach((input) => {
+        input.addEventListener("change", handlePriceChange);
+      });
+
+      servicesList.querySelectorAll(".remove-service-btn").forEach((btn) => {
+        btn.addEventListener("click", handleRemoveService);
+      });
+    }
+
+    function handleServiceChange(e) {
+      const index = parseInt(e.target.dataset.index);
+      const serviceId = parseInt(e.target.value);
+      const service = availableServices.find((s) => s.serviceId === serviceId);
+
+      if (service) {
+        selectedServices[index] = {
+          ...selectedServices[index],
+          serviceId: service.serviceId,
+          service_name: service.serviceName,
+          unitPrice: service.price,
+        };
+        updateServicesList();
+      }
+    }
+
+    function handleQuantityChange(e) {
+      const index = parseInt(e.target.dataset.index);
+      selectedServices[index].quantity = parseInt(e.target.value) || 1;
+      updateServicesList();
+    }
+
+    function handlePriceChange(e) {
+      const index = parseInt(e.target.dataset.index);
+      selectedServices[index].unitPrice = parseFloat(e.target.value) || 0;
+      updateServicesList();
+    }
+
+    function handleRemoveService(e) {
+      const index = parseInt(e.target.dataset.index);
+      selectedServices.splice(index, 1);
+      updateServicesList();
+    }
   }
 
   /**
