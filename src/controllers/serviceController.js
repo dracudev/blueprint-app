@@ -21,7 +21,7 @@ const serviceController = {
   },
   create: async (req, res) => {
     try {
-      if (!req.user.canCreateProducts) {
+      if (!req.user.canCreateServices) {
         if (
           req.headers.accept &&
           req.headers.accept.includes("application/json")
@@ -95,7 +95,7 @@ const serviceController = {
   },
   update: async (req, res) => {
     try {
-      if (!req.user.canEditProducts) {
+      if (!req.user.canEditServices) {
         if (
           req.headers.accept &&
           req.headers.accept.includes("application/json")
@@ -189,7 +189,7 @@ const serviceController = {
   },
   remove: async (req, res) => {
     try {
-      if (!req.user.canDeleteProducts) {
+      if (!req.user.canDeleteServices) {
         if (
           req.headers.accept &&
           req.headers.accept.includes("application/json")
@@ -259,9 +259,9 @@ const serviceController = {
       title: serviceId ? "Edit Service" : "Create Service",
       user: {
         ...req.user,
-        canCreateProducts: true,
-        canEditProducts: true,
-        canDeleteProducts: true,
+        canCreateServices: true,
+        canEditServices: true,
+        canDeleteServices: true,
       },
       clients,
       services,

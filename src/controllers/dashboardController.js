@@ -87,25 +87,37 @@ const dashboardController = {
               if (project) {
                 formData = {
                   client_id: project.clientId,
-                  project_name: project.projectName || "",
-                  description: project.description || "",
                   total_amount: project.totalAmount || "",
-                  job_status: project.jobStatus || "pending",
+                  job_status: project.jobStatus || "RECEIVED",
+                  services: JSON.stringify(
+                    project.projectItems.map((item) => ({
+                      serviceId: item.serviceId,
+                      service_name: item.service.serviceName,
+                      quantity: item.quantity,
+                      unitPrice: item.unitPrice,
+                    }))
+                  ),
                 };
               }
-              crudForm.fields = crudForm.fields.map((f) =>
-                f.name === "client_id"
-                  ? {
-                      ...f,
-                      options: clients.map((c) => ({
-                        value: c.clientId,
-                        label: c.isCompany
-                          ? c.companyName
-                          : `${c.firstName} ${c.lastName}`,
-                      })),
-                    }
-                  : f
-              );
+              crudForm.fields = crudForm.fields.map((f) => {
+                if (f.name === "client_id") {
+                  return {
+                    ...f,
+                    options: clients.map((c) => ({
+                      value: c.clientId,
+                      label: c.isCompany
+                        ? c.companyName
+                        : `${c.firstName} ${c.lastName}`,
+                    })),
+                  };
+                } else if (f.name === "services") {
+                  return {
+                    ...f,
+                    services: services,
+                  };
+                }
+                return f;
+              });
             }
             crudForm.formData = formData;
           } else {
@@ -113,19 +125,25 @@ const dashboardController = {
             crudForm.formData = {};
 
             if (entity === "project") {
-              crudForm.fields = crudForm.fields.map((f) =>
-                f.name === "client_id"
-                  ? {
-                      ...f,
-                      options: clients.map((c) => ({
-                        value: c.clientId,
-                        label: c.isCompany
-                          ? c.companyName
-                          : `${c.firstName} ${c.lastName}`,
-                      })),
-                    }
-                  : f
-              );
+              crudForm.fields = crudForm.fields.map((f) => {
+                if (f.name === "client_id") {
+                  return {
+                    ...f,
+                    options: clients.map((c) => ({
+                      value: c.clientId,
+                      label: c.isCompany
+                        ? c.companyName
+                        : `${c.firstName} ${c.lastName}`,
+                    })),
+                  };
+                } else if (f.name === "services") {
+                  return {
+                    ...f,
+                    services: services,
+                  };
+                }
+                return f;
+              });
             }
           }
 

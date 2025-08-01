@@ -309,7 +309,7 @@ const clientController = {
 
   getClientData: async (req, res) => {
     try {
-      const client = await ClientService.findWithOrdersByEmail(
+      const client = await ClientService.findWithProjectsByEmail(
         req.session.user.email
       );
 
