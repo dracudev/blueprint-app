@@ -8,18 +8,23 @@ const ServiceService = {
   getByUser: async (user) => {
     return models.Service.findMany();
   },
+  getById: async (id) => {
+    return models.Service.findUnique({
+      where: { serviceId: Number(id) },
+    });
+  },
   create: async (data) => {
     return models.Service.create({ data });
   },
   update: async (id, data) => {
     return models.Service.update({
-      where: { id: Number(id) },
+      where: { serviceId: Number(id) },
       data,
     });
   },
   remove: async (id) => {
     return models.Service.delete({
-      where: { id: Number(id) },
+      where: { serviceId: Number(id) },
     });
   },
 };

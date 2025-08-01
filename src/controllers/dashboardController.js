@@ -3,6 +3,8 @@ const ServiceService = require("../services/ServiceService");
 const ProjectService = require("../services/ProjectService");
 const crudFormConfigs = require("../config/crudFormConfigs");
 
+const { getDashboardPermissions } = require("../middleware/auth");
+
 const dashboardController = {
   renderDashboard: async (req, res) => {
     const user = req.user;
@@ -49,6 +51,26 @@ const dashboardController = {
       }
     }
 
+    if (
+      req.query.action === "delete" &&
+      req.query.entity === "service" &&
+      req.query.id &&
+      user.role === "admin" &&
+      permissions.canDeleteProducts
+    ) {
+      try {
+        await ServiceService.remove(req.query.id);
+        return res.redirect(`/dashboard?tab=services&success=1`);
+      } catch (error) {
+        console.error("Error deleting service from dashboard:", error);
+        return res.status(500).render("error", {
+          title: "Error",
+          message: "Unable to delete service.",
+          user,
+        });
+      }
+    }
+
     if (req.query.action === "create" || req.query.action === "edit") {
       let entity = req.query.entity;
       if (entity && crudFormConfigs[entity]) {
@@ -62,6 +84,15 @@ const dashboardController = {
           crudForm.clientId = req.query.id; // Pass the client ID for edit operations
         }
         if (entity === "client" && req.query.action !== "edit") {
+          crudForm.action = "/dashboard";
+          crudForm.method = "POST";
+        }
+        if (entity === "service" && req.query.action === "edit") {
+          crudForm.action = "/dashboard";
+          crudForm.method = "POST";
+          crudForm.serviceId = req.query.id;
+        }
+        if (entity === "service" && req.query.action !== "edit") {
           crudForm.action = "/dashboard";
           crudForm.method = "POST";
         }
@@ -98,7 +129,7 @@ const dashboardController = {
             const service = await ServiceService.getById(req.query.id);
             if (service) {
               formData = {
-                service_name: service.service_name || "",
+                service_name: service.serviceName || "",
                 description: service.description || "",
                 price: service.price || "",
               };
@@ -137,31 +168,3 @@ const dashboardController = {
 };
 
 module.exports = dashboardController;
-
-function getDashboardPermissions(user) {
-  if (user.role === "admin") {
-    return {
-      canCreateClients: true,
-      canEditClients: true,
-      canDeleteClients: true,
-      canCreateProducts: true,
-      canEditProducts: true,
-      canDeleteProducts: true,
-      canCreateOrders: true,
-      canEditOrders: true,
-      canDeleteOrders: true,
-    };
-  } else {
-    return {
-      canCreateClients: false,
-      canEditClients: false,
-      canDeleteClients: false,
-      canCreateProducts: false,
-      canEditProducts: false,
-      canDeleteProducts: false,
-      canCreateOrders: true,
-      canEditOrders: true,
-      canDeleteOrders: false,
-    };
-  }
-}

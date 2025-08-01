@@ -60,4 +60,16 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  document
+    .querySelectorAll('button[data-action="delete"][data-entity="service"]')
+    .forEach((btn) => {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const serviceId = this.dataset.id;
+        if (confirm("Are you sure you want to delete this service?")) {
+          window.location.href = `/dashboard?action=delete&entity=service&id=${serviceId}&tab=services`;
+        }
+      });
+    });
 });

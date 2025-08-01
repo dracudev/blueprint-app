@@ -17,6 +17,14 @@
     <input type="hidden" name="clientId" value="<%= clientId %>" />
     <input type="hidden" name="isEdit" value="true" />
   <% } %>
+  <% if (typeof serviceId !== 'undefined' && serviceId) { %>
+    <input type="hidden" name="serviceId" value="<%= serviceId %>" />
+    <input type="hidden" name="isEdit" value="true" />
+  <% } %>
+  <% if (typeof projectId !== 'undefined' && projectId) { %>
+    <input type="hidden" name="projectId" value="<%= projectId %>" />
+    <input type="hidden" name="isEdit" value="true" />
+  <% } %>
   <div class="crud-form-errors alert alert-danger" style="display:none"></div>
   <% if (typeof fields !== 'undefined' && Array.isArray(fields)) { %>
     <% fields.forEach(function(field) { %>

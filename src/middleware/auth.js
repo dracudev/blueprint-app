@@ -13,9 +13,47 @@ const jwtAuth = (req, res, next) => {
     return;
   }
 
-  req.user = req.session.user;
+  // Merge dashboard permissions into req.user
+  const sessionUser = req.session.user;
+  const permissions = getDashboardPermissions(sessionUser);
+  req.user = { ...sessionUser, ...permissions };
   next();
 };
+
+// Helper function to get dashboard permissions (moved from dashboardController)
+function getDashboardPermissions(user) {
+  if (user.role === "admin") {
+    return {
+      canCreateClients: true,
+      canEditClients: true,
+      canDeleteClients: true,
+      canCreateProducts: true,
+      canEditProducts: true,
+      canDeleteProducts: true,
+      canCreateServices: true,
+      canEditServices: true,
+      canDeleteServices: true,
+      canCreateOrders: true,
+      canEditOrders: true,
+      canDeleteOrders: true,
+    };
+  } else {
+    return {
+      canCreateClients: false,
+      canEditClients: false,
+      canDeleteClients: false,
+      canCreateProducts: false,
+      canEditProducts: false,
+      canDeleteProducts: false,
+      canCreateServices: false,
+      canEditServices: false,
+      canDeleteServices: false,
+      canCreateOrders: true,
+      canEditOrders: true,
+      canDeleteOrders: false,
+    };
+  }
+}
 
 const requireAdmin = (req, res, next) => {
   if (!req.session.user || req.session.user.role !== "admin") {
@@ -59,4 +97,5 @@ module.exports = {
   can,
   redirectIfAuthenticated,
   jwtAuth,
+  getDashboardPermissions,
 };
