@@ -57,11 +57,12 @@ const dashboardController = {
           crudForm.fields = crudForm.fields.filter(
             (f) => f.name !== "password"
           );
-          crudForm.action = `/api/clients/${req.query.id}`;
+          crudForm.action = "/dashboard";
           crudForm.method = "POST";
+          crudForm.clientId = req.query.id; // Pass the client ID for edit operations
         }
         if (entity === "client" && req.query.action !== "edit") {
-          crudForm.action = "/api/clients";
+          crudForm.action = "/dashboard";
           crudForm.method = "POST";
         }
         if (entity === "project" && user.role === "admin") {

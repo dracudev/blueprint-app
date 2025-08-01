@@ -8,7 +8,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node public/scripts/deploy.js",
+    "start": "node app.js",
     "dev": "nodemon app.js",
     "db:generate": "npx prisma generate --schema=database/prisma/schema.prisma",
     "db:push": "npx prisma db push --schema=database/prisma/schema.prisma",

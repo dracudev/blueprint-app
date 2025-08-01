@@ -135,6 +135,7 @@ const validateAdminClient = [
   ...clientValidation.validateClientSetup,
   body("email").isEmail().withMessage("Valid email required"),
   body("password")
+    .if(body("isEdit").not().equals("true"))
     .trim()
     .isLength({ min: 6 })
     .withMessage(
@@ -142,7 +143,13 @@ const validateAdminClient = [
     ),
 ];
 
+const validateAdminClientEdit = [
+  ...clientValidation.validateClientUpdate,
+  body("email").isEmail().withMessage("Valid email required"),
+];
+
 module.exports = {
   ...clientValidation,
   validateAdminClient,
+  validateAdminClientEdit,
 };

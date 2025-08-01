@@ -1,6 +1,22 @@
-<main class="client-setup-container">
+<main class="client-setup-card">
 <% var formData = typeof formData !== 'undefined' ? formData : {}; %>
+
+<!-- Error Display Section -->
+<% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+<div class="alert alert-danger">
+  <ul style="margin: 0; padding-left: 20px;">
+    <% errors.forEach(function(error) { %>
+    <li><%= error.msg || error.message || error %></li>
+    <% }); %>
+  </ul>
+</div>
+<% } %>
+
 <form action="<%= typeof action !== 'undefined' ? action : '' %>" method="<%= typeof method !== 'undefined' ? method : 'POST' %>" class="crud-form client-setup-form">
+  <% if (typeof clientId !== 'undefined' && clientId) { %>
+    <input type="hidden" name="clientId" value="<%= clientId %>" />
+    <input type="hidden" name="isEdit" value="true" />
+  <% } %>
   <div class="crud-form-errors alert alert-danger" style="display:none"></div>
   <% if (typeof fields !== 'undefined' && Array.isArray(fields)) { %>
     <% fields.forEach(function(field) { %>
@@ -40,9 +56,9 @@
         </div>
       </div>
         <% } else if (
-          (field.name === 'companyName' && formData && formData.isCompany === 'true') ||
-          (field.name === 'firstName' && (!formData || formData.isCompany === 'false' || typeof formData.isCompany === 'undefined')) ||
-          (field.name === 'lastName' && (!formData || formData.isCompany === 'false' || typeof formData.isCompany === 'undefined')) ||
+          (field.name === 'companyName') ||
+          (field.name === 'firstName') ||
+          (field.name === 'lastName') ||
           (field.name !== 'companyName' && field.name !== 'firstName' && field.name !== 'lastName' && field.type !== 'select')
         ) { %>
           <% if (field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number') { %>

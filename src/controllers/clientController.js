@@ -136,7 +136,6 @@ const clientController = {
       };
 
       const client = await ClientService.create(clientData);
-      // Update user role to 'client' in DB, session and JWT
       await UserService.updateRoleByEmail(req.session.user.email, "client");
       req.session.user.role = "client";
       const { signJwt } = require("../utils/jwt");
@@ -383,18 +382,17 @@ const clientController = {
 
   update: async (req, res) => {
     try {
+      const { id } = req.params;
+
       const errors = validationResult(req);
+
       if (!errors.isEmpty()) {
-        return res.status(400).render("dashboard", {
-          title: "Manage Clients",
-          user: req.user,
-          currentTab: "clients",
-          crudForm: {
-            ...req.body,
-            errors: errors.array(),
-            isEdit: true,
-          },
-        });
+        return await clientController.renderUpdateDashboardWithError(
+          req,
+          res,
+          id,
+          errors.array()
+        );
       }
 
       let {
@@ -413,62 +411,109 @@ const clientController = {
 
       if (isCompany) {
         if (!companyName) {
-          return res.status(400).render("dashboard", {
-            title: "Manage Clients",
-            user: req.user,
-            currentTab: "clients",
-            crudForm: {
-              ...req.body,
-              errors: [
-                { msg: "Company name is required for business accounts" },
-              ],
-              isEdit: true,
-            },
-          });
+          return await clientController.renderUpdateDashboardWithError(
+            req,
+            res,
+            id,
+            [{ msg: "Company name is required for business accounts" }]
+          );
         }
         firstName = null;
         lastName = null;
       } else {
         if (!firstName || !lastName) {
-          return res.status(400).render("dashboard", {
-            title: "Manage Clients",
-            user: req.user,
-            currentTab: "clients",
-            crudForm: {
-              ...req.body,
-              errors: [
-                {
-                  msg: "First and last name are required for individual accounts",
-                },
-              ],
-              isEdit: true,
-            },
-          });
+          return await clientController.renderUpdateDashboardWithError(
+            req,
+            res,
+            id,
+            [
+              {
+                msg: "First and last name are required for individual accounts",
+              },
+            ]
+          );
         }
         companyName = null;
       }
 
-      const clientId = req.params.id;
       const updateData = {
         isCompany,
         companyName,
         firstName,
         lastName,
+        email,
         phone,
         billingAddress,
-        email,
       };
 
-      await ClientService.update(clientId, updateData);
+      await ClientService.update(id, updateData);
+      console.log("Client updated successfully:", updateData);
+
       res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error updating client:", error);
+
+      if (error.message && error.message.includes("email")) {
+        return await clientController.renderUpdateDashboardWithError(
+          req,
+          res,
+          req.params.id,
+          [
+            {
+              msg: "Email already exists. Please use a different email address.",
+            },
+          ]
+        );
+      }
+
       res.status(500).render("error", {
         title: "Error",
-        message: "Unable to update client.",
+        error: {
+          status: 500,
+          message: "Unable to update client.",
+        },
         user: req.user,
       });
     }
+  },
+
+  renderUpdateDashboardWithError: async function (req, res, clientId, errors) {
+    const ServiceService = require("../services/ServiceService");
+    const ProjectService = require("../services/ProjectService");
+    const crudFormConfigs = require("../config/crudFormConfigs");
+
+    const clients = await ClientService.getAll();
+    const services = await ServiceService.getAll();
+    const projects = await ProjectService.getAll();
+
+    const crudForm = { ...crudFormConfigs.client };
+    crudForm.isEdit = true;
+    crudForm.clientId = clientId;
+    crudForm.cancelUrl = "/dashboard?tab=clients";
+    crudForm.fields = crudForm.fields.filter((f) => f.name !== "password");
+    crudForm.formData = req.body;
+    crudForm.errors = errors;
+
+    console.log("CRUD form data being passed:", {
+      formData: crudForm.formData,
+      errors: crudForm.errors,
+      clientId: crudForm.clientId,
+    });
+
+    return res.status(400).render("dashboard", {
+      title: "Edit Client",
+      user: {
+        ...req.user,
+        canCreateClients: true,
+        canEditClients: true,
+        canDeleteClients: true,
+      },
+      clients,
+      services,
+      projects,
+      currentTab: "clients",
+      crudForm,
+    });
   },
 
   remove: async (req, res) => {
@@ -496,16 +541,39 @@ const clientController = {
   adminCreateClient: async (req, res) => {
     try {
       const errors = validationResult(req);
+
       if (!errors.isEmpty()) {
+        const ClientService = require("../services/ClientService");
+        const ServiceService = require("../services/ServiceService");
+        const ProjectService = require("../services/ProjectService");
+        const crudFormConfigs = require("../config/crudFormConfigs");
+
+        const clients = await ClientService.getAll();
+        const services = await ServiceService.getAll();
+        const projects = await ProjectService.getAll();
+
+        const crudForm = { ...crudFormConfigs.client };
+        crudForm.isEdit = false;
+        crudForm.cancelUrl = "/dashboard?tab=clients";
+        crudForm.fields = crudForm.fields.map((f) =>
+          f.name === "password" ? { ...f, required: true } : f
+        );
+        crudForm.formData = req.body;
+        crudForm.errors = errors.array();
+
         return res.status(400).render("dashboard", {
           title: "Manage Clients",
-          user: req.user,
-          currentTab: "clients",
-          crudForm: {
-            ...req.body,
-            errors: errors.array(),
-            isEdit: false,
+          user: {
+            ...req.user,
+            canCreateClients: true,
+            canEditClients: true,
+            canDeleteClients: true,
           },
+          clients,
+          services,
+          projects,
+          currentTab: "clients",
+          crudForm,
         });
       }
 
@@ -526,36 +594,78 @@ const clientController = {
 
       if (isCompany) {
         if (!companyName) {
+          const ClientService = require("../services/ClientService");
+          const ServiceService = require("../services/ServiceService");
+          const ProjectService = require("../services/ProjectService");
+          const crudFormConfigs = require("../config/crudFormConfigs");
+
+          const clients = await ClientService.getAll();
+          const services = await ServiceService.getAll();
+          const projects = await ProjectService.getAll();
+
+          const crudForm = { ...crudFormConfigs.client };
+          crudForm.isEdit = false;
+          crudForm.cancelUrl = "/dashboard?tab=clients";
+          crudForm.fields = crudForm.fields.map((f) =>
+            f.name === "password" ? { ...f, required: true } : f
+          );
+          crudForm.formData = req.body;
+          crudForm.errors = [
+            { msg: "Company name is required for business accounts" },
+          ];
+
           return res.status(400).render("dashboard", {
             title: "Manage Clients",
-            user: req.user,
-            currentTab: "clients",
-            crudForm: {
-              ...req.body,
-              errors: [
-                { msg: "Company name is required for business accounts" },
-              ],
-              isEdit: false,
+            user: {
+              ...req.user,
+              canCreateClients: true,
+              canEditClients: true,
+              canDeleteClients: true,
             },
+            clients,
+            services,
+            projects,
+            currentTab: "clients",
+            crudForm,
           });
         }
         firstName = null;
         lastName = null;
       } else {
         if (!firstName || !lastName) {
+          const ClientService = require("../services/ClientService");
+          const ServiceService = require("../services/ServiceService");
+          const ProjectService = require("../services/ProjectService");
+          const crudFormConfigs = require("../config/crudFormConfigs");
+
+          const clients = await ClientService.getAll();
+          const services = await ServiceService.getAll();
+          const projects = await ProjectService.getAll();
+
+          const crudForm = { ...crudFormConfigs.client };
+          crudForm.isEdit = false;
+          crudForm.cancelUrl = "/dashboard?tab=clients";
+          crudForm.fields = crudForm.fields.map((f) =>
+            f.name === "password" ? { ...f, required: true } : f
+          );
+          crudForm.formData = req.body;
+          crudForm.errors = [
+            { msg: "First and last name are required for individual accounts" },
+          ];
+
           return res.status(400).render("dashboard", {
             title: "Manage Clients",
-            user: req.user,
-            currentTab: "clients",
-            crudForm: {
-              ...req.body,
-              errors: [
-                {
-                  msg: "First and last name are required for individual accounts",
-                },
-              ],
-              isEdit: false,
+            user: {
+              ...req.user,
+              canCreateClients: true,
+              canEditClients: true,
+              canDeleteClients: true,
             },
+            clients,
+            services,
+            projects,
+            currentTab: "clients",
+            crudForm,
           });
         }
         companyName = null;
@@ -568,6 +678,7 @@ const clientController = {
       } else if (firstName && lastName) {
         userName = `${firstName} ${lastName}`;
       }
+
       await UserService.create({
         email,
         password: hashedPassword,
@@ -589,9 +700,52 @@ const clientController = {
       res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error creating client:", error);
+
+      if (error.message && error.message.includes("email")) {
+        const ClientService = require("../services/ClientService");
+        const ServiceService = require("../services/ServiceService");
+        const ProjectService = require("../services/ProjectService");
+        const crudFormConfigs = require("../config/crudFormConfigs");
+
+        const clients = await ClientService.getAll();
+        const services = await ServiceService.getAll();
+        const projects = await ProjectService.getAll();
+
+        const crudForm = { ...crudFormConfigs.client };
+        crudForm.isEdit = false;
+        crudForm.cancelUrl = "/dashboard?tab=clients";
+        crudForm.fields = crudForm.fields.map((f) =>
+          f.name === "password" ? { ...f, required: true } : f
+        );
+        crudForm.formData = req.body;
+        crudForm.errors = [
+          {
+            msg: "Email already exists. Please use a different email address.",
+          },
+        ];
+
+        return res.status(400).render("dashboard", {
+          title: "Manage Clients",
+          user: {
+            ...req.user,
+            canCreateClients: true,
+            canEditClients: true,
+            canDeleteClients: true,
+          },
+          clients,
+          services,
+          projects,
+          currentTab: "clients",
+          crudForm,
+        });
+      }
+
       res.status(500).render("error", {
         title: "Error",
-        message: "Unable to create client.",
+        error: {
+          status: 500,
+          message: "Unable to create client.",
+        },
         user: req.user,
       });
     }
