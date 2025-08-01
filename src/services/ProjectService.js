@@ -4,6 +4,11 @@ const ProjectService = {
   getAll: async () => {
     return models.Project.findMany();
   },
+  getById: async (id) => {
+    return models.Project.findUnique({
+      where: { id: Number(id) },
+    });
+  },
   getByUser: async (user) => {
     const client = await models.Client.findFirst({
       where: { email: user.email },

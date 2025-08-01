@@ -21,11 +21,33 @@ const serviceController = {
   },
   create: async (req, res) => {
     try {
-      if (!req.user.canCreateProducts)
-        return res.status(403).json({ success: false, message: "Forbidden" });
+      if (!req.user.canCreateProducts) {
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(403).json({ success: false, message: "Forbidden" });
+        }
+        return res.status(403).render("error", {
+          title: "Forbidden",
+          message: "You do not have permission to create services.",
+          user: req.user,
+        });
+      }
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors: errors.array(),
+          });
+        }
+
         return await serviceController.renderUpdateDashboardWithError(
           req,
           res,
@@ -42,7 +64,10 @@ const serviceController = {
 
       const service = await ServiceService.create(serviceData);
 
-      if (req.headers["content-type"] === "application/json") {
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
         res
           .status(201)
           .json({ success: true, message: "Service created", service });
@@ -51,7 +76,10 @@ const serviceController = {
       }
     } catch (error) {
       console.error("Error creating service:", error);
-      if (req.headers["content-type"] === "application/json") {
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
         res
           .status(500)
           .json({ success: false, message: "Unable to create service" });
@@ -67,18 +95,50 @@ const serviceController = {
   },
   update: async (req, res) => {
     try {
-      if (!req.user.canEditProducts)
-        return res.status(403).json({ success: false, message: "Forbidden" });
+      if (!req.user.canEditProducts) {
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(403).json({ success: false, message: "Forbidden" });
+        }
+        return res.status(403).render("error", {
+          title: "Forbidden",
+          message: "You do not have permission to edit services.",
+          user: req.user,
+        });
+      }
 
       const serviceId = req.params.id || req.body.serviceId;
       if (!serviceId) {
-        return res
-          .status(400)
-          .json({ success: false, message: "Service ID is required" });
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res
+            .status(400)
+            .json({ success: false, message: "Service ID is required" });
+        }
+        return res.status(400).render("error", {
+          title: "Bad Request",
+          message: "Service ID is required.",
+          user: req.user,
+        });
       }
 
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors: errors.array(),
+          });
+        }
+
         return await serviceController.renderUpdateDashboardWithError(
           req,
           res,
@@ -95,7 +155,10 @@ const serviceController = {
 
       const updated = await ServiceService.update(serviceId, updateData);
 
-      if (req.headers["content-type"] === "application/json") {
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
         res.json({
           success: true,
           message: "Service updated",
@@ -106,7 +169,10 @@ const serviceController = {
       }
     } catch (error) {
       console.error("Error updating service:", error);
-      if (req.headers["content-type"] === "application/json") {
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
         res
           .status(500)
           .json({ success: false, message: "Unable to update service" });
@@ -123,16 +189,47 @@ const serviceController = {
   },
   remove: async (req, res) => {
     try {
-      if (!req.user.canDeleteProducts)
-        return res.status(403).json({ success: false, message: "Forbidden" });
+      if (!req.user.canDeleteProducts) {
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(403).json({ success: false, message: "Forbidden" });
+        }
+        return res.status(403).render("error", {
+          title: "Forbidden",
+          message: "You do not have permission to delete services.",
+          user: req.user,
+        });
+      }
+
       const serviceId = req.params.id;
       await ServiceService.remove(serviceId);
-      res.json({ success: true, message: "Service deleted" });
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        res.json({ success: true, message: "Service deleted" });
+      } else {
+        res.redirect("/dashboard?tab=services&success=1");
+      }
     } catch (error) {
       console.error("Error deleting service:", error);
-      res
-        .status(500)
-        .json({ success: false, message: "Unable to delete service" });
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        res
+          .status(500)
+          .json({ success: false, message: "Unable to delete service" });
+      } else {
+        res.status(500).render("error", {
+          title: "Error",
+          message: "Unable to delete service.",
+          user: req.user,
+        });
+      }
     }
   },
 

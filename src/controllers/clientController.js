@@ -342,6 +342,17 @@ const clientController = {
       } else {
         clients = await ClientService.getByUser(user.id);
       }
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.json({
+          success: true,
+          clients: clients,
+        });
+      }
+
       res.render("dashboard", {
         title: user.role === "admin" ? "Manage Clients" : "My Profile",
         user,
@@ -350,6 +361,17 @@ const clientController = {
       });
     } catch (error) {
       console.error("Error listing clients:", error);
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.status(500).json({
+          success: false,
+          message: "Unable to fetch clients",
+        });
+      }
+
       res.status(500).render("error", {
         title: "Error",
         message: "Unable to fetch clients.",
@@ -361,17 +383,51 @@ const clientController = {
   create: async (req, res) => {
     try {
       if (!req.user.canCreateClients) {
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(403).json({
+            success: false,
+            message: "You do not have permission to create clients.",
+          });
+        }
+
         return res.status(403).render("error", {
           title: "Forbidden",
           message: "You do not have permission to create clients.",
           user: req.user,
         });
       }
+
       const clientData = req.body;
-      await ClientService.create(clientData);
+      const newClient = await ClientService.create(clientData);
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.status(201).json({
+          success: true,
+          message: "Client created successfully",
+          client: newClient,
+        });
+      }
+
       res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error creating client:", error);
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.status(500).json({
+          success: false,
+          message: "Unable to create client",
+        });
+      }
+
       res.status(500).render("error", {
         title: "Error",
         message: "Unable to create client.",
@@ -387,6 +443,18 @@ const clientController = {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
+        // Check if this is an API request
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors: errors.array(),
+          });
+        }
+
         return await clientController.renderUpdateDashboardWithError(
           req,
           res,
@@ -411,26 +479,47 @@ const clientController = {
 
       if (isCompany) {
         if (!companyName) {
+          const errorMsg = "Company name is required for business accounts";
+
+          if (
+            req.headers.accept &&
+            req.headers.accept.includes("application/json")
+          ) {
+            return res.status(400).json({
+              success: false,
+              message: errorMsg,
+            });
+          }
+
           return await clientController.renderUpdateDashboardWithError(
             req,
             res,
             id,
-            [{ msg: "Company name is required for business accounts" }]
+            [{ msg: errorMsg }]
           );
         }
         firstName = null;
         lastName = null;
       } else {
         if (!firstName || !lastName) {
+          const errorMsg =
+            "First and last name are required for individual accounts";
+
+          if (
+            req.headers.accept &&
+            req.headers.accept.includes("application/json")
+          ) {
+            return res.status(400).json({
+              success: false,
+              message: errorMsg,
+            });
+          }
+
           return await clientController.renderUpdateDashboardWithError(
             req,
             res,
             id,
-            [
-              {
-                msg: "First and last name are required for individual accounts",
-              },
-            ]
+            [{ msg: errorMsg }]
           );
         }
         companyName = null;
@@ -446,24 +535,55 @@ const clientController = {
         billingAddress,
       };
 
-      await ClientService.update(id, updateData);
+      const updatedClient = await ClientService.update(id, updateData);
       console.log("Client updated successfully:", updateData);
+
+      // Check if this is an API request
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.json({
+          success: true,
+          message: "Client updated successfully",
+          client: updatedClient,
+        });
+      }
 
       res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error updating client:", error);
 
       if (error.message && error.message.includes("email")) {
+        const errorMsg =
+          "Email already exists. Please use a different email address.";
+
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: errorMsg,
+          });
+        }
+
         return await clientController.renderUpdateDashboardWithError(
           req,
           res,
           req.params.id,
-          [
-            {
-              msg: "Email already exists. Please use a different email address.",
-            },
-          ]
+          [{ msg: errorMsg }]
         );
+      }
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.status(500).json({
+          success: false,
+          message: "Unable to update client",
+        });
       }
 
       res.status(500).render("error", {
@@ -519,17 +639,50 @@ const clientController = {
   remove: async (req, res) => {
     try {
       if (!req.user.canDeleteClients) {
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(403).json({
+            success: false,
+            message: "You do not have permission to delete clients.",
+          });
+        }
+
         return res.status(403).render("error", {
           title: "Forbidden",
           message: "You do not have permission to delete clients.",
           user: req.user,
         });
       }
+
       const clientId = req.params.id;
       await ClientService.remove(clientId);
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.json({
+          success: true,
+          message: "Client deleted successfully",
+        });
+      }
+
       res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error deleting client:", error);
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.status(500).json({
+          success: false,
+          message: "Unable to delete client",
+        });
+      }
+
       res.status(500).render("error", {
         title: "Error",
         message: "Unable to delete client.",
@@ -543,38 +696,22 @@ const clientController = {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        const ClientService = require("../services/ClientService");
-        const ServiceService = require("../services/ServiceService");
-        const ProjectService = require("../services/ProjectService");
-        const crudFormConfigs = require("../config/crudFormConfigs");
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: "Validation failed",
+            errors: errors.array(),
+          });
+        }
 
-        const clients = await ClientService.getAll();
-        const services = await ServiceService.getAll();
-        const projects = await ProjectService.getAll();
-
-        const crudForm = { ...crudFormConfigs.client };
-        crudForm.isEdit = false;
-        crudForm.cancelUrl = "/dashboard?tab=clients";
-        crudForm.fields = crudForm.fields.map((f) =>
-          f.name === "password" ? { ...f, required: true } : f
+        return await clientController.renderCreateDashboardWithError(
+          req,
+          res,
+          errors.array()
         );
-        crudForm.formData = req.body;
-        crudForm.errors = errors.array();
-
-        return res.status(400).render("dashboard", {
-          title: "Manage Clients",
-          user: {
-            ...req.user,
-            canCreateClients: true,
-            canEditClients: true,
-            canDeleteClients: true,
-          },
-          clients,
-          services,
-          projects,
-          currentTab: "clients",
-          crudForm,
-        });
       }
 
       let {
@@ -594,79 +731,46 @@ const clientController = {
 
       if (isCompany) {
         if (!companyName) {
-          const ClientService = require("../services/ClientService");
-          const ServiceService = require("../services/ServiceService");
-          const ProjectService = require("../services/ProjectService");
-          const crudFormConfigs = require("../config/crudFormConfigs");
+          const errorMsg = "Company name is required for business accounts";
 
-          const clients = await ClientService.getAll();
-          const services = await ServiceService.getAll();
-          const projects = await ProjectService.getAll();
+          if (
+            req.headers.accept &&
+            req.headers.accept.includes("application/json")
+          ) {
+            return res.status(400).json({
+              success: false,
+              message: errorMsg,
+            });
+          }
 
-          const crudForm = { ...crudFormConfigs.client };
-          crudForm.isEdit = false;
-          crudForm.cancelUrl = "/dashboard?tab=clients";
-          crudForm.fields = crudForm.fields.map((f) =>
-            f.name === "password" ? { ...f, required: true } : f
+          return await clientController.renderCreateDashboardWithError(
+            req,
+            res,
+            [{ msg: errorMsg }]
           );
-          crudForm.formData = req.body;
-          crudForm.errors = [
-            { msg: "Company name is required for business accounts" },
-          ];
-
-          return res.status(400).render("dashboard", {
-            title: "Manage Clients",
-            user: {
-              ...req.user,
-              canCreateClients: true,
-              canEditClients: true,
-              canDeleteClients: true,
-            },
-            clients,
-            services,
-            projects,
-            currentTab: "clients",
-            crudForm,
-          });
         }
         firstName = null;
         lastName = null;
       } else {
         if (!firstName || !lastName) {
-          const ClientService = require("../services/ClientService");
-          const ServiceService = require("../services/ServiceService");
-          const ProjectService = require("../services/ProjectService");
-          const crudFormConfigs = require("../config/crudFormConfigs");
+          const errorMsg =
+            "First and last name are required for individual accounts";
 
-          const clients = await ClientService.getAll();
-          const services = await ServiceService.getAll();
-          const projects = await ProjectService.getAll();
+          if (
+            req.headers.accept &&
+            req.headers.accept.includes("application/json")
+          ) {
+            return res.status(400).json({
+              success: false,
+              message: errorMsg,
+            });
+          }
 
-          const crudForm = { ...crudFormConfigs.client };
-          crudForm.isEdit = false;
-          crudForm.cancelUrl = "/dashboard?tab=clients";
-          crudForm.fields = crudForm.fields.map((f) =>
-            f.name === "password" ? { ...f, required: true } : f
+          return await clientController.renderCreateDashboardWithError(
+            req,
+            res,
+            [{ msg: errorMsg }]
           );
-          crudForm.formData = req.body;
-          crudForm.errors = [
-            { msg: "First and last name are required for individual accounts" },
-          ];
-
-          return res.status(400).render("dashboard", {
-            title: "Manage Clients",
-            user: {
-              ...req.user,
-              canCreateClients: true,
-              canEditClients: true,
-              canDeleteClients: true,
-            },
-            clients,
-            services,
-            projects,
-            currentTab: "clients",
-            crudForm,
-          });
         }
         companyName = null;
       }
@@ -696,47 +800,49 @@ const clientController = {
         billingAddress,
       };
 
-      await ClientService.create(clientData);
+      const newClient = await ClientService.create(clientData);
+
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.status(201).json({
+          success: true,
+          message: "Client created successfully",
+          client: newClient,
+        });
+      }
+
       res.redirect("/dashboard?tab=clients&success=1");
     } catch (error) {
       console.error("Error creating client:", error);
 
       if (error.message && error.message.includes("email")) {
-        const ClientService = require("../services/ClientService");
-        const ServiceService = require("../services/ServiceService");
-        const ProjectService = require("../services/ProjectService");
-        const crudFormConfigs = require("../config/crudFormConfigs");
+        const errorMsg =
+          "Email already exists. Please use a different email address.";
 
-        const clients = await ClientService.getAll();
-        const services = await ServiceService.getAll();
-        const projects = await ProjectService.getAll();
+        if (
+          req.headers.accept &&
+          req.headers.accept.includes("application/json")
+        ) {
+          return res.status(400).json({
+            success: false,
+            message: errorMsg,
+          });
+        }
 
-        const crudForm = { ...crudFormConfigs.client };
-        crudForm.isEdit = false;
-        crudForm.cancelUrl = "/dashboard?tab=clients";
-        crudForm.fields = crudForm.fields.map((f) =>
-          f.name === "password" ? { ...f, required: true } : f
-        );
-        crudForm.formData = req.body;
-        crudForm.errors = [
-          {
-            msg: "Email already exists. Please use a different email address.",
-          },
-        ];
+        return await clientController.renderCreateDashboardWithError(req, res, [
+          { msg: errorMsg },
+        ]);
+      }
 
-        return res.status(400).render("dashboard", {
-          title: "Manage Clients",
-          user: {
-            ...req.user,
-            canCreateClients: true,
-            canEditClients: true,
-            canDeleteClients: true,
-          },
-          clients,
-          services,
-          projects,
-          currentTab: "clients",
-          crudForm,
+      if (
+        req.headers.accept &&
+        req.headers.accept.includes("application/json")
+      ) {
+        return res.status(500).json({
+          success: false,
+          message: "Unable to create client",
         });
       }
 
@@ -749,6 +855,40 @@ const clientController = {
         user: req.user,
       });
     }
+  },
+
+  renderCreateDashboardWithError: async function (req, res, errors) {
+    const ServiceService = require("../services/ServiceService");
+    const ProjectService = require("../services/ProjectService");
+    const crudFormConfigs = require("../config/crudFormConfigs");
+
+    const clients = await ClientService.getAll();
+    const services = await ServiceService.getAll();
+    const projects = await ProjectService.getAll();
+
+    const crudForm = { ...crudFormConfigs.client };
+    crudForm.isEdit = false;
+    crudForm.cancelUrl = "/dashboard?tab=clients";
+    crudForm.fields = crudForm.fields.map((f) =>
+      f.name === "password" ? { ...f, required: true } : f
+    );
+    crudForm.formData = req.body;
+    crudForm.errors = errors;
+
+    return res.status(400).render("dashboard", {
+      title: "Manage Clients",
+      user: {
+        ...req.user,
+        canCreateClients: true,
+        canEditClients: true,
+        canDeleteClients: true,
+      },
+      clients,
+      services,
+      projects,
+      currentTab: "clients",
+      crudForm,
+    });
   },
 };
 

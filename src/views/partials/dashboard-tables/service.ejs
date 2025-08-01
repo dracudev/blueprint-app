@@ -28,17 +28,22 @@
           <% if (user.role === 'admin') { %> <% if (user.canEditProducts) { %>
           <a
             href="/dashboard?action=edit&entity=service&id=<%= s.serviceId %>&tab=services"
-            class="btn btn-secondary btn-md"
+            class="btn btn-secondary btn-md crud-btn"
+            data-action="edit"
+            data-entity="service"
+            data-id="<%= s.serviceId %>"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteProducts) { %>
-          <a
-            href="/dashboard?action=delete&entity=service&id=<%= s.serviceId %>&tab=services"
-            class="btn btn-danger btn-md"
-            onclick="return confirm('Are you sure you want to delete this service?');"
+          <button
+            type="button"
+            class="btn btn-danger btn-md crud-btn"
+            data-action="delete"
+            data-entity="service"
+            data-id="<%= s.serviceId %>"
           >
             Delete
-          </a>
+          </button>
           <% } %> <% } %>
         </td>
       </tr>

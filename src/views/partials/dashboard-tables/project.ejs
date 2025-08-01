@@ -39,13 +39,16 @@
           <% if (user.role === 'admin') { %> <% if (user.canEditOrders) { %>
           <a
             href="/dashboard?action=edit&entity=project&id=<%= p.projectId %>&tab=projects"
-            class="btn btn-secondary btn-md"
+            class="btn btn-secondary btn-md crud-btn"
+            data-action="edit"
+            data-entity="project"
+            data-id="<%= p.projectId %>"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteOrders) { %>
           <button
             type="button"
-            class="btn btn-danger btn-md"
+            class="btn btn-danger btn-md crud-btn"
             data-action="delete"
             data-entity="project"
             data-id="<%= p.projectId %>"

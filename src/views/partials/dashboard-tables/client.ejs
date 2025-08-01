@@ -31,17 +31,22 @@
           <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
           <a
             href="/dashboard?action=edit&entity=client&id=<%= c.clientId %>&tab=clients"
-            class="btn btn-secondary btn-md"
+            class="btn btn-secondary btn-md crud-btn"
+            data-action="edit"
+            data-entity="client"
+            data-id="<%= c.clientId %>"
             >Edit</a
           >
           <% } %> <% if (user.canDeleteClients) { %>
-          <a
-            href="/dashboard?action=delete&entity=client&id=<%= c.clientId %>&tab=clients"
-            class="btn btn-danger btn-md"
-            onclick="return confirm('Are you sure you want to delete this client?');"
+          <button
+            type="button"
+            class="btn btn-danger btn-md crud-btn"
+            data-action="delete"
+            data-entity="client"
+            data-id="<%= c.clientId %>"
           >
             Delete
-          </a>
+          </button>
           <% } %> <% } %>
         </td>
       </tr>

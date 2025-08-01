@@ -12,20 +12,32 @@
 </div>
 <% } %>
 
-<form action="<%= typeof action !== 'undefined' ? action : '' %>" method="<%= typeof method !== 'undefined' ? method : 'POST' %>" class="crud-form client-setup-form">
+<form class="crud-form client-setup-form"
+      <% if (typeof entityId !== 'undefined' && entityId) { %>
+        data-client-id="<%= typeof clientId !== 'undefined' ? clientId : '' %>"
+        data-service-id="<%= typeof serviceId !== 'undefined' ? serviceId : '' %>"
+        data-project-id="<%= typeof projectId !== 'undefined' ? projectId : '' %>"
+        data-entity-id="<%= entityId %>"
+      <% } %>
+      <% if (typeof entity !== 'undefined') { %>
+        data-entity-type="<%= entity %>"
+      <% } %>
+      data-is-edit="<%= typeof isEdit !== 'undefined' ? isEdit : false %>">
+  
+  <!-- Hidden fields for entity IDs (fallback for form data) -->
   <% if (typeof clientId !== 'undefined' && clientId) { %>
     <input type="hidden" name="clientId" value="<%= clientId %>" />
-    <input type="hidden" name="isEdit" value="true" />
   <% } %>
   <% if (typeof serviceId !== 'undefined' && serviceId) { %>
     <input type="hidden" name="serviceId" value="<%= serviceId %>" />
-    <input type="hidden" name="isEdit" value="true" />
   <% } %>
   <% if (typeof projectId !== 'undefined' && projectId) { %>
     <input type="hidden" name="projectId" value="<%= projectId %>" />
-    <input type="hidden" name="isEdit" value="true" />
   <% } %>
+  
+  <!-- Error container for AJAX form errors -->
   <div class="crud-form-errors alert alert-danger" style="display:none"></div>
+  
   <% if (typeof fields !== 'undefined' && Array.isArray(fields)) { %>
     <% fields.forEach(function(field) { %>
       <div class="form-group <%= field.fullWidth ? 'full-width' : '' %>">
@@ -80,6 +92,9 @@
               <%= field.required ? 'required' : '' %>
               <%= field.readonly ? 'readonly' : '' %>
               <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
+              <%= field.step ? 'step="' + field.step + '"' : '' %>
+              <%= field.min ? 'min="' + field.min + '"' : '' %>
+              <%= field.max ? 'max="' + field.max + '"' : '' %>
             />
           <% } %>
         <% } else if (field.type === 'select') { %>
@@ -100,6 +115,9 @@
             <%= field.required ? 'required' : '' %>
             <%= field.readonly ? 'readonly' : '' %>
             <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
+            <%= field.step ? 'step="' + field.step + '"' : '' %>
+            <%= field.min ? 'min="' + field.min + '"' : '' %>
+            <%= field.max ? 'max="' + field.max + '"' : '' %>
           />
         <% } %>
         <% if (field.help) { %>

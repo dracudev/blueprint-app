@@ -53,9 +53,7 @@ const crudFormConfigs = {
         required: false,
       },
     ],
-    action: "/dashboard",
-    method: "POST",
-    submitLabel: "Save",
+    submitLabel: "Save Client",
   },
   service: {
     fields: [
@@ -77,11 +75,11 @@ const crudFormConfigs = {
         type: "number",
         required: true,
         pattern: "^\\d+(\\.\\d{1,2})?$",
+        step: "0.01",
+        min: "0",
       },
     ],
-    action: "/dashboard",
-    method: "POST",
-    submitLabel: "Save",
+    submitLabel: "Save Service",
   },
   project: {
     fields: [
@@ -110,6 +108,8 @@ const crudFormConfigs = {
         type: "number",
         required: true,
         pattern: "^\\d+(\\.\\d{1,2})?$",
+        step: "0.01",
+        min: "0",
       },
       {
         name: "job_status",
@@ -123,9 +123,7 @@ const crudFormConfigs = {
         ],
       },
     ],
-    action: "/dashboard",
-    method: "POST",
-    submitLabel: "Save",
+    submitLabel: "Save Project",
   },
 };
 

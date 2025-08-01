@@ -3,9 +3,9 @@
 <link rel="stylesheet" href="/styles/dashboard.css" />
 <link rel="stylesheet" href="/styles/profile.css" />
 <link rel="stylesheet" href="/styles/client-setup.css" />
+<link rel="stylesheet" href="/styles/notifications.css" />
 <%- include('partials/header') %>
 
-<script src="/scripts/dashboard-crud-form.js"></script>
 
 <main data-current-tab="<%= currentTab || 'clients' %>">
   <% if (user) { %>
@@ -51,6 +51,9 @@
 </main>
 
 
+<script src="/scripts/api-service.js"></script>
+<script src="/scripts/notification-service.js"></script>
+<script src="/scripts/dashboard-crud-form.js"></script>
 <script src="/scripts/dashboard.js"></script>
 </body>
 </html>
