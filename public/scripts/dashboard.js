@@ -50,7 +50,7 @@ function initializeTabs() {
     tab.addEventListener("click", function (e) {
       e.preventDefault();
       const tabName = this.dataset.tab;
-      activateTab(tabName, true); // Pass true to indicate this is a user click
+      activateTab(tabName, true);
 
       const newUrl = new URL(window.location);
       newUrl.searchParams.set("tab", tabName);

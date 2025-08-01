@@ -443,7 +443,6 @@ const clientController = {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        // Check if this is an API request
         if (
           req.headers.accept &&
           req.headers.accept.includes("application/json")
@@ -538,7 +537,6 @@ const clientController = {
       const updatedClient = await ClientService.update(id, updateData);
       console.log("Client updated successfully:", updateData);
 
-      // Check if this is an API request
       if (
         req.headers.accept &&
         req.headers.accept.includes("application/json")

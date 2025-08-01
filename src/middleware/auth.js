@@ -13,14 +13,12 @@ const jwtAuth = (req, res, next) => {
     return;
   }
 
-  // Merge dashboard permissions into req.user
   const sessionUser = req.session.user;
   const permissions = getDashboardPermissions(sessionUser);
   req.user = { ...sessionUser, ...permissions };
   next();
 };
 
-// Helper function to get dashboard permissions (moved from dashboardController)
 function getDashboardPermissions(user) {
   if (user.role === "admin") {
     return {
