@@ -25,14 +25,14 @@ module.exports = {
   async remove(id) {
     return models.Client.delete({ where: { clientId: Number(id) } });
   },
-  async findWithOrdersByEmail(email) {
+  async findWithProjectsByEmail(email) {
     return models.Client.findFirst({
       where: { email },
       include: {
-        orders: {
+        projects: {
           include: {
-            orderItems: {
-              include: { product: true },
+            projectItems: {
+              include: { service: true },
             },
             payments: true,
           },
