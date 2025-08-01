@@ -25,30 +25,24 @@ function getDashboardPermissions(user) {
       canCreateClients: true,
       canEditClients: true,
       canDeleteClients: true,
-      canCreateProducts: true,
-      canEditProducts: true,
-      canDeleteProducts: true,
       canCreateServices: true,
       canEditServices: true,
       canDeleteServices: true,
-      canCreateOrders: true,
-      canEditOrders: true,
-      canDeleteOrders: true,
+      canCreateProjects: true,
+      canEditProjects: true,
+      canDeleteProjects: true,
     };
   } else {
     return {
       canCreateClients: false,
       canEditClients: false,
       canDeleteClients: false,
-      canCreateProducts: false,
-      canEditProducts: false,
-      canDeleteProducts: false,
       canCreateServices: false,
       canEditServices: false,
       canDeleteServices: false,
-      canCreateOrders: true,
-      canEditOrders: true,
-      canDeleteOrders: false,
+      canCreateProjects: true,
+      canEditProjects: true,
+      canDeleteProjects: false,
     };
   }
 }
