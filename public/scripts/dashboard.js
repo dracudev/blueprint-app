@@ -15,7 +15,15 @@ function initializeTabs() {
   const tabs = document.querySelectorAll(".dashboard-tab");
   const sections = document.querySelectorAll(".dashboard-section");
 
-  function activateTab(tabName) {
+  function activateTab(tabName, isUserClick = false) {
+    const crudFormContainer = document.querySelector(
+      ".dashboard-crud-form-container"
+    );
+    if (crudFormContainer && isUserClick) {
+      window.location.href = `/dashboard?tab=${tabName}`;
+      return;
+    }
+
     tabs.forEach((tab) => {
       if (tab.dataset.tab === tabName) {
         tab.classList.add("active");
@@ -42,7 +50,7 @@ function initializeTabs() {
     tab.addEventListener("click", function (e) {
       e.preventDefault();
       const tabName = this.dataset.tab;
-      activateTab(tabName);
+      activateTab(tabName, true); // Pass true to indicate this is a user click
 
       const newUrl = new URL(window.location);
       newUrl.searchParams.set("tab", tabName);
