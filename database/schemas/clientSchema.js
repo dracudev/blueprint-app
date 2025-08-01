@@ -39,9 +39,9 @@ module.exports = {
   associations: {
     hasMany: [
       {
-        model: "Order",
+        model: "Project",
         foreignKey: "clientId",
-        as: "orders",
+        as: "projects",
       },
     ],
   },

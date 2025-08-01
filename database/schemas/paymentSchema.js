@@ -7,12 +7,12 @@ module.exports = {
       autoIncrement: true,
       allowNull: false,
     },
-    orderId: {
+    projectId: {
       type: "INTEGER",
       allowNull: false,
       references: {
-        model: "Order",
-        key: "orderId",
+        model: "Project",
+        key: "projectId",
       },
     },
     paymentStatus: {
@@ -25,7 +25,7 @@ module.exports = {
       type: "DECIMAL",
       precision: 10,
       scale: 2,
-      defaultValue: 0.00,
+      defaultValue: 0.0,
       allowNull: false,
     },
     paymentDate: {
@@ -37,9 +37,9 @@ module.exports = {
   associations: {
     belongsTo: [
       {
-        model: "Order",
-        foreignKey: "orderId",
-        as: "order",
+        model: "Project",
+        foreignKey: "projectId",
+        as: "project",
       },
     ],
   },

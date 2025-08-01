@@ -69,13 +69,13 @@ async function main() {
     update: {
       serviceName: "E-commerce Platform",
       description:
-        "Full-featured e-commerce platform with payment integration, inventory management, order tracking, and admin dashboard. Includes shopping cart and checkout functionality.",
+        "Full-featured e-commerce platform with payment integration, inventory management, project tracking, and admin dashboard. Includes shopping cart and checkout functionality.",
       price: 6000.0,
     },
     create: {
       serviceName: "E-commerce Platform",
       description:
-        "Full-featured e-commerce platform with payment integration, inventory management, order tracking, and admin dashboard. Includes shopping cart and checkout functionality.",
+        "Full-featured e-commerce platform with payment integration, inventory management, project tracking, and admin dashboard. Includes shopping cart and checkout functionality.",
       price: 6000.0,
     },
   });
