@@ -101,6 +101,7 @@ const dashboardController = {
                 formData = {
                   client_id: project.clientId,
                   total_amount: project.totalAmount || "",
+                  paid_amount: project.paidAmount || "",
                   job_status: project.jobStatus || "RECEIVED",
                   services: JSON.stringify(
                     project.projectItems.map((item) => ({

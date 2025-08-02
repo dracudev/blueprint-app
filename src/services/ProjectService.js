@@ -14,7 +14,6 @@ const ProjectService = {
       },
     });
 
-    // Calculate paid amounts for each project
     return projects.map((project) => ({
       ...project,
       paidAmount: project.payments.reduce(
@@ -67,7 +66,6 @@ const ProjectService = {
       },
     });
 
-    // Calculate paid amounts for each project
     return projects.map((project) => ({
       ...project,
       paidAmount: project.payments.reduce(
@@ -78,19 +76,16 @@ const ProjectService = {
   },
 
   create: async (data) => {
-    // Map form field names to Prisma field names
     const mappedData = {
       clientId: Number(data.clientId || data.client_id),
       jobStatus: data.jobStatus || data.job_status || "RECEIVED",
       totalAmount: data.totalAmount || data.total_amount || 0,
     };
 
-    // Remove any undefined values and form-specific fields
     const cleanData = Object.fromEntries(
       Object.entries(mappedData).filter(([_, value]) => value !== undefined)
     );
 
-    // Parse services data if provided
     let services = [];
     if (data.services) {
       try {
@@ -103,14 +98,28 @@ const ProjectService = {
       }
     }
 
-    // Create project and project items in a transaction
     const result = await prisma.$transaction(async (tx) => {
-      // Create the project
       const project = await tx.project.create({
         data: cleanData,
       });
 
-      // Create project items if services were provided
+      if (data.paid_amount !== undefined) {
+        const paidAmount = Number(data.paid_amount || 0);
+
+        if (paidAmount > 0) {
+          await tx.payment.create({
+            data: {
+              projectId: project.projectId,
+              paidAmount: paidAmount,
+              paymentStatus:
+                paidAmount >= Number(project.totalAmount)
+                  ? "PAID"
+                  : "PARTIALLY_PAID",
+            },
+          });
+        }
+      }
+
       if (services && services.length > 0) {
         const projectItems = services.map((service) => ({
           projectId: project.projectId,
@@ -123,7 +132,6 @@ const ProjectService = {
           data: projectItems,
         });
 
-        // Calculate and update total amount if not manually set
         if (!data.totalAmount && !data.total_amount) {
           const calculatedTotal = projectItems.reduce(
             (sum, item) => sum + item.quantity * Number(item.unitPrice),
@@ -144,7 +152,6 @@ const ProjectService = {
   },
 
   update: async (id, data) => {
-    // Map form field names to Prisma field names
     const mappedData = {};
 
     if (data.clientId || data.client_id) {
@@ -161,12 +168,10 @@ const ProjectService = {
       );
     }
 
-    // Remove any undefined values
     const cleanData = Object.fromEntries(
       Object.entries(mappedData).filter(([_, value]) => value !== undefined)
     );
 
-    // Parse services data if provided
     let services = [];
     if (data.services) {
       try {
@@ -179,22 +184,51 @@ const ProjectService = {
       }
     }
 
-    // Update project and project items in a transaction
     const result = await prisma.$transaction(async (tx) => {
-      // Update the project
       const project = await tx.project.update({
         where: { projectId: Number(id) },
         data: cleanData,
       });
 
-      // Handle services update if provided
+      if (data.paid_amount !== undefined) {
+        const paidAmount = Number(data.paid_amount || 0);
+
+        const existingPayment = await tx.payment.findFirst({
+          where: { projectId: Number(id) },
+        });
+
+        if (existingPayment) {
+          await tx.payment.update({
+            where: { paymentId: existingPayment.paymentId },
+            data: {
+              paidAmount: paidAmount,
+              paymentStatus:
+                paidAmount > 0
+                  ? paidAmount >= Number(project.totalAmount)
+                    ? "PAID"
+                    : "PARTIALLY_PAID"
+                  : "UNPAID",
+            },
+          });
+        } else if (paidAmount > 0) {
+          await tx.payment.create({
+            data: {
+              projectId: Number(id),
+              paidAmount: paidAmount,
+              paymentStatus:
+                paidAmount >= Number(project.totalAmount)
+                  ? "PAID"
+                  : "PARTIALLY_PAID",
+            },
+          });
+        }
+      }
+
       if (data.services !== undefined) {
-        // Delete existing project items
         await tx.projectItem.deleteMany({
           where: { projectId: Number(id) },
         });
 
-        // Create new project items if services were provided
         if (services && services.length > 0) {
           const projectItems = services.map((service) => ({
             projectId: Number(id),
@@ -207,7 +241,6 @@ const ProjectService = {
             data: projectItems,
           });
 
-          // Calculate and update total amount if not manually set
           if (!data.totalAmount && !data.total_amount) {
             const calculatedTotal = projectItems.reduce(
               (sum, item) => sum + item.quantity * Number(item.unitPrice),

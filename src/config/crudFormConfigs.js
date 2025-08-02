@@ -111,6 +111,17 @@ const crudFormConfigs = {
         readonly: true,
       },
       {
+        name: "paid_amount",
+        label: "Paid Amount",
+        type: "number",
+        required: false,
+        pattern: "^\\d+(\\.\\d{1,2})?$",
+        step: "0.01",
+        min: "0",
+        help: "Amount already paid by the client",
+        adminOnly: true,
+      },
+      {
         name: "job_status",
         label: "Status",
         type: "select",
