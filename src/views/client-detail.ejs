@@ -1,0 +1,355 @@
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/styles/client-detail.css" />
+<%- include('partials/header') %>
+
+<div class="client-detail-container">
+  <!-- Back Navigation -->
+  <div class="back-navigation">
+    <% if (user.role === 'admin') { %>
+    <a href="/dashboard?tab=clients" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Clients
+    </a>
+    <% } else { %>
+    <a href="/dashboard" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Dashboard
+    </a>
+    <% } %>
+  </div>
+
+  <!-- Client Hero Section -->
+  <section class="client-hero">
+    <div class="client-hero-content">
+      <div class="client-icon-large">
+        <% if (client.isCompany) { %>
+        <i class="fas fa-building"></i>
+        <% } else { %>
+        <i class="fas fa-user"></i>
+        <% } %>
+      </div>
+
+      <h1>
+        <% if (client.isCompany) { %> <%= client.companyName %> <% } else { %>
+        <%= client.firstName %> <%= client.lastName %> <% } %>
+      </h1>
+
+      <div class="client-type-badge">
+        <% if (client.isCompany) { %>
+        <i class="fas fa-building"></i>
+        Business Client <% } else { %>
+        <i class="fas fa-user"></i>
+        Individual Client <% } %>
+      </div>
+
+      <p class="client-email">
+        <i class="fas fa-envelope"></i>
+        <%= client.email %>
+      </p>
+
+      <div class="client-actions-hero">
+        <% if (user.role === 'admin') { %>
+        <a
+          href="/dashboard?action=edit&entity=client&id=<%= client.clientId %>&tab=clients"
+          class="btn btn-hero-primary"
+        >
+          <i class="fas fa-edit"></i>
+          Edit Client
+        </a>
+        <% } %>
+        <a href="mailto:<%= client.email %>" class="btn btn-hero-secondary">
+          <i class="fas fa-envelope"></i>
+          Send Email
+        </a>
+        <% if (client.phone) { %>
+        <a href="tel:<%= client.phone %>" class="btn btn-hero-secondary">
+          <i class="fas fa-phone"></i>
+          Call Client
+        </a>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Grid -->
+  <div class="client-content-grid">
+    <!-- Main Content -->
+    <div class="client-main-content">
+      <!-- Projects Section -->
+      <div class="content-section">
+        <h2>Client Projects</h2>
+        <% if (client.projects && client.projects.length > 0) { %>
+        <div class="projects-grid">
+          <% client.projects.forEach((project) => { %>
+          <div class="project-item-card">
+            <div class="project-item-header">
+              <div class="project-icon">
+                <i class="fas fa-project-diagram"></i>
+              </div>
+              <h3>
+                <a
+                  href="/project/<%= project.projectId %>"
+                  class="project-title-link"
+                >
+                  Project #<%= project.projectId %>
+                </a>
+              </h3>
+              <div
+                class="project-status-badge status-<%= project.jobStatus.toLowerCase().replace('_', '-') %>"
+              >
+                <%= project.jobStatus.charAt(0) +
+                project.jobStatus.slice(1).toLowerCase().replace('_', ' ') %>
+              </div>
+            </div>
+
+            <div class="project-services">
+              <h4>Services:</h4>
+              <% if (project.projectItems && project.projectItems.length > 0) {
+              %>
+              <div class="services-list">
+                <% project.projectItems.forEach((item) => { %>
+                <div class="service-item">
+                  <a
+                    href="/service/<%= item.service.serviceId %>"
+                    class="service-name"
+                  >
+                    <%= item.service.serviceName %>
+                  </a>
+                  <span class="service-quantity">(x<%= item.quantity %>)</span>
+                </div>
+                <% }) %>
+              </div>
+              <% } else { %>
+              <p class="no-services">No services assigned</p>
+              <% } %>
+            </div>
+
+            <div class="project-financials">
+              <div class="financial-row">
+                <span class="label">Total Amount:</span>
+                <span class="value total"
+                  >€<%= project.totalAmount.toLocaleString() %></span
+                >
+              </div>
+              <div class="financial-row">
+                <span class="label">Paid:</span>
+                <span class="value paid"
+                  >€<%= project.paidAmount.toLocaleString() %></span
+                >
+              </div>
+              <div class="financial-row">
+                <span class="label">Outstanding:</span>
+                <span class="value outstanding"
+                  >€<%= (Number(project.totalAmount) -
+                  project.paidAmount).toLocaleString() %></span
+                >
+              </div>
+            </div>
+
+            <div class="project-meta">
+              <div class="meta-item">
+                <i class="fas fa-calendar-alt"></i>
+                Created: <%= new Date(project.createdAt).toLocaleDateString() %>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-folder-open"></i>
+          <h3>No Projects</h3>
+          <p>This client doesn't have any projects yet.</p>
+          <% if (user.role === 'admin') { %>
+          <a
+            href="/dashboard?action=create&entity=project&tab=projects&client=<%= client.clientId %>"
+            class="btn btn-primary"
+          >
+            <i class="fas fa-plus"></i>
+            Create Project
+          </a>
+          <% } %>
+        </div>
+        <% } %>
+      </div>
+
+      <!-- Client Information -->
+      <div class="content-section">
+        <h2>Contact Information</h2>
+        <div class="contact-info-card">
+          <div class="contact-info-row">
+            <span class="label">Type:</span>
+            <span class="value">
+              <% if (client.isCompany) { %>
+              <i class="fas fa-building"></i> Company <% } else { %>
+              <i class="fas fa-user"></i> Individual <% } %>
+            </span>
+          </div>
+          <% if (client.isCompany && client.companyName) { %>
+          <div class="contact-info-row">
+            <span class="label">Company Name:</span>
+            <span class="value"><%= client.companyName %></span>
+          </div>
+          <% } %> <% if (!client.isCompany) { %>
+          <div class="contact-info-row">
+            <span class="label">Full Name:</span>
+            <span class="value"
+              ><%= client.firstName %> <%= client.lastName %></span
+            >
+          </div>
+          <% } %>
+          <div class="contact-info-row">
+            <span class="label">Email:</span>
+            <span class="value">
+              <a href="mailto:<%= client.email %>"><%= client.email %></a>
+            </span>
+          </div>
+          <% if (client.phone) { %>
+          <div class="contact-info-row">
+            <span class="label">Phone:</span>
+            <span class="value">
+              <a href="tel:<%= client.phone %>"><%= client.phone %></a>
+            </span>
+          </div>
+          <% } %> <% if (client.billingAddress) { %>
+          <div class="contact-info-row">
+            <span class="label">Billing Address:</span>
+            <span class="value address"><%= client.billingAddress %></span>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="client-sidebar">
+      <!-- Summary Card -->
+      <div class="summary-card">
+        <div class="summary-badge">Client Overview</div>
+
+        <div class="summary-stats">
+          <div class="stat-item">
+            <div class="stat-number"><%= summary.totalProjects %></div>
+            <div class="stat-label">Total Projects</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">
+              €<%= summary.totalValue.toLocaleString() %>
+            </div>
+            <div class="stat-label">Total Value</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">
+              €<%= summary.totalPaid.toLocaleString() %>
+            </div>
+            <div class="stat-label">Total Paid</div>
+          </div>
+          <div class="stat-item outstanding">
+            <div class="stat-number">
+              €<%= summary.totalOutstanding.toLocaleString() %>
+            </div>
+            <div class="stat-label">Outstanding</div>
+          </div>
+        </div>
+
+        <% if (user.role === 'admin') { %>
+        <div class="summary-actions">
+          <a
+            href="/dashboard?action=create&entity=project&tab=projects&client=<%= client.clientId %>"
+            class="btn btn-primary btn-full"
+          >
+            <i class="fas fa-plus"></i>
+            New Project
+          </a>
+        </div>
+        <% } %>
+      </div>
+
+      <!-- Project Status Breakdown -->
+      <div class="status-card">
+        <h3>
+          <i class="fas fa-chart-pie"></i>
+          Project Status
+        </h3>
+        <div class="status-breakdown">
+          <div class="status-item">
+            <span class="status-dot status-received"></span>
+            <span class="status-label">Received:</span>
+            <span class="status-count"
+              ><%= summary.projectsByStatus.RECEIVED %></span
+            >
+          </div>
+          <div class="status-item">
+            <span class="status-dot status-in-progress"></span>
+            <span class="status-label">In Progress:</span>
+            <span class="status-count"
+              ><%= summary.projectsByStatus.IN_PROGRESS %></span
+            >
+          </div>
+          <div class="status-item">
+            <span class="status-dot status-completed"></span>
+            <span class="status-label">Completed:</span>
+            <span class="status-count"
+              ><%= summary.projectsByStatus.COMPLETED %></span
+            >
+          </div>
+          <div class="status-item">
+            <span class="status-dot status-delivered"></span>
+            <span class="status-label">Delivered:</span>
+            <span class="status-count"
+              ><%= summary.projectsByStatus.DELIVERED %></span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Info -->
+      <div class="info-card">
+        <h3>
+          <i class="fas fa-info-circle"></i>
+          Client Details
+        </h3>
+        <div class="info-item">
+          <span class="info-item-label">Client ID:</span>
+          <span class="info-item-value">#<%= client.clientId %></span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Type:</span>
+          <span class="info-item-value">
+            <%= client.isCompany ? 'Business' : 'Individual' %>
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Projects:</span>
+          <span class="info-item-value"><%= summary.totalProjects %></span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Status:</span>
+          <span class="info-item-value">
+            <span
+              class="client-status <%= summary.totalOutstanding > 0 ? 'outstanding' : 'current' %>"
+            >
+              <%= summary.totalOutstanding > 0 ? 'Outstanding Balance' :
+              'Current' %>
+            </span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add some interactivity for project cards
+  document.addEventListener("DOMContentLoaded", function () {
+    const projectCards = document.querySelectorAll(".project-item-card");
+    projectCards.forEach((card) => {
+      card.addEventListener("mouseenter", function () {
+        this.style.transform = "translateY(-5px)";
+      });
+      card.addEventListener("mouseleave", function () {
+        this.style.transform = "translateY(0)";
+      });
+    });
+  });
+</script>

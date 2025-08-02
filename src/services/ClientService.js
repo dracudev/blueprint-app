@@ -40,4 +40,19 @@ module.exports = {
       },
     });
   },
+  async getByIdWithProjects(clientId) {
+    return models.Client.findFirst({
+      where: { clientId: Number(clientId) },
+      include: {
+        projects: {
+          include: {
+            projectItems: {
+              include: { service: true },
+            },
+            payments: true,
+          },
+        },
+      },
+    });
+  },
 };

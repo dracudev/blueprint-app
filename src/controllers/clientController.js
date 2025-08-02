@@ -888,6 +888,96 @@ const clientController = {
       crudForm,
     });
   },
+
+  showClientDetail: async (req, res) => {
+    try {
+      if (!req.session.user) {
+        return res.redirect("/auth/login");
+      }
+
+      const clientId = req.params.id;
+
+      // Role-based access control
+      if (req.session.user.role === "client") {
+        // Clients can only view their own profile
+        const userClient = await ClientService.findByEmail(
+          req.session.user.email
+        );
+        if (!userClient || userClient.clientId !== Number(clientId)) {
+          return res.status(403).render("error", {
+            title: "Access Denied",
+            message: "You can only view your own profile.",
+            user: req.session.user,
+          });
+        }
+      } else if (req.session.user.role !== "admin") {
+        // Only admins and clients (with restrictions) can view client details
+        return res.status(403).render("error", {
+          title: "Access Denied",
+          message: "You don't have permission to view client details.",
+          user: req.session.user,
+        });
+      }
+
+      const client = await ClientService.getByIdWithProjects(clientId);
+
+      if (!client) {
+        return res.status(404).render("error", {
+          title: "Client Not Found",
+          message: "The requested client could not be found.",
+          user: req.session.user,
+        });
+      }
+
+      // Calculate project summaries
+      let totalProjects = client.projects.length;
+      let totalValue = 0;
+      let totalPaid = 0;
+      let projectsByStatus = {
+        RECEIVED: 0,
+        IN_PROGRESS: 0,
+        COMPLETED: 0,
+        DELIVERED: 0,
+      };
+
+      client.projects.forEach((project) => {
+        totalValue += Number(project.totalAmount);
+        const paidAmount = project.payments.reduce(
+          (sum, payment) => sum + Number(payment.paidAmount),
+          0
+        );
+        totalPaid += paidAmount;
+        projectsByStatus[project.jobStatus]++;
+
+        // Add calculated paid amount to project
+        project.paidAmount = paidAmount;
+      });
+
+      res.render("client-detail", {
+        title: `${
+          client.isCompany
+            ? client.companyName
+            : client.firstName + " " + client.lastName
+        } - Client Details`,
+        client: client,
+        user: req.session.user,
+        summary: {
+          totalProjects,
+          totalValue,
+          totalPaid,
+          totalOutstanding: totalValue - totalPaid,
+          projectsByStatus,
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching client details:", error);
+      res.status(500).render("error", {
+        title: "Error",
+        message: "An error occurred while loading the client details.",
+        user: req.session.user,
+      });
+    }
+  },
 };
 
 module.exports = clientController;

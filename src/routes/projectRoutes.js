@@ -2,22 +2,8 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", async function (req, res) {
-  try {
-    const ProjectService = require("../services/ProjectService");
-    const projects = await ProjectService.getAll();
-    res.render("projects", {
-      title: "All Projects",
-      user: req.session.user,
-      projects: projects,
-    });
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    res.render("projects", {
-      title: "All Projects",
-      user: req.session.user,
-      projects: [],
-    });
-  }
+  // Redirect to dashboard projects tab instead of rendering a separate projects page
+  res.redirect("/dashboard?tab=projects");
 });
 
 router.get("/:id", async function (req, res) {

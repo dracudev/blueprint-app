@@ -22,8 +22,15 @@
       <% clients.forEach(c => { %>
       <tr>
         <td>
-          <% if (c.isCompany) { %> <%= c.companyName %> <% } else { %> <%=
-          c.firstName %> <%= c.lastName %> <% } %>
+          <% if (c.isCompany) { %>
+          <a href="/client/<%= c.clientId %>" class="client-name-link">
+            <%= c.companyName %>
+          </a>
+          <% } else { %>
+          <a href="/client/<%= c.clientId %>" class="client-name-link">
+            <%= c.firstName %> <%= c.lastName %>
+          </a>
+          <% } %>
         </td>
         <td><%= c.email %></td>
 
