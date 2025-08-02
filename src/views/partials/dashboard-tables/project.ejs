@@ -48,7 +48,7 @@
             <div class="service-item-row">
               <% if (item.service && item.service.serviceId) { %>
               <a
-                href="/services/<%= item.service.serviceId %>"
+                href="/service/<%= item.service.serviceId %>"
                 class="service-link"
               >
                 <%= item.service.serviceName %>
@@ -67,30 +67,32 @@
           p.jobStatus.slice(1).toLowerCase().replace('_', ' ') %> <% } else { %>
           N/A <% } %>
         </td>
-        <td>€<%= p.totalAmount %></td>
-        <td>€<%= p.paidAmount || 0 %></td>
+        <td><%= p.totalAmount %>€</td>
+        <td><%= p.paidAmount || 0 %>€</td>
         <% if (user.role === 'admin') { %>
         <td>
-          <% if (user.canEditProjects) { %>
-          <a
-            href="/dashboard?action=edit&entity=project&id=<%= p.projectId %>&tab=projects"
-            class="btn btn-secondary btn-md crud-btn"
-            data-action="edit"
-            data-entity="project"
-            data-id="<%= p.projectId %>"
-            >Edit</a
-          >
-          <% } %> <% if (user.canDeleteProjects) { %>
-          <button
-            type="button"
-            class="btn btn-danger btn-md crud-btn"
-            data-action="delete"
-            data-entity="project"
-            data-id="<%= p.projectId %>"
-          >
-            Delete
-          </button>
-          <% } %>
+          <div class="actions">
+            <% if (user.canEditProjects) { %>
+            <a
+              href="/dashboard?action=edit&entity=project&id=<%= p.projectId %>&tab=projects"
+              class="btn btn-secondary btn-sm crud-btn"
+              data-action="edit"
+              data-entity="project"
+              data-id="<%= p.projectId %>"
+              >Edit</a
+            >
+            <% } %> <% if (user.canDeleteProjects) { %>
+            <button
+              type="button"
+              class="btn btn-danger btn-sm crud-btn"
+              data-action="delete"
+              data-entity="project"
+              data-id="<%= p.projectId %>"
+            >
+              Delete
+            </button>
+            <% } %>
+          </div>
         </td>
         <% } %>
       </tr>

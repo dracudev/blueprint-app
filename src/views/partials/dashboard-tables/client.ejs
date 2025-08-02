@@ -35,26 +35,30 @@
         <td><%= c.email %></td>
 
         <td>
-          <% if (user.role === 'admin') { %> <% if (user.canEditClients) { %>
-          <a
-            href="/dashboard?action=edit&entity=client&id=<%= c.clientId %>&tab=clients"
-            class="btn btn-secondary btn-md crud-btn"
-            data-action="edit"
-            data-entity="client"
-            data-id="<%= c.clientId %>"
-            >Edit</a
-          >
-          <% } %> <% if (user.canDeleteClients) { %>
-          <button
-            type="button"
-            class="btn btn-danger btn-md crud-btn"
-            data-action="delete"
-            data-entity="client"
-            data-id="<%= c.clientId %>"
-          >
-            Delete
-          </button>
-          <% } %> <% } %>
+          <% if (user.role === 'admin') { %>
+          <div class="actions">
+            <% if (user.canEditClients) { %>
+            <a
+              href="/dashboard?action=edit&entity=client&id=<%= c.clientId %>&tab=clients"
+              class="btn btn-secondary btn-sm crud-btn"
+              data-action="edit"
+              data-entity="client"
+              data-id="<%= c.clientId %>"
+              >Edit</a
+            >
+            <% } %> <% if (user.canDeleteClients) { %>
+            <button
+              type="button"
+              class="btn btn-danger btn-sm crud-btn"
+              data-action="delete"
+              data-entity="client"
+              data-id="<%= c.clientId %>"
+            >
+              Delete
+            </button>
+            <% } %>
+          </div>
+          <% } %>
         </td>
       </tr>
       <% }) %>

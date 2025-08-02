@@ -13,7 +13,6 @@ router.get("/profile", clientController.showProfile);
 router.post("/profile", validateClientUpdate, clientController.updateProfile);
 router.get("/profile/edit", clientController.showEdit);
 
-// Client detail route - for admins to view any client, for clients to view their own profile
 router.get("/:id", clientController.showClientDetail);
 
 router.get("/data", clientController.getClientData);

@@ -23,28 +23,32 @@
       <tr>
         <td><%= s.serviceName %></td>
         <td><%= s.description || 'No description' %></td>
-        <td>$<%= parseFloat(s.price).toFixed(2) %></td>
+        <td><%= parseFloat(s.price).toLocaleString() %>€</td>
         <td>
-          <% if (user.role === 'admin') { %> <% if (user.canEditServices) { %>
-          <a
-            href="/dashboard?action=edit&entity=service&id=<%= s.serviceId %>&tab=services"
-            class="btn btn-secondary btn-md crud-btn"
-            data-action="edit"
-            data-entity="service"
-            data-id="<%= s.serviceId %>"
-            >Edit</a
-          >
-          <% } %> <% if (user.canDeleteServices) { %>
-          <button
-            type="button"
-            class="btn btn-danger btn-md crud-btn"
-            data-action="delete"
-            data-entity="service"
-            data-id="<%= s.serviceId %>"
-          >
-            Delete
-          </button>
-          <% } %> <% } %>
+          <% if (user.role === 'admin') { %>
+          <div class="actions">
+            <% if (user.canEditServices) { %>
+            <a
+              href="/dashboard?action=edit&entity=service&id=<%= s.serviceId %>&tab=services"
+              class="btn btn-secondary btn-sm crud-btn"
+              data-action="edit"
+              data-entity="service"
+              data-id="<%= s.serviceId %>"
+              >Edit</a
+            >
+            <% } %> <% if (user.canDeleteServices) { %>
+            <button
+              type="button"
+              class="btn btn-danger btn-sm crud-btn"
+              data-action="delete"
+              data-entity="service"
+              data-id="<%= s.serviceId %>"
+            >
+              Delete
+            </button>
+            <% } %>
+          </div>
+          <% } %>
         </td>
       </tr>
       <% }) %>

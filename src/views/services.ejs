@@ -63,7 +63,7 @@
                         </ul>
                         <div class="service-pricing">
                             <span class="price-label">Starting from</span>
-                            <span class="price">€<%= service.price.toLocaleString() %></span>
+                            <span class="price"><%= service.price.toLocaleString() %>€</span>
                         </div>
                         <div class="service-actions">
                             <% if (user) { %>
@@ -71,7 +71,7 @@
                             <% } else { %>
                                 <a href="/auth/signup" class="btn btn-primary btn-md">Get Quote</a>
                             <% } %>
-                            <a href="/services/<%= service.serviceId %>" class="btn btn-outline btn-md">Learn More</a>
+                            <a href="/service/<%= service.serviceId %>" class="btn btn-outline btn-md">Learn More</a>
                         </div>
                     </div>
                 </div>
