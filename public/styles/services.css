@@ -218,24 +218,13 @@
   flex: 1;
   min-width: 120px;
   justify-content: center;
-  text-decoration: none !important;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
+  text-decoration: none;
 }
 
-.service-actions .btn:hover {
-  text-decoration: none !important;
-}
-
-.service-actions .btn:focus {
-  text-decoration: none !important;
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-}
-
-.service-actions .btn:visited {
-  text-decoration: none !important;
+.service-actions .btn:hover,
+.service-actions .btn:focus,
+.service-actions .btn:active {
+  text-decoration: none;
 }
 
 /* Process Section */
@@ -349,16 +338,25 @@
 
 .cta-actions .btn {
   min-width: 150px;
+  text-decoration: none;
+}
+
+.cta-actions .btn:hover,
+.cta-actions .btn:focus,
+.cta-actions .btn:active {
+  text-decoration: none;
 }
 
 .cta-actions .btn-outline {
   border-color: var(--text-white);
   color: var(--text-white);
+  text-decoration: none;
 }
 
 .cta-actions .btn-outline:hover {
   background-color: var(--text-white);
   color: var(--primary-color);
+  text-decoration: none;
 }
 
 /* Responsive Design */
@@ -406,6 +404,7 @@
 
   .service-actions .btn {
     width: 100%;
+    text-decoration: none;
   }
 
   .process-section {
@@ -441,6 +440,7 @@
   .cta-actions .btn {
     width: 100%;
     max-width: 300px;
+    text-decoration: none;
   }
 }
 

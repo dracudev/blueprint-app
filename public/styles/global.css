@@ -789,6 +789,14 @@ main p {
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+}
+
+.btn:hover,
+.btn:focus,
+.btn:active,
+.btn:visited {
+  text-decoration: none;
 }
 
 .btn:focus-visible {
@@ -954,6 +962,40 @@ main p {
   padding: var(--space-4) var(--space-6);
   background-color: var(--bg-secondary);
   border-top: 1px solid var(--border-color);
+}
+
+/* Button Groups & Actions */
+.btn-group {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.btn-group .btn {
+  text-decoration: none;
+}
+
+.btn-group .btn:hover,
+.btn-group .btn:focus,
+.btn-group .btn:active {
+  text-decoration: none;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.actions .btn {
+  text-decoration: none;
+}
+
+.actions .btn:hover,
+.actions .btn:focus,
+.actions .btn:active {
+  text-decoration: none;
 }
 
 /* Loading State */

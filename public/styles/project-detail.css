@@ -122,14 +122,12 @@
   padding: var(--space-4) var(--space-6);
   border-radius: var(--radius-xl);
   font-weight: var(--font-weight-semibold);
-  text-decoration: none !important;
 }
 
 .btn-hero-primary {
   background: var(--text-white);
   color: var(--primary-color);
   border: 2px solid var(--text-white);
-  text-decoration: none !important;
 }
 
 .btn-hero-primary:hover {
@@ -138,14 +136,12 @@
   border-color: var(--text-white);
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-  text-decoration: none !important;
 }
 
 .btn-hero-secondary {
   background: transparent;
   color: var(--text-white);
   border: 2px solid rgba(255, 255, 255, 0.6);
-  text-decoration: none !important;
 }
 
 .btn-hero-secondary:hover {
@@ -153,7 +149,6 @@
   border-color: var(--text-white);
   transform: translateY(-2px);
   backdrop-filter: blur(10px);
-  text-decoration: none !important;
 }
 
 /* Content Grid */

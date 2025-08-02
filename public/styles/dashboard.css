@@ -62,7 +62,14 @@
 
 .dashboard-table-header .btn {
   flex-shrink: 0;
-  width: auto;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.dashboard-table-header .btn:hover,
+.dashboard-table-header .btn:focus,
+.dashboard-table-header .btn:active {
+  text-decoration: none;
 }
 
 .dashboard-table {
@@ -98,6 +105,25 @@
   border-bottom: none;
 }
 
+/* Table Action Buttons */
+.dashboard-table .btn {
+  margin-right: var(--space-2);
+  margin-bottom: var(--space-1);
+  text-decoration: none;
+  font-size: var(--font-size-xs);
+  padding: var(--space-1) var(--space-3);
+}
+
+.dashboard-table .btn:hover,
+.dashboard-table .btn:focus,
+.dashboard-table .btn:active {
+  text-decoration: none;
+}
+
+.dashboard-table .btn:last-child {
+  margin-right: 0;
+}
+
 /* Responsive Styles */
 @media (max-width: 900px) {
   .dashboard-container {
@@ -124,6 +150,8 @@
   .dashboard-table-header .btn {
     align-self: stretch;
     max-width: 200px;
+    text-align: center;
+    text-decoration: none;
   }
   .dashboard-table {
     font-size: var(--font-size-xs);
