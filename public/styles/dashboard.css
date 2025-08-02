@@ -167,6 +167,18 @@
   text-decoration: underline;
 }
 
+.project-id-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  transition: color var(--transition-fast);
+}
+
+.project-id-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
 .service-item-row:hover {
   box-shadow: var(--shadow-sm);
   border-color: var(--border-focus);

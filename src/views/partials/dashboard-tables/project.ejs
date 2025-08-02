@@ -13,6 +13,7 @@
   <table class="dashboard-table dashboard-table-main">
     <thead>
       <tr>
+        <th>Project ID</th>
         <% if (user.role !== 'client') { %>
         <th>Client</th>
         <% } %>
@@ -20,12 +21,19 @@
         <th>Status</th>
         <th>Total</th>
         <th>Paid</th>
+        <% if (user.role === 'admin') { %>
         <th>Actions</th>
+        <% } %>
       </tr>
     </thead>
     <tbody>
       <% projects.forEach(p => { %>
       <tr>
+        <td>
+          <a href="/project/<%= p.projectId %>" class="project-id-link">
+            #<%= p.projectId %>
+          </a>
+        </td>
         <% if (user.role !== 'client') { %>
         <td>
           <% if (p.client) { %> <% if (p.client.isCompany) { %> <%=
@@ -61,8 +69,9 @@
         </td>
         <td>€<%= p.totalAmount %></td>
         <td>€<%= p.paidAmount || 0 %></td>
+        <% if (user.role === 'admin') { %>
         <td>
-          <% if (user.role === 'admin') { %> <% if (user.canEditProjects) { %>
+          <% if (user.canEditProjects) { %>
           <a
             href="/dashboard?action=edit&entity=project&id=<%= p.projectId %>&tab=projects"
             class="btn btn-secondary btn-md crud-btn"
@@ -81,12 +90,9 @@
           >
             Delete
           </button>
-          <% } %> <% } %> <% if (user.role === 'client') { %>
-          <a href="/project/view/<%= p.projectId %>" class="btn btn-info btn-md"
-            >View</a
-          >
           <% } %>
         </td>
+        <% } %>
       </tr>
       <% }) %>
     </tbody>

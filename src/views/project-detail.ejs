@@ -1,0 +1,360 @@
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/styles/project-detail.css" />
+<%- include('partials/header') %>
+
+<div class="project-detail-container">
+  <!-- Back Navigation -->
+  <div class="back-navigation">
+    <a href="javascript:history.back()" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Projects
+    </a>
+  </div>
+
+  <!-- Project Hero Section -->
+  <section class="project-hero">
+    <div class="project-hero-content">
+      <div class="project-icon-large">
+        <i class="fas fa-project-diagram"></i>
+      </div>
+
+      <h1>Project #<%= project.projectId %></h1>
+
+      <div
+        class="project-status-badge status-<%= project.jobStatus.toLowerCase().replace('_', '-') %>"
+      >
+        <i
+          class="fas fa-<%= project.jobStatus === 'COMPLETED' ? 'check-circle' : project.jobStatus === 'IN_PROGRESS' ? 'clock' : project.jobStatus === 'DELIVERED' ? 'truck' : 'inbox' %>"
+        ></i>
+        <%= project.jobStatus.charAt(0) +
+        project.jobStatus.slice(1).toLowerCase().replace('_', ' ') %>
+      </div>
+
+      <div class="project-client">
+        <% if (project.client) { %> <% if (project.client.isCompany) { %>
+        <h2><%= project.client.companyName %></h2>
+        <% } else { %>
+        <h2><%= project.client.firstName %> <%= project.client.lastName %></h2>
+        <% } %> <% } else { %>
+        <h2>Unknown Client</h2>
+        <% } %>
+      </div>
+
+      <div class="project-actions-hero">
+        <% if (user && user.role === 'admin') { %>
+        <a
+          href="/dashboard?action=edit&entity=project&id=<%= project.projectId %>&tab=projects"
+          class="btn btn-hero-primary"
+        >
+          <i class="fas fa-edit"></i>
+          Edit Project
+        </a>
+        <% } %> <% if (project.client && project.client.email) { %>
+        <a
+          href="mailto:<%= project.client.email %>"
+          class="btn btn-hero-secondary"
+        >
+          <i class="fas fa-envelope"></i>
+          Contact Client
+        </a>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Grid -->
+  <div class="project-content-grid">
+    <!-- Main Content -->
+    <div class="project-main-content">
+      <!-- Services Section -->
+      <div class="content-section">
+        <h2>Project Services</h2>
+        <% if (project.projectItems && project.projectItems.length > 0) { %>
+        <div class="services-grid">
+          <% project.projectItems.forEach((item) => { %>
+          <div class="service-item-card">
+            <div class="service-item-header">
+              <div class="service-icon">
+                <% if
+                (item.service.serviceName.toLowerCase().includes('website') ||
+                item.service.serviceName.toLowerCase().includes('web')) { %>
+                <i class="fas fa-globe-americas"></i>
+                <% } else if
+                (item.service.serviceName.toLowerCase().includes('mobile') ||
+                item.service.serviceName.toLowerCase().includes('app')) { %>
+                <i class="fas fa-mobile-alt"></i>
+                <% } else if
+                (item.service.serviceName.toLowerCase().includes('ecommerce') ||
+                item.service.serviceName.toLowerCase().includes('e-commerce') ||
+                item.service.serviceName.toLowerCase().includes('shop')) { %>
+                <i class="fas fa-shopping-cart"></i>
+                <% } else if
+                (item.service.serviceName.toLowerCase().includes('api') ||
+                item.service.serviceName.toLowerCase().includes('backend')) { %>
+                <i class="fas fa-server"></i>
+                <% } else if
+                (item.service.serviceName.toLowerCase().includes('design') ||
+                item.service.serviceName.toLowerCase().includes('ui')) { %>
+                <i class="fas fa-paint-brush"></i>
+                <% } else if
+                (item.service.serviceName.toLowerCase().includes('consulting')
+                || item.service.serviceName.toLowerCase().includes('advice')) {
+                %>
+                <i class="fas fa-lightbulb"></i>
+                <% } else { %>
+                <i class="fas fa-code"></i>
+                <% } %>
+              </div>
+              <h3>
+                <a
+                  href="/services/<%= item.service.serviceId %>"
+                  class="service-title-link"
+                >
+                  <%= item.service.serviceName %>
+                </a>
+              </h3>
+            </div>
+            <div class="service-item-details">
+              <div class="service-detail">
+                <span class="label">Quantity:</span>
+                <span class="value"><%= item.quantity %></span>
+              </div>
+              <div class="service-detail">
+                <span class="label">Unit Price:</span>
+                <span class="value"
+                  >€<%= item.unitPrice.toLocaleString() %></span
+                >
+              </div>
+              <div class="service-detail total">
+                <span class="label">Subtotal:</span>
+                <span class="value"
+                  >€<%= (item.quantity *
+                  Number(item.unitPrice)).toLocaleString() %></span
+                >
+              </div>
+            </div>
+            <% if (item.service.description) { %>
+            <p class="service-description"><%= item.service.description %></p>
+            <% } %>
+          </div>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <h3>No Services Added</h3>
+          <p>This project doesn't have any services assigned yet.</p>
+        </div>
+        <% } %>
+      </div>
+
+      <!-- Client Information -->
+      <div class="content-section">
+        <h2>Client Information</h2>
+        <% if (project.client) { %>
+        <div class="client-info-card">
+          <div class="client-info-row">
+            <span class="label">Type:</span>
+            <span class="value">
+              <% if (project.client.isCompany) { %>
+              <i class="fas fa-building"></i> Company <% } else { %>
+              <i class="fas fa-user"></i> Individual <% } %>
+            </span>
+          </div>
+          <% if (project.client.isCompany && project.client.companyName) { %>
+          <div class="client-info-row">
+            <span class="label">Company Name:</span>
+            <span class="value"><%= project.client.companyName %></span>
+          </div>
+          <% } %> <% if (!project.client.isCompany) { %>
+          <div class="client-info-row">
+            <span class="label">Name:</span>
+            <span class="value"
+              ><%= project.client.firstName %> <%= project.client.lastName
+              %></span
+            >
+          </div>
+          <% } %>
+          <div class="client-info-row">
+            <span class="label">Email:</span>
+            <span class="value">
+              <a href="mailto:<%= project.client.email %>"
+                ><%= project.client.email %></a
+              >
+            </span>
+          </div>
+          <% if (project.client.phone) { %>
+          <div class="client-info-row">
+            <span class="label">Phone:</span>
+            <span class="value">
+              <a href="tel:<%= project.client.phone %>"
+                ><%= project.client.phone %></a
+              >
+            </span>
+          </div>
+          <% } %> <% if (project.client.billingAddress) { %>
+          <div class="client-info-row">
+            <span class="label">Billing Address:</span>
+            <span class="value address"
+              ><%= project.client.billingAddress %></span
+            >
+          </div>
+          <% } %>
+        </div>
+        <% } else { %>
+        <div class="empty-state">
+          <i class="fas fa-user-slash"></i>
+          <h3>No Client Information</h3>
+          <p>Client information is not available for this project.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="project-sidebar">
+      <!-- Pricing Summary -->
+      <div class="pricing-card">
+        <div class="pricing-badge">Project Summary</div>
+
+        <div class="pricing-amount">
+          €<%= project.totalAmount.toLocaleString() %>
+        </div>
+        <div class="pricing-label">Total Amount</div>
+
+        <div class="payment-summary">
+          <div class="payment-row">
+            <span class="payment-label">Paid Amount:</span>
+            <span class="payment-value paid"
+              >€<%= project.paidAmount.toLocaleString() %></span
+            >
+          </div>
+          <div class="payment-row">
+            <span class="payment-label">Remaining:</span>
+            <span class="payment-value remaining"
+              >€<%= (Number(project.totalAmount) -
+              project.paidAmount).toLocaleString() %></span
+            >
+          </div>
+          <div class="payment-row total">
+            <span class="payment-label">Payment Status:</span>
+            <span
+              class="payment-status <%= project.paidAmount >= Number(project.totalAmount) ? 'paid' : project.paidAmount > 0 ? 'partial' : 'unpaid' %>"
+            >
+              <% if (project.paidAmount >= Number(project.totalAmount)) { %>
+              <i class="fas fa-check-circle"></i> Fully Paid <% } else if
+              (project.paidAmount > 0) { %>
+              <i class="fas fa-clock"></i> Partially Paid <% } else { %>
+              <i class="fas fa-exclamation-circle"></i> Unpaid <% } %>
+            </span>
+          </div>
+        </div>
+
+        <% if (user && user.role === 'admin') { %>
+        <div class="pricing-actions">
+          <a
+            href="/dashboard?action=edit&entity=project&id=<%= project.projectId %>&tab=projects"
+            class="btn btn-primary btn-full"
+          >
+            <i class="fas fa-edit"></i>
+            Manage Project
+          </a>
+        </div>
+        <% } %>
+      </div>
+
+      <!-- Project Information -->
+      <div class="info-card">
+        <h3>
+          <i class="fas fa-info-circle"></i>
+          Project Details
+        </h3>
+        <div class="info-item">
+          <span class="info-item-label">Project ID:</span>
+          <span class="info-item-value">#<%= project.projectId %></span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Created:</span>
+          <span class="info-item-value"
+            ><%= new Date(project.createdAt).toLocaleDateString() %></span
+          >
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Status:</span>
+          <span class="info-item-value">
+            <span
+              class="status-badge-small status-<%= project.jobStatus.toLowerCase().replace('_', '-') %>"
+            >
+              <%= project.jobStatus.charAt(0) +
+              project.jobStatus.slice(1).toLowerCase().replace('_', ' ') %>
+            </span>
+          </span>
+        </div>
+        <div class="info-item">
+          <span class="info-item-label">Services Count:</span>
+          <span class="info-item-value"
+            ><%= project.projectItems ? project.projectItems.length : 0 %></span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Timeline -->
+  <section class="progress-timeline">
+    <h2>Project Progress</h2>
+    <div class="timeline-steps">
+      <div
+        class="timeline-step <%= project.jobStatus === 'RECEIVED' || project.jobStatus === 'IN_PROGRESS' || project.jobStatus === 'COMPLETED' || project.jobStatus === 'DELIVERED' ? 'completed' : '' %>"
+      >
+        <div class="timeline-number">1</div>
+        <div class="timeline-content">
+          <h4>Project Received</h4>
+          <p>Project has been received and is in our system</p>
+        </div>
+      </div>
+      <div
+        class="timeline-step <%= project.jobStatus === 'IN_PROGRESS' || project.jobStatus === 'COMPLETED' || project.jobStatus === 'DELIVERED' ? 'completed' : project.jobStatus === 'RECEIVED' ? 'current' : '' %>"
+      >
+        <div class="timeline-number">2</div>
+        <div class="timeline-content">
+          <h4>In Progress</h4>
+          <p>Development work is actively underway</p>
+        </div>
+      </div>
+      <div
+        class="timeline-step <%= project.jobStatus === 'COMPLETED' || project.jobStatus === 'DELIVERED' ? 'completed' : project.jobStatus === 'IN_PROGRESS' ? 'current' : '' %>"
+      >
+        <div class="timeline-number">3</div>
+        <div class="timeline-content">
+          <h4>Completed</h4>
+          <p>Development work has been completed</p>
+        </div>
+      </div>
+      <div
+        class="timeline-step <%= project.jobStatus === 'DELIVERED' ? 'completed' : project.jobStatus === 'COMPLETED' ? 'current' : '' %>"
+      >
+        <div class="timeline-number">4</div>
+        <div class="timeline-content">
+          <h4>Delivered</h4>
+          <p>Project has been delivered to the client</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Add some interactivity for service cards
+  document.addEventListener("DOMContentLoaded", function () {
+    const serviceCards = document.querySelectorAll(".service-item-card");
+    serviceCards.forEach((card) => {
+      card.addEventListener("mouseenter", function () {
+        this.style.transform = "translateY(-5px)";
+      });
+      card.addEventListener("mouseleave", function () {
+        this.style.transform = "translateY(0)";
+      });
+    });
+  });
+</script>

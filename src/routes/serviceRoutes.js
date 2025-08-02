@@ -34,7 +34,7 @@ router.get("/:id", async function (req, res) {
     }
 
     res.render("service-detail", {
-      title: `${service.serviceName} - Service Details`,
+      title: `${service.serviceName}`,
       service: service,
       user: req.session.user,
     });
