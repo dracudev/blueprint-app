@@ -75,12 +75,7 @@
           </label>
         </div>
       </div>
-        <% } else if (
-          (field.name === 'companyName') ||
-          (field.name === 'firstName') ||
-          (field.name === 'lastName') ||
-          (field.name !== 'companyName' && field.name !== 'firstName' && field.name !== 'lastName' && field.type !== 'select')
-        ) { %>
+        <% } else if (field.name === 'companyName' || field.name === 'firstName' || field.name === 'lastName') { %>
           <% if (field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number') { %>
             <input
               type="<%= field.type || 'text' %>"
@@ -97,6 +92,21 @@
               <%= field.max ? 'max="' + field.max + '"' : '' %>
             />
           <% } %>
+        <% } else if (field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number') { %>
+          <input
+            type="<%= field.type || 'text' %>"
+            id="<%= field.name %>"
+            name="<%= field.name %>"
+            class="form-control"
+            value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
+            placeholder="<%= field.placeholder || '' %>"
+            <%= field.required ? 'required' : '' %>
+            <%= field.readonly ? 'readonly' : '' %>
+            <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
+            <%= field.step ? 'step="' + field.step + '"' : '' %>
+            <%= field.min ? 'min="' + field.min + '"' : '' %>
+            <%= field.max ? 'max="' + field.max + '"' : '' %>
+          />
         <% } else if (field.type === 'select') { %>
           <select id="<%= field.name %>" name="<%= field.name %>" class="form-control" <%= field.required ? 'required' : '' %>>
             <option value="" disabled <%= (formData && (typeof formData[field.name] === 'undefined' || formData[field.name] === '')) ? 'selected' : '' %>>Select...</option>

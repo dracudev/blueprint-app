@@ -3,10 +3,16 @@
  * Handles form submissions via AJAX to REST API endpoints
  */
 document.addEventListener("DOMContentLoaded", function () {
-  const form = document.querySelector(
-    ".dashboard-crud-form-container .crud-form"
-  );
-  if (!form) return;
+  const form =
+    document.querySelector(".dashboard-crud-form-container .crud-form") ||
+    document.querySelector(".crud-form");
+
+  if (!form) {
+    console.log("No CRUD form found on this page");
+    return;
+  }
+
+  console.log("CRUD form found, initializing...");
 
   initializeClientTypeToggle();
   initializeServiceSelector();
@@ -74,12 +80,44 @@ document.addEventListener("DOMContentLoaded", function () {
     const serviceContainer = form.querySelector(
       '[data-field-type="service-selector"]'
     );
-    if (!serviceContainer) return;
+    if (!serviceContainer) {
+      console.log("No service selector found in form");
+      return;
+    }
 
-    const servicesData = JSON.parse(serviceContainer.dataset.services || "[]");
-    const existingServices = JSON.parse(
-      serviceContainer.dataset.existingServices || "[]"
-    );
+    console.log("Service selector found, initializing...");
+
+    let servicesData = [];
+    let existingServices = [];
+
+    try {
+      servicesData = JSON.parse(serviceContainer.dataset.services || "[]");
+    } catch (e) {
+      console.error("Error parsing services data:", e);
+      servicesData = [];
+    }
+
+    try {
+      existingServices = JSON.parse(
+        serviceContainer.dataset.existingServices || "[]"
+      );
+    } catch (e) {
+      console.error("Error parsing existing services data:", e);
+      existingServices = [];
+    }
+
+    console.log("Services data:", servicesData);
+    console.log("Existing services:", existingServices);
+
+    if (!servicesData || servicesData.length === 0) {
+      console.warn("No services data available for service selector");
+      serviceContainer.innerHTML = `
+        <div class="alert alert-warning">
+          <p>No services available. Please add services first before creating projects.</p>
+        </div>
+      `;
+      return;
+    }
 
     let selectedServices = [...existingServices];
 
@@ -95,6 +133,11 @@ document.addEventListener("DOMContentLoaded", function () {
     availableServices,
     selectedServices
   ) {
+    console.log("Creating service selector UI with:", {
+      availableServices,
+      selectedServices,
+    });
+
     container.innerHTML = `
       <div class="service-selector">
         <div class="service-selector-header">
@@ -109,6 +152,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const servicesList = container.querySelector(".selected-services-list");
     const servicesInput = container.querySelector(".services-input");
     const addServiceBtn = container.querySelector(".add-service-btn");
+
+    if (!servicesList || !servicesInput || !addServiceBtn) {
+      console.error("Failed to create service selector elements");
+      return;
+    }
 
     // Render existing services
     updateServicesList();
@@ -127,78 +175,98 @@ document.addEventListener("DOMContentLoaded", function () {
           unitPrice: availableService.price,
         });
         updateServicesList();
+      } else {
+        alert("No more services available to add.");
       }
     });
 
     function updateServicesList() {
-      // Update hidden input
-      servicesInput.value = JSON.stringify(selectedServices);
+      try {
+        // Update hidden input
+        servicesInput.value = JSON.stringify(selectedServices);
 
-      // Render service items
-      servicesList.innerHTML = selectedServices
-        .map(
-          (service, index) => `
-        <div class="service-item" data-index="${index}">
-          <div class="service-item-content">
-            <div class="service-info">
-              <select class="form-control service-select" data-index="${index}">
-                ${availableServices
-                  .map(
-                    (s) => `
-                  <option value="${s.serviceId}" ${
-                      s.serviceId == service.serviceId ? "selected" : ""
-                    }>
-                    ${s.serviceName} - €${s.price}
-                  </option>
-                `
-                  )
-                  .join("")}
-              </select>
+        // Render service items
+        if (selectedServices.length === 0) {
+          servicesList.innerHTML = `
+            <div class="no-services-message" style="text-align: center; padding: var(--space-4); color: var(--text-muted);">
+              <p>No services added yet. Click "Add Service" to get started.</p>
             </div>
-            <div class="service-quantity">
-              <label>Qty:</label>
-              <input type="number" class="form-control quantity-input" 
-                     value="${
-                       service.quantity
-                     }" min="1" data-index="${index}" />
+          `;
+          return;
+        }
+
+        servicesList.innerHTML = selectedServices
+          .map(
+            (service, index) => `
+          <div class="service-item" data-index="${index}">
+            <div class="service-item-content">
+              <div class="service-info">
+                <select class="form-control service-select" data-index="${index}">
+                  ${availableServices
+                    .map(
+                      (s) => `
+                    <option value="${s.serviceId}" ${
+                        s.serviceId == service.serviceId ? "selected" : ""
+                      }>
+                      ${s.serviceName} - €${s.price}
+                    </option>
+                  `
+                    )
+                    .join("")}
+                </select>
+              </div>
+              <div class="service-quantity">
+                <label>Qty:</label>
+                <input type="number" class="form-control quantity-input" 
+                       value="${
+                         service.quantity
+                       }" min="1" data-index="${index}" />
+              </div>
+              <div class="service-price">
+                <label>Unit Price:</label>
+                <input type="number" class="form-control price-input" 
+                       value="${
+                         service.unitPrice
+                       }" min="0" step="0.01" data-index="${index}" />
+              </div>
+              <div class="service-total">
+                <strong>€${(service.quantity * service.unitPrice).toFixed(
+                  2
+                )}</strong>
+              </div>
+              <button type="button" class="btn btn-sm btn-danger remove-service-btn" data-index="${index}">
+                Remove
+              </button>
             </div>
-            <div class="service-price">
-              <label>Unit Price:</label>
-              <input type="number" class="form-control price-input" 
-                     value="${
-                       service.unitPrice
-                     }" min="0" step="0.01" data-index="${index}" />
-            </div>
-            <div class="service-total">
-              <strong>€${(service.quantity * service.unitPrice).toFixed(
-                2
-              )}</strong>
-            </div>
-            <button type="button" class="btn btn-sm btn-danger remove-service-btn" data-index="${index}">
-              Remove
-            </button>
           </div>
-        </div>
-      `
-        )
-        .join("");
+        `
+          )
+          .join("");
 
-      // Add event listeners
-      servicesList.querySelectorAll(".service-select").forEach((select) => {
-        select.addEventListener("change", handleServiceChange);
-      });
+        // Add event listeners
+        servicesList.querySelectorAll(".service-select").forEach((select) => {
+          select.addEventListener("change", handleServiceChange);
+        });
 
-      servicesList.querySelectorAll(".quantity-input").forEach((input) => {
-        input.addEventListener("change", handleQuantityChange);
-      });
+        servicesList.querySelectorAll(".quantity-input").forEach((input) => {
+          input.addEventListener("change", handleQuantityChange);
+        });
 
-      servicesList.querySelectorAll(".price-input").forEach((input) => {
-        input.addEventListener("change", handlePriceChange);
-      });
+        servicesList.querySelectorAll(".price-input").forEach((input) => {
+          input.addEventListener("change", handlePriceChange);
+        });
 
-      servicesList.querySelectorAll(".remove-service-btn").forEach((btn) => {
-        btn.addEventListener("click", handleRemoveService);
-      });
+        servicesList.querySelectorAll(".remove-service-btn").forEach((btn) => {
+          btn.addEventListener("click", handleRemoveService);
+        });
+      } catch (error) {
+        console.error("Error updating services list:", error);
+        servicesList.innerHTML = `
+          <div class="alert alert-danger">
+            <p>Error updating services list. Please try again.</p>
+          </div>
+        `;
+      }
     }
 
     function handleServiceChange(e) {

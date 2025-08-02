@@ -205,6 +205,78 @@
   cursor: not-allowed;
 }
 
+.client-setup-form select.form-control:not([readonly]):not([disabled]) {
+  cursor: pointer;
+}
+
+/* Service selector styling */
+.service-selector {
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  background: var(--bg-white);
+}
+
+.service-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.service-selector-header .form-label {
+  margin: 0;
+  font-weight: var(--font-weight-semibold);
+}
+
+.selected-services-list {
+  min-height: 60px;
+}
+
+.service-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin-bottom: var(--space-3);
+  background: var(--bg-secondary);
+}
+
+.service-item-content {
+  display: grid;
+  grid-template-columns: 2fr 100px 120px 100px auto;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.service-info select {
+  width: 100%;
+}
+
+.service-quantity input,
+.service-price input {
+  width: 100%;
+}
+
+.service-total {
+  text-align: center;
+  font-weight: var(--font-weight-semibold);
+}
+
+@media (max-width: 768px) {
+  .service-item-content {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .service-quantity,
+  .service-price,
+  .service-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
 .client-setup-form .form-control::placeholder {
   color: var(--text-light);
 }
