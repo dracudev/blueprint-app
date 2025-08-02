@@ -8,6 +8,21 @@ const projectValidation = {
       .isInt({ min: 1 })
       .withMessage("Invalid client selected"),
 
+    body("services")
+      .notEmpty()
+      .withMessage("At least one service must be contracted")
+      .custom((value) => {
+        try {
+          const services = typeof value === "string" ? JSON.parse(value) : value;
+          if (!Array.isArray(services) || services.length === 0) {
+            throw new Error("At least one service must be contracted");
+          }
+          return true;
+        } catch (error) {
+          throw new Error("At least one service must be contracted");
+        }
+      }),
+
     body("job_status")
       .optional()
       .isIn(["RECEIVED", "IN_PROGRESS", "COMPLETED", "DELIVERED"])
