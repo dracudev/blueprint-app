@@ -13,7 +13,8 @@ const projectValidation = {
       .withMessage("At least one service must be contracted")
       .custom((value) => {
         try {
-          const services = typeof value === "string" ? JSON.parse(value) : value;
+          const services =
+            typeof value === "string" ? JSON.parse(value) : value;
           if (!Array.isArray(services) || services.length === 0) {
             throw new Error("At least one service must be contracted");
           }
