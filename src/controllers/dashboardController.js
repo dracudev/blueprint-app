@@ -24,7 +24,8 @@ const dashboardController = {
       }
 
       const permissions = getDashboardPermissions(user);
-      const tab = req.query.tab || "clients";
+      const tab =
+        req.query.tab || (user.role === "client" ? "projects" : "clients");
 
       let title = "Dashboard";
       if (tab === "clients")

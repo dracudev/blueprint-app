@@ -874,7 +874,7 @@ const clientController = {
     crudForm.errors = errors;
 
     return res.status(400).render("dashboard", {
-      title: "Manage Clients",
+      title: "Dashboard",
       user: {
         ...req.user,
         canCreateClients: true,

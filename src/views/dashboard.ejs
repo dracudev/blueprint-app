@@ -7,7 +7,7 @@
 <%- include('partials/header') %>
 
 
-<main data-current-tab="<%= currentTab || 'clients' %>">
+<main data-current-tab="<%= currentTab || (user && user.role === 'client' ? 'projects' : 'clients') %>" data-user-role="<%= user ? user.role : '' %>">
   <% if (user) { %>
     <nav class="dashboard-tabs">
       <% if (user.role === 'client') { %>
