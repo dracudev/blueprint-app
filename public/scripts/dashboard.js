@@ -39,11 +39,16 @@ function initializeTabs() {
         section.style.display = "none";
       }
     });
+
+    updateDocumentTitle(tabName);
   }
 
   const urlParams = new URLSearchParams(window.location.search);
+  const mainElement = document.querySelector("main");
   const initialTab =
-    urlParams.get("tab") || document.body.dataset.currentTab || "clients";
+    urlParams.get("tab") ||
+    (mainElement && mainElement.dataset.currentTab) ||
+    "clients";
   activateTab(initialTab);
 
   tabs.forEach((tab) => {
@@ -57,6 +62,40 @@ function initializeTabs() {
       window.history.pushState({}, "", newUrl);
     });
   });
+}
+
+/**
+ * Update document title based on current tab and user role
+ */
+function updateDocumentTitle(tabName) {
+  const userRole = getUserRole();
+
+  let title = "Dashboard";
+
+  if (tabName === "clients") {
+    title = userRole === "admin" ? "Manage Clients" : "My Profile";
+  } else if (tabName === "services") {
+    title = userRole === "admin" ? "Manage Services" : "Available Services";
+  } else if (tabName === "projects") {
+    title = userRole === "admin" ? "Manage Projects" : "My Projects";
+  }
+
+  document.title = `CodeCost | ${title}`;
+}
+
+/**
+ * Get user role from the page context
+ */
+function getUserRole() {
+  const mainElement = document.querySelector("main");
+  if (mainElement && mainElement.dataset.userRole) {
+    return mainElement.dataset.userRole;
+  }
+
+  const adminTabs = document.querySelectorAll(
+    '.dashboard-tab[data-tab="clients"], .dashboard-tab[data-tab="services"]'
+  );
+  return adminTabs.length > 1 ? "admin" : "client";
 }
 
 /**
