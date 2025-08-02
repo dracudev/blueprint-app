@@ -38,7 +38,14 @@
           <div class="project-services-column">
             <% p.projectItems.forEach((item) => { %>
             <div class="service-item-row">
-              <%= item.service ? item.service.serviceName : 'Unknown Service' %>
+              <% if (item.service && item.service.serviceId) { %>
+              <a
+                href="/services/<%= item.service.serviceId %>"
+                class="service-link"
+              >
+                <%= item.service.serviceName %>
+              </a>
+              <% } else { %> Unknown Service <% } %>
               <small>(x<%= item.quantity %>)</small>
             </div>
             <% }) %>

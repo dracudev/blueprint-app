@@ -1,0 +1,463 @@
+<%- include('partials/head') %>
+<link rel="stylesheet" href="/styles/service-detail.css" />
+<%- include('partials/header') %>
+
+<div class="service-detail-container">
+    <!-- Back Navigation -->
+    <div class="back-navigation">
+        <a href="/services" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Back to Services
+        </a>
+    </div>
+
+    <!-- Service Hero Section -->
+    <section class="service-hero">
+        <div class="service-hero-content">
+            <div class="service-icon-large">
+                <% if (service.serviceName.toLowerCase().includes('website') || service.serviceName.toLowerCase().includes('web')) { %>
+                    <i class="fas fa-globe-americas"></i>
+                <% } else if (service.serviceName.toLowerCase().includes('mobile') || service.serviceName.toLowerCase().includes('app')) { %>
+                    <i class="fas fa-mobile-alt"></i>
+                <% } else if (service.serviceName.toLowerCase().includes('ecommerce') || service.serviceName.toLowerCase().includes('e-commerce') || service.serviceName.toLowerCase().includes('shop')) { %>
+                    <i class="fas fa-shopping-cart"></i>
+                <% } else if (service.serviceName.toLowerCase().includes('api') || service.serviceName.toLowerCase().includes('backend')) { %>
+                    <i class="fas fa-server"></i>
+                <% } else if (service.serviceName.toLowerCase().includes('design') || service.serviceName.toLowerCase().includes('ui')) { %>
+                    <i class="fas fa-paint-brush"></i>
+                <% } else if (service.serviceName.toLowerCase().includes('consulting') || service.serviceName.toLowerCase().includes('advice')) { %>
+                    <i class="fas fa-lightbulb"></i>
+                <% } else { %>
+                    <i class="fas fa-code"></i>
+                <% } %>
+            </div>
+            
+            <h1><%= service.serviceName %></h1>
+            
+            <div class="service-price">
+                Starting from €<%= service.price.toLocaleString() %>
+            </div>
+            
+            <% if (service.description) { %>
+                <p class="service-description">
+                    <%= service.description %>
+                </p>
+            <% } %>
+            
+            <div class="service-actions-hero">
+                <% if (user) { %>
+                    <a href="/dashboard?action=create&entity=project&tab=projects&service=<%= service.serviceId %>" class="btn btn-hero-primary">
+                        <i class="fas fa-rocket"></i>
+                        Start Project
+                    </a>
+                <% } else { %>
+                    <a href="/auth/signup" class="btn btn-hero-primary">
+                        <i class="fas fa-user-plus"></i>
+                        Get Started
+                    </a>
+                <% } %>
+                <a href="mailto:contact@codecost.com?subject=Inquiry about <%= service.serviceName %>" class="btn btn-hero-secondary">
+                    <i class="fas fa-envelope"></i>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Grid -->
+    <div class="service-content-grid">
+        <!-- Main Content -->
+        <div class="service-main-content">
+            <!-- Service Overview -->
+            <div class="content-section">
+                <h2>Service Overview</h2>
+                <p>
+                    <% if (service.serviceName.toLowerCase().includes('website') || service.serviceName.toLowerCase().includes('web')) { %>
+                        Our <%= service.serviceName %> service provides comprehensive web development solutions tailored to your business needs. We create modern, responsive, and user-friendly websites that drive results and enhance your online presence.
+                    <% } else if (service.serviceName.toLowerCase().includes('mobile') || service.serviceName.toLowerCase().includes('app')) { %>
+                        Our <%= service.serviceName %> service delivers high-quality mobile applications for iOS and Android platforms. We focus on creating intuitive user experiences with native performance and cross-platform compatibility.
+                    <% } else if (service.serviceName.toLowerCase().includes('ecommerce') || service.serviceName.toLowerCase().includes('e-commerce') || service.serviceName.toLowerCase().includes('shop')) { %>
+                        Our <%= service.serviceName %> service builds complete online retail solutions that drive sales and growth. From product catalogs to payment processing, we create comprehensive e-commerce platforms.
+                    <% } else { %>
+                        Our <%= service.serviceName %> service is designed to meet your specific business requirements with professional development solutions that deliver exceptional results and value.
+                    <% } %>
+                </p>
+                
+                <% if (service.description && service.description.length > 100) { %>
+                    <p><%= service.description %></p>
+                <% } %>
+            </div>
+
+            <!-- Key Features -->
+            <div class="content-section">
+                <h2>Key Features & Benefits</h2>
+                <ul class="features-list">
+                    <% if (service.serviceName.toLowerCase().includes('website') || service.serviceName.toLowerCase().includes('web')) { %>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Responsive Design</h4>
+                                <p>Your website will look perfect on all devices - desktop, tablet, and mobile.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>SEO Optimization</h4>
+                                <p>Built-in SEO best practices to help your website rank higher in search engines.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Modern Technologies</h4>
+                                <p>We use the latest web technologies and frameworks for optimal performance.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Content Management</h4>
+                                <p>Easy-to-use content management system for updating your website content.</p>
+                            </div>
+                        </li>
+                    <% } else if (service.serviceName.toLowerCase().includes('mobile') || service.serviceName.toLowerCase().includes('app')) { %>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Cross-Platform Development</h4>
+                                <p>One codebase for both iOS and Android platforms, reducing development time and cost.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Native Performance</h4>
+                                <p>Optimized for speed and performance, delivering a smooth user experience.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>App Store Deployment</h4>
+                                <p>Complete assistance with app store submission and approval process.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Offline Functionality</h4>
+                                <p>Essential features work even without internet connection.</p>
+                            </div>
+                        </li>
+                    <% } else if (service.serviceName.toLowerCase().includes('ecommerce') || service.serviceName.toLowerCase().includes('e-commerce') || service.serviceName.toLowerCase().includes('shop')) { %>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Payment Integration</h4>
+                                <p>Secure payment processing with multiple payment gateway options.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Inventory Management</h4>
+                                <p>Comprehensive product and inventory management system.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Order Processing</h4>
+                                <p>Automated order processing and customer notification system.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Analytics Dashboard</h4>
+                                <p>Detailed sales analytics and reporting for business insights.</p>
+                            </div>
+                        </li>
+                    <% } else { %>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Professional Quality</h4>
+                                <p>High-quality development following industry best practices and standards.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Scalable Solutions</h4>
+                                <p>Built to grow with your business and handle increasing demands.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Ongoing Support</h4>
+                                <p>Comprehensive support and maintenance services post-delivery.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check feature-icon"></i>
+                            <div class="feature-content">
+                                <h4>Custom Solutions</h4>
+                                <p>Tailored specifically to meet your unique business requirements.</p>
+                            </div>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+
+            <!-- Technologies Used -->
+            <div class="content-section">
+                <h2>Technologies & Tools</h2>
+                <p>We use cutting-edge technologies and proven frameworks to deliver exceptional results:</p>
+                <ul class="features-list">
+                    <% if (service.serviceName.toLowerCase().includes('website') || service.serviceName.toLowerCase().includes('web')) { %>
+                        <li>
+                            <i class="fab fa-html5 feature-icon" style="color: #e34f26;"></i>
+                            <div class="feature-content">
+                                <h4>Frontend Technologies</h4>
+                                <p>HTML5, CSS3, JavaScript, React, Vue.js, and modern CSS frameworks.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-server feature-icon" style="color: #68217a;"></i>
+                            <div class="feature-content">
+                                <h4>Backend Development</h4>
+                                <p>Node.js, Express.js, PHP, Python, and database integration.</p>
+                            </div>
+                        </li>
+                    <% } else if (service.serviceName.toLowerCase().includes('mobile') || service.serviceName.toLowerCase().includes('app')) { %>
+                        <li>
+                            <i class="fab fa-react feature-icon" style="color: #61dafb;"></i>
+                            <div class="feature-content">
+                                <h4>React Native</h4>
+                                <p>Cross-platform mobile development for iOS and Android.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fab fa-flutter feature-icon" style="color: #02569b;"></i>
+                            <div class="feature-content">
+                                <h4>Flutter</h4>
+                                <p>Google's UI toolkit for building natively compiled applications.</p>
+                            </div>
+                        </li>
+                    <% } else { %>
+                        <li>
+                            <i class="fas fa-code feature-icon" style="color: #007acc;"></i>
+                            <div class="feature-content">
+                                <h4>Modern Frameworks</h4>
+                                <p>Latest technologies and frameworks for optimal performance.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-database feature-icon" style="color: #336791;"></i>
+                            <div class="feature-content">
+                                <h4>Database Solutions</h4>
+                                <p>Robust database design and optimization for your data needs.</p>
+                            </div>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="service-sidebar">
+            <!-- Pricing Card -->
+            <div class="pricing-card">
+                <div class="pricing-badge">Professional Service</div>
+                <div class="pricing-amount">€<%= service.price.toLocaleString() %></div>
+                <div class="pricing-label">Starting Price</div>
+                
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Professional Development</li>
+                    <li><i class="fas fa-check"></i> Quality Assurance</li>
+                    <li><i class="fas fa-check"></i> Documentation</li>
+                    <li><i class="fas fa-check"></i> Post-Launch Support</li>
+                    <li><i class="fas fa-check"></i> Source Code Delivery</li>
+                </ul>
+                
+                <% if (user) { %>
+                    <a href="/dashboard?action=create&entity=project&tab=projects&service=<%= service.serviceId %>" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-rocket"></i>
+                        Start Project
+                    </a>
+                <% } else { %>
+                    <a href="/auth/signup" class="btn btn-primary btn-lg" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i>
+                        Get Started
+                    </a>
+                <% } %>
+            </div>
+
+            <!-- Service Info -->
+            <div class="info-card">
+                <h3>
+                    <i class="fas fa-info-circle"></i>
+                    Service Details
+                </h3>
+                <div class="info-item">
+                    <span class="info-item-label">Service ID</span>
+                    <span class="info-item-value">#<%= service.serviceId %></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Delivery Time</span>
+                    <span class="info-item-value">
+                        <% if (service.serviceName.toLowerCase().includes('website') || service.serviceName.toLowerCase().includes('web')) { %>
+                            2-4 weeks
+                        <% } else if (service.serviceName.toLowerCase().includes('mobile') || service.serviceName.toLowerCase().includes('app')) { %>
+                            4-8 weeks
+                        <% } else if (service.serviceName.toLowerCase().includes('ecommerce') || service.serviceName.toLowerCase().includes('e-commerce')) { %>
+                            6-10 weeks
+                        <% } else { %>
+                            2-6 weeks
+                        <% } %>
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Revisions</span>
+                    <span class="info-item-value">3 included</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-item-label">Support</span>
+                    <span class="info-item-value">30 days free</span>
+                </div>
+            </div>
+
+            <!-- Contact Card -->
+            <div class="info-card">
+                <h3>
+                    <i class="fas fa-headset"></i>
+                    Need Help?
+                </h3>
+                <p style="color: var(--text-secondary); font-size: var(--font-size-sm); margin-bottom: var(--space-4);">
+                    Have questions about this service? Our team is here to help you make the right choice.
+                </p>
+                <a href="mailto:contact@codecost.com?subject=Inquiry about <%= service.serviceName %>" class="btn btn-outline btn-md" style="width: 100%;">
+                    <i class="fas fa-envelope"></i>
+                    Contact Us
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Development Process -->
+    <section class="process-timeline">
+        <h2>Our Development Process</h2>
+        <div class="timeline-steps">
+            <div class="timeline-step">
+                <div class="timeline-number">1</div>
+                <div class="timeline-content">
+                    <h4>Discovery & Planning</h4>
+                    <p>We analyze your requirements, goals, and create a detailed project roadmap with clear milestones.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-number">2</div>
+                <div class="timeline-content">
+                    <h4>Design & Prototyping</h4>
+                    <p>Creating wireframes, mockups, and prototypes to visualize your solution before development begins.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-number">3</div>
+                <div class="timeline-content">
+                    <h4>Development & Testing</h4>
+                    <p>Building your solution with modern technologies, following best practices and thorough testing.</p>
+                </div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-number">4</div>
+                <div class="timeline-content">
+                    <h4>Launch & Support</h4>
+                    <p>Smooth deployment to production with comprehensive documentation and ongoing support.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Fix back button functionality
+    const backLink = document.querySelector('.back-link');
+    if (backLink) {
+        backLink.addEventListener('click', function(e) {
+            // If user came from within the site, use browser back
+            if (document.referrer && document.referrer.includes(window.location.origin)) {
+                e.preventDefault();
+                window.history.back();
+            }
+            // Otherwise, let the default href="/services" work
+        });
+    }
+
+    // Smooth scrolling for internal links
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Add hover effects to feature items
+    const featureItems = document.querySelectorAll('.features-list li');
+    featureItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(8px)';
+        });
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+        });
+    });
+
+    // Add animation to timeline steps on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    const timelineSteps = document.querySelectorAll('.timeline-step');
+    timelineSteps.forEach(step => {
+        step.style.opacity = '0';
+        step.style.transform = 'translateY(30px)';
+        step.style.transition = 'all 0.6s ease-out';
+        observer.observe(step);
+    });
+
+    // Add click tracking for CTA buttons
+    const ctaButtons = document.querySelectorAll('.btn-hero-primary, .btn-primary');
+    ctaButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Track button clicks (you can integrate with analytics here)
+            console.log('CTA button clicked:', this.textContent.trim());
+        });
+    });
+});
+</script>
+
+</div>
+</body>
+</html>

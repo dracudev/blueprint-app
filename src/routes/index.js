@@ -5,6 +5,7 @@ const { jwtAuth } = require("../middleware/auth");
 const authRoutes = require("./authRoutes");
 const clientRoutes = require("./clientRoutes");
 const dashboardRoutes = require("./dashboardRoutes");
+const servicesRoutes = require("./servicesRoutes");
 const clientApiRoutes = require("./api/clientApiRoutes");
 const serviceApiRoutes = require("./api/serviceApiRoutes");
 const projectApiRoutes = require("./api/projectApiRoutes");
@@ -23,16 +24,10 @@ router.get("/", function (req, res) {
   });
 });
 
-router.get("/services", function (req, res) {
-  res.render("services", {
-    title: "Our Services",
-    user: req.session.user,
-  });
-});
-
 router.use("/auth", authRoutes);
 router.use("/client", jwtAuth, clientRoutes);
 router.use("/dashboard", dashboardRoutes);
+router.use("/services", servicesRoutes);
 
 router.use("/api/clients", clientApiRoutes);
 router.use("/api/services", serviceApiRoutes);

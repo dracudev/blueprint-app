@@ -148,8 +148,23 @@
   box-shadow: var(--shadow-xs);
   transition: all var(--transition-fast);
   word-wrap: break-word;
-  overflow-wrap: break-word;
-  min-width: 0;
+}
+
+.service-item-row:hover {
+  background: var(--gray-100);
+  border-color: var(--primary-light);
+}
+
+.service-link {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition: color var(--transition-fast);
+}
+
+.service-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
 }
 
 .service-item-row:hover {

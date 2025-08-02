@@ -121,7 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let selectedServices = [...existingServices];
 
-    // Create the service selector UI
     createServiceSelectorUI(serviceContainer, servicesData, selectedServices);
   }
 
@@ -158,10 +157,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Render existing services
     updateServicesList();
 
-    // Add service button handler
     addServiceBtn.addEventListener("click", () => {
       const availableService = availableServices.find(
         (s) => !selectedServices.some((sel) => sel.serviceId === s.serviceId)
@@ -182,10 +179,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateServicesList() {
       try {
-        // Update hidden input
         servicesInput.value = JSON.stringify(selectedServices);
 
-        // Render service items
         if (selectedServices.length === 0) {
           servicesList.innerHTML = `
             <div class="no-services-message" style="text-align: center; padding: var(--space-4); color: var(--text-muted);">
@@ -241,7 +236,6 @@ document.addEventListener("DOMContentLoaded", function () {
           )
           .join("");
 
-        // Add event listeners
         servicesList.querySelectorAll(".service-select").forEach((select) => {
           select.addEventListener("change", handleServiceChange);
         });

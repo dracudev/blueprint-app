@@ -9,84 +9,151 @@
     </div>
 
     <div class="services-grid">
-        <!-- Website Development Service -->
-        <div class="service-card">
-            <div class="service-icon">
-                <i class="fas fa-globe-americas"></i>
-            </div>
-            <div class="service-content">
-                <h3>Website Development</h3>
-                <p>Custom websites built with modern technologies. From simple landing pages to complex web applications, we create responsive and user-friendly websites that drive results.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Responsive Design</li>
-                    <li><i class="fas fa-check"></i> SEO Optimized</li>
-                    <li><i class="fas fa-check"></i> Modern Technologies</li>
-                    <li><i class="fas fa-check"></i> Content Management</li>
-                </ul>
-                <div class="service-pricing">
-                    <span class="price-label">Starting from</span>
-                    <span class="price">$2,999</span>
+        <% if (services && services.length > 0) { %>
+            <% services.forEach((service, index) => { %>
+                <div class="service-card <%= index === 1 ? 'featured' : '' %>">
+                    <% if (index === 1) { %>
+                        <div class="featured-badge">
+                            <i class="fas fa-star"></i>
+                            <span>Most Popular</span>
+                        </div>
+                    <% } %>
+                    <div class="service-icon">
+                        <% if (service.serviceName.toLowerCase().includes('website') || service.serviceName.toLowerCase().includes('web')) { %>
+                            <i class="fas fa-globe-americas"></i>
+                        <% } else if (service.serviceName.toLowerCase().includes('mobile') || service.serviceName.toLowerCase().includes('app')) { %>
+                            <i class="fas fa-mobile-alt"></i>
+                        <% } else if (service.serviceName.toLowerCase().includes('ecommerce') || service.serviceName.toLowerCase().includes('e-commerce') || service.serviceName.toLowerCase().includes('shop')) { %>
+                            <i class="fas fa-shopping-cart"></i>
+                        <% } else if (service.serviceName.toLowerCase().includes('api') || service.serviceName.toLowerCase().includes('backend')) { %>
+                            <i class="fas fa-server"></i>
+                        <% } else if (service.serviceName.toLowerCase().includes('design') || service.serviceName.toLowerCase().includes('ui')) { %>
+                            <i class="fas fa-paint-brush"></i>
+                        <% } else if (service.serviceName.toLowerCase().includes('consulting') || service.serviceName.toLowerCase().includes('advice')) { %>
+                            <i class="fas fa-lightbulb"></i>
+                        <% } else { %>
+                            <i class="fas fa-code"></i>
+                        <% } %>
+                    </div>
+                    <div class="service-content">
+                        <h3><%= service.serviceName %></h3>
+                        <p><%= service.description || 'Professional development solution tailored to your business needs.' %></p>
+                        <ul class="service-features">
+                            <% if (service.serviceName.toLowerCase().includes('website') || service.serviceName.toLowerCase().includes('web')) { %>
+                                <li><i class="fas fa-check"></i> Responsive Design</li>
+                                <li><i class="fas fa-check"></i> SEO Optimized</li>
+                                <li><i class="fas fa-check"></i> Modern Technologies</li>
+                                <li><i class="fas fa-check"></i> Content Management</li>
+                            <% } else if (service.serviceName.toLowerCase().includes('mobile') || service.serviceName.toLowerCase().includes('app')) { %>
+                                <li><i class="fas fa-check"></i> iOS & Android</li>
+                                <li><i class="fas fa-check"></i> Cross-platform Support</li>
+                                <li><i class="fas fa-check"></i> Native Performance</li>
+                                <li><i class="fas fa-check"></i> App Store Deployment</li>
+                            <% } else if (service.serviceName.toLowerCase().includes('ecommerce') || service.serviceName.toLowerCase().includes('e-commerce') || service.serviceName.toLowerCase().includes('shop')) { %>
+                                <li><i class="fas fa-check"></i> Payment Integration</li>
+                                <li><i class="fas fa-check"></i> Inventory Management</li>
+                                <li><i class="fas fa-check"></i> Order Processing</li>
+                                <li><i class="fas fa-check"></i> Analytics Dashboard</li>
+                            <% } else { %>
+                                <li><i class="fas fa-check"></i> Professional Quality</li>
+                                <li><i class="fas fa-check"></i> Scalable Solutions</li>
+                                <li><i class="fas fa-check"></i> Modern Technologies</li>
+                                <li><i class="fas fa-check"></i> Ongoing Support</li>
+                            <% } %>
+                        </ul>
+                        <div class="service-pricing">
+                            <span class="price-label">Starting from</span>
+                            <span class="price">€<%= service.price.toLocaleString() %></span>
+                        </div>
+                        <div class="service-actions">
+                            <% if (user) { %>
+                                <a href="/dashboard?action=create&entity=project&tab=projects&service=<%= service.serviceId %>" class="btn btn-primary btn-md">Get Quote</a>
+                            <% } else { %>
+                                <a href="/auth/signup" class="btn btn-primary btn-md">Get Quote</a>
+                            <% } %>
+                            <a href="/services/<%= service.serviceId %>" class="btn btn-outline btn-md">Learn More</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="service-actions">
-                    <button class="btn btn-primary btn-md">Get Quote</button>
-                    <button class="btn btn-outline btn-md">Learn More</button>
+            <% }) %>
+        <% } else { %>
+            <!-- Fallback static content if no services in database -->
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-globe-americas"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Website Development</h3>
+                    <p>Custom websites built with modern technologies. From simple landing pages to complex web applications, we create responsive and user-friendly websites that drive results.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Responsive Design</li>
+                        <li><i class="fas fa-check"></i> SEO Optimized</li>
+                        <li><i class="fas fa-check"></i> Modern Technologies</li>
+                        <li><i class="fas fa-check"></i> Content Management</li>
+                    </ul>
+                    <div class="service-pricing">
+                        <span class="price-label">Starting from</span>
+                        <span class="price">€2,999</span>
+                    </div>
+                    <div class="service-actions">
+                        <a href="/auth/signup" class="btn btn-primary btn-md">Get Quote</a>
+                        <button class="btn btn-outline btn-md">Learn More</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Mobile App Development Service -->
-        <div class="service-card featured">
-            <div class="featured-badge">
-                <i class="fas fa-star"></i>
-                <span>Most Popular</span>
-            </div>
-            <div class="service-icon">
-                <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div class="service-content">
-                <h3>Mobile App Development</h3>
-                <p>Native and cross-platform mobile applications for iOS and Android. We build high-performance apps that provide excellent user experience across all devices.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> iOS & Android</li>
-                    <li><i class="fas fa-check"></i> Cross-platform Support</li>
-                    <li><i class="fas fa-check"></i> Native Performance</li>
-                    <li><i class="fas fa-check"></i> App Store Deployment</li>
-                </ul>
-                <div class="service-pricing">
-                    <span class="price-label">Starting from</span>
-                    <span class="price">$4,999</span>
+            <div class="service-card featured">
+                <div class="featured-badge">
+                    <i class="fas fa-star"></i>
+                    <span>Most Popular</span>
                 </div>
-                <div class="service-actions">
-                    <button class="btn btn-primary btn-md">Get Quote</button>
-                    <button class="btn btn-outline btn-md">Learn More</button>
+                <div class="service-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <div class="service-content">
+                    <h3>Mobile App Development</h3>
+                    <p>Native and cross-platform mobile applications for iOS and Android. We build high-performance apps that provide excellent user experience across all devices.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> iOS & Android</li>
+                        <li><i class="fas fa-check"></i> Cross-platform Support</li>
+                        <li><i class="fas fa-check"></i> Native Performance</li>
+                        <li><i class="fas fa-check"></i> App Store Deployment</li>
+                    </ul>
+                    <div class="service-pricing">
+                        <span class="price-label">Starting from</span>
+                        <span class="price">€4,999</span>
+                    </div>
+                    <div class="service-actions">
+                        <a href="/auth/signup" class="btn btn-primary btn-md">Get Quote</a>
+                        <button class="btn btn-outline btn-md">Learn More</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- E-commerce Platform Service -->
-        <div class="service-card">
-            <div class="service-icon">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
-            <div class="service-content">
-                <h3>E-commerce Platform</h3>
-                <p>Complete e-commerce solutions that drive sales and growth. From service catalogs to payment processing, we build comprehensive online stores.</p>
-                <ul class="service-features">
-                    <li><i class="fas fa-check"></i> Payment Integration</li>
-                    <li><i class="fas fa-check"></i> Inventory Management</li>
-                    <li><i class="fas fa-check"></i> Project Processing</li>
-                    <li><i class="fas fa-check"></i> Analytics Dashboard</li>
-                </ul>
-                <div class="service-pricing">
-                    <span class="price-label">Starting from</span>
-                    <span class="price">$6,999</span>
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shopping-cart"></i>
                 </div>
-                <div class="service-actions">
-                    <button class="btn btn-primary btn-md">Get Quote</button>
-                    <button class="btn btn-outline btn-md">Learn More</button>
+                <div class="service-content">
+                    <h3>E-commerce Platform</h3>
+                    <p>Complete e-commerce solutions that drive sales and growth. From service catalogs to payment processing, we build comprehensive online stores.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Payment Integration</li>
+                        <li><i class="fas fa-check"></i> Inventory Management</li>
+                        <li><i class="fas fa-check"></i> Order Processing</li>
+                        <li><i class="fas fa-check"></i> Analytics Dashboard</li>
+                    </ul>
+                    <div class="service-pricing">
+                        <span class="price-label">Starting from</span>
+                        <span class="price">€6,999</span>
+                    </div>
+                    <div class="service-actions">
+                        <a href="/auth/signup" class="btn btn-primary btn-md">Get Quote</a>
+                        <button class="btn btn-outline btn-md">Learn More</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        <% } %>
     </div>
 
     <!-- Process Section -->
