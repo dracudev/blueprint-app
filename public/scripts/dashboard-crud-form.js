@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <option value="${s.serviceId}" ${
                         s.serviceId == service.serviceId ? "selected" : ""
                       }>
-                      ${s.serviceName} - €${s.price}
+                      ${s.serviceName} - ${s.price}€
                     </option>
                   `
                     )
@@ -230,9 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
                        }" min="0" step="0.01" data-index="${index}" />
               </div>
               <div class="service-total">
-                <strong>€${(service.quantity * service.unitPrice).toFixed(
-                  2
-                )}</strong>
+                ${(service.quantity * service.unitPrice).toFixed(2)}€
               </div>
               <button type="button" class="btn btn-sm btn-danger remove-service-btn" data-index="${index}">
                 Remove

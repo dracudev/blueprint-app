@@ -36,6 +36,18 @@ const dashboardController = {
         title = user.role === "admin" ? "Manage Projects" : "My Projects";
 
       let crudForm = null;
+      let userClient = null;
+
+      if (user.role !== "admin") {
+        try {
+          const clientByEmail = await ClientService.findByEmail(user.email);
+          if (clientByEmail) {
+            userClient = clientByEmail;
+          }
+        } catch (error) {
+          console.log("No client found for user email:", user.email);
+        }
+      }
 
       if (req.query.action === "create" || req.query.action === "edit") {
         const entity = req.query.entity;
@@ -159,6 +171,7 @@ const dashboardController = {
         projects,
         currentTab: tab,
         crudForm,
+        userClient,
       });
     } catch (error) {
       console.error("Error rendering dashboard:", error);

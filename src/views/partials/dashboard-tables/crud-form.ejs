@@ -35,6 +35,16 @@
     <input type="hidden" name="projectId" value="<%= projectId %>" />
   <% } %>
   
+  <!-- Auto-assign client for non-admin users creating projects -->
+  <% if (typeof entity !== 'undefined' && entity === 'project' && typeof user !== 'undefined' && user.role !== 'admin' && typeof userClient !== 'undefined' && userClient) { %>
+    <input type="hidden" name="client_id" value="<%= userClient.clientId %>" />
+    <input type="hidden" name="job_status" value="RECEIVED" />
+  <% } %>
+
+  <% if (typeof entity !== 'undefined' && entity === 'project' && typeof user !== 'undefined' && user.role !== 'admin' && typeof user.clientId !== 'undefined') { %>
+    <input type="hidden" name="client_id" value="<%= user.clientId %>" />
+  <% } %>
+  
   <!-- Error container for AJAX form errors -->
   <div class="crud-form-errors alert alert-danger" style="display:none"></div>
   
@@ -93,6 +103,7 @@
             />
           <% } %>
         <% } else if (field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number') { %>
+          <% var isReadonly = field.readonly || (field.name === 'total_amount') || (field.name === 'price' && typeof user !== 'undefined' && user.role !== 'admin'); %>
           <input
             type="<%= field.type || 'text' %>"
             id="<%= field.name %>"
@@ -101,19 +112,47 @@
             value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
             placeholder="<%= field.placeholder || '' %>"
             <%= field.required ? 'required' : '' %>
-            <%= field.readonly ? 'readonly' : '' %>
+            <%= isReadonly ? 'readonly' : '' %>
             <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
             <%= field.step ? 'step="' + field.step + '"' : '' %>
             <%= field.min ? 'min="' + field.min + '"' : '' %>
             <%= field.max ? 'max="' + field.max + '"' : '' %>
           />
+          <% if (field.name === 'total_amount') { %>
+            <small class="form-text text-muted">This amount is calculated automatically from the selected services</small>
+          <% } %>
+          <% if (field.name === 'price' && typeof user !== 'undefined' && user.role !== 'admin') { %>
+            <small class="form-text text-muted">Service prices can only be modified by administrators</small>
+          <% } %>
         <% } else if (field.type === 'select') { %>
-          <select id="<%= field.name %>" name="<%= field.name %>" class="form-control" <%= field.required ? 'required' : '' %>>
-            <option value="" disabled <%= (formData && (typeof formData[field.name] === 'undefined' || formData[field.name] === '')) ? 'selected' : '' %>>Select...</option>
-            <% (field.options || []).forEach(function(opt) { %>
-              <option value="<%= String(opt.value) %>" <%= (formData && String(formData[field.name]) === String(opt.value)) ? 'selected' : '' %>><%= opt.label %></option>
-            <% }) %>
-          </select>
+          <% var shouldShowField = true; %>
+          <% if (field.adminOnly && typeof user !== 'undefined' && user.role !== 'admin') { %>
+            <% shouldShowField = false; %>
+          <% } %>
+          
+          <% if (shouldShowField) { %>
+            <select id="<%= field.name %>" name="<%= field.name %>" class="form-control" <%= field.required ? 'required' : '' %>>
+              <option value="" disabled <%= (formData && (typeof formData[field.name] === 'undefined' || formData[field.name] === '')) ? 'selected' : '' %>>Select...</option>
+              <% (field.options || []).forEach(function(opt) { %>
+                <option value="<%= String(opt.value) %>" <%= (formData && String(formData[field.name]) === String(opt.value)) ? 'selected' : '' %>><%= opt.label %></option>
+              <% }) %>
+            </select>
+          <% } else { %>
+            <!-- Hidden field for non-admin users -->
+            <% if (field.name === 'client_id' && typeof user !== 'undefined' && user.clientId) { %>
+              <input type="hidden" name="client_id" value="<%= user.clientId %>" />
+              <div class="form-control-static">
+                <strong>Your Project</strong>
+                <p class="text-muted">This project will be associated with your account</p>
+              </div>
+            <% } else if (field.name === 'job_status') { %>
+              <input type="hidden" name="job_status" value="RECEIVED" />
+              <div class="form-control-static">
+                <strong>Status: Received</strong>
+                <p class="text-muted">Initial status for new projects</p>
+              </div>
+            <% } %>
+          <% } %>
         <% } else if (field.type === 'service-selector') { %>
           <div 
             data-field-type="service-selector" 

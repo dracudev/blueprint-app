@@ -259,7 +259,7 @@
 
 .service-total {
   text-align: center;
-  font-weight: var(--font-weight-semibold);
+  font-weight: normal;
 }
 
 @media (max-width: 768px) {

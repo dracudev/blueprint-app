@@ -89,6 +89,7 @@ const crudFormConfigs = {
         type: "select",
         required: true,
         options: [],
+        adminOnly: true,
       },
       {
         name: "services",
@@ -106,7 +107,8 @@ const crudFormConfigs = {
         pattern: "^\\d+(\\.\\d{1,2})?$",
         step: "0.01",
         min: "0",
-        help: "Leave empty to calculate automatically from project items",
+        help: "Calculated automatically from project items",
+        readonly: true,
       },
       {
         name: "job_status",
@@ -119,6 +121,7 @@ const crudFormConfigs = {
           { value: "COMPLETED", label: "Completed" },
           { value: "DELIVERED", label: "Delivered" },
         ],
+        adminOnly: true,
       },
     ],
     submitLabel: "Save Project",

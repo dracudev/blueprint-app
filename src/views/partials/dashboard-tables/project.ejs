@@ -13,7 +13,6 @@
   <table class="dashboard-table dashboard-table-main">
     <thead>
       <tr>
-        <th>Project ID</th>
         <th>Client</th>
         <th>Services</th>
         <th>Status</th>
@@ -25,7 +24,6 @@
     <tbody>
       <% projects.forEach(p => { %>
       <tr>
-        <td><%= p.projectId %></td>
         <td>
           <% if (p.client) { %> <% if (p.client.isCompany) { %> <%=
           p.client.companyName %> <% } else { %> <%= p.client.firstName %> <%=
@@ -33,13 +31,13 @@
         </td>
         <td>
           <% if (p.projectItems && p.projectItems.length > 0) { %>
-          <div class="project-services">
-            <% p.projectItems.forEach((item, index) => { %>
-            <span class="service-item">
+          <div class="project-services-column">
+            <% p.projectItems.forEach((item) => { %>
+            <div class="service-item-row">
               <%= item.service ? item.service.serviceName : 'Unknown Service' %>
               <small>(x<%= item.quantity %>)</small>
-            </span>
-            <% if (index < p.projectItems.length - 1) { %>, <% } %> <% }) %>
+            </div>
+            <% }) %>
           </div>
           <% } else { %>
           <span class="text-muted">No services</span>
@@ -75,11 +73,6 @@
           <% } %> <% } %> <% if (user.role === 'client') { %>
           <a href="/project/view/<%= p.projectId %>" class="btn btn-info btn-md"
             >View</a
-          >
-          <a
-            href="/project/payment/<%= p.projectId %>"
-            class="btn btn-success btn-md"
-            >View Payment</a
           >
           <% } %>
         </td>
