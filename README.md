@@ -1,4 +1,4 @@
-# BluePrint | Web Development Budgeting
+# Blueprint | Web Development Budgeting
 
 ## Table of Contents
 

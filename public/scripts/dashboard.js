@@ -80,7 +80,7 @@ function updateDocumentTitle(tabName) {
     title = userRole === "admin" ? "Manage Projects" : "My Projects";
   }
 
-  document.title = `BluePrint | ${title}`;
+  document.title = `Blueprint | ${title}`;
 }
 
 /**
