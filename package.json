@@ -10,6 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js",
+    "build": "npx prisma generate --schema=database/prisma/schema.prisma && npx prisma migrate deploy --schema=database/prisma/schema.prisma",
+    "deploy": "node deploy.js",
     "db:generate": "npx prisma generate --schema=database/prisma/schema.prisma",
     "db:push": "npx prisma db push --schema=database/prisma/schema.prisma",
     "db:migrate": "npx prisma migrate dev --schema=database/prisma/schema.prisma",
