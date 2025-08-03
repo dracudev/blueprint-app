@@ -56,6 +56,11 @@
           <i class="fas fa-edit"></i>
           Edit Client
         </a>
+        <% } else if (isOwnProfile && user.role === 'client') { %>
+        <a href="/client/setup" class="btn btn-hero-primary">
+          <i class="fas fa-edit"></i>
+          Edit Profile
+        </a>
         <% } %>
         <a href="mailto:<%= client.email %>" class="btn btn-hero-secondary">
           <i class="fas fa-envelope"></i>
@@ -67,7 +72,6 @@
           Call Client
         </a>
         <% } %>
-      </div>
     </div>
   </section>
 
@@ -103,7 +107,7 @@
             </div>
 
             <div class="project-services">
-              <h4>Services:</h4>
+
               <% if (project.projectItems && project.projectItems.length > 0) {
               %>
               <div class="services-list">

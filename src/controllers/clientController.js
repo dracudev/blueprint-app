@@ -4,39 +4,6 @@ const UserService = require("../services/UserService");
 const ClientService = require("../services/ClientService");
 
 const clientController = {
-  showProfile: async (req, res) => {
-    try {
-      if (!req.session.user) {
-        return res.redirect("/auth/login");
-      }
-
-      const client = await ClientService.findByEmail(req.session.user.email);
-
-      if (!client) {
-        return res.redirect("/client/setup");
-      }
-
-      const successMessage = req.session.successMessage;
-      delete req.session.successMessage;
-
-      res.render("profile", {
-        title: "My Profile",
-        user: req.session.user,
-        client: client,
-        successMessage: successMessage,
-      });
-    } catch (error) {
-      console.error("Error loading profile:", error);
-      res.status(500).render("error", {
-        title: "Error",
-        error: {
-          status: 500,
-          message: "Unable to load profile information",
-        },
-        user: req.session.user,
-      });
-    }
-  },
   showSetup: async (req, res) => {
     try {
       const existingClient = await ClientService.findByEmail(
@@ -44,7 +11,21 @@ const clientController = {
       );
 
       if (existingClient) {
-        return res.redirect("/client/profile");
+        return res.render("client-setup", {
+          title: "Edit Profile",
+          user: req.session.user,
+          formData: {
+            isCompany: existingClient.isCompany.toString(),
+            companyName: existingClient.companyName || "",
+            firstName: existingClient.firstName || "",
+            lastName: existingClient.lastName || "",
+            email: existingClient.email,
+            phone: existingClient.phone || "",
+            billingAddress: existingClient.billingAddress || "",
+          },
+          errors: [],
+          isEdit: true,
+        });
       }
 
       res.render("client-setup", {
@@ -70,12 +51,20 @@ const clientController = {
     try {
       const errors = validationResult(req);
 
+      const existingClient = await ClientService.findByEmail(
+        req.session.user.email
+      );
+
+      const isEdit = !!existingClient;
+      const title = isEdit ? "Edit Profile" : "Client Setup";
+
       if (!errors.isEmpty()) {
         return res.status(400).render("client-setup", {
-          title: "Client Setup",
+          title,
           user: req.session.user,
           formData: req.body,
           errors: errors.array(),
+          isEdit,
         });
       }
 
@@ -92,16 +81,17 @@ const clientController = {
 
       if (isCompanyBool && !companyName) {
         return res.status(400).render("client-setup", {
-          title: "Client Setup",
+          title,
           user: req.session.user,
           formData: req.body,
           errors: [{ msg: "Company name is required for business accounts" }],
+          isEdit,
         });
       }
 
       if (!isCompanyBool && (!firstName || !lastName)) {
         return res.status(400).render("client-setup", {
-          title: "Client Setup",
+          title,
           user: req.session.user,
           formData: req.body,
           errors: [
@@ -109,43 +99,48 @@ const clientController = {
               msg: "First name and last name are required for individual accounts",
             },
           ],
+          isEdit,
         });
       }
 
-      const existingClient = await ClientService.findByEmail(
-        req.session.user.email
-      );
+      if (isEdit) {
+        const updateData = {
+          isCompany: isCompanyBool,
+          companyName: isCompanyBool ? companyName : null,
+          firstName: !isCompanyBool ? firstName : null,
+          lastName: !isCompanyBool ? lastName : null,
+          phone: phone || null,
+          billingAddress: billingAddress || null,
+        };
 
-      if (existingClient) {
-        return res.status(400).render("client-setup", {
-          title: "Client Setup",
-          user: req.session.user,
-          formData: req.body,
-          errors: [{ msg: "Client profile already exists for this email" }],
-        });
+        await ClientService.updateByEmail(req.session.user.email, updateData);
+        console.log("Client updated successfully:", updateData);
+
+        req.session.successMessage = "Client profile updated successfully!";
+        res.redirect(`/client/${existingClient.clientId}`);
+      } else {
+        const clientData = {
+          isCompany: isCompanyBool,
+          companyName: isCompanyBool ? companyName : null,
+          firstName: !isCompanyBool ? firstName : null,
+          lastName: !isCompanyBool ? lastName : null,
+          email: req.session.user.email,
+          phone: phone || null,
+          billingAddress: billingAddress || null,
+        };
+
+        const client = await ClientService.create(clientData);
+        await UserService.updateRoleByEmail(req.session.user.email, "client");
+        req.session.user.role = "client";
+        const { signJwt } = require("../utils/jwt");
+        const { exp, iat, ...userPayload } = req.session.user;
+        req.session.jwt = signJwt(userPayload);
+
+        console.log("Client created successfully:", client);
+
+        req.session.successMessage = "Client profile created successfully!";
+        res.redirect(`/client/${client.clientId}`);
       }
-
-      const clientData = {
-        isCompany: isCompanyBool,
-        companyName: isCompanyBool ? companyName : null,
-        firstName: !isCompanyBool ? firstName : null,
-        lastName: !isCompanyBool ? lastName : null,
-        email: req.session.user.email,
-        phone: phone || null,
-        billingAddress: billingAddress || null,
-      };
-
-      const client = await ClientService.create(clientData);
-      await UserService.updateRoleByEmail(req.session.user.email, "client");
-      req.session.user.role = "client";
-      const { signJwt } = require("../utils/jwt");
-      const { exp, iat, ...userPayload } = req.session.user;
-      req.session.jwt = signJwt(userPayload);
-
-      console.log("Client created successfully:", client);
-
-      req.session.successMessage = "Client profile created successfully!";
-      res.redirect("/client/profile");
     } catch (error) {
       console.error("Error processing client setup:", error);
       res.status(500).render("client-setup", {
@@ -155,42 +150,6 @@ const clientController = {
         errors: [
           { msg: "An error occurred while setting up your client profile" },
         ],
-      });
-    }
-  },
-
-  showEdit: async (req, res) => {
-    try {
-      const client = await ClientService.findByEmail(req.session.user.email);
-
-      if (!client) {
-        return res.redirect("/client/setup");
-      }
-
-      res.render("client-setup", {
-        title: "Edit Profile",
-        user: req.session.user,
-        formData: {
-          isCompany: client.isCompany.toString(),
-          companyName: client.companyName || "",
-          firstName: client.firstName || "",
-          lastName: client.lastName || "",
-          email: client.email,
-          phone: client.phone || "",
-          billingAddress: client.billingAddress || "",
-        },
-        errors: [],
-        isEdit: true,
-      });
-    } catch (error) {
-      console.error("Error showing client profile:", error);
-      res.status(500).render("error", {
-        title: "Error",
-        error: {
-          status: 500,
-          message: "Unable to load client profile",
-        },
-        user: req.session.user,
       });
     }
   },
@@ -280,7 +239,10 @@ const clientController = {
         });
       } else {
         req.session.successMessage = "Client profile updated successfully!";
-        res.redirect("/client/profile");
+        const updatedClient = await ClientService.findByEmail(
+          req.session.user.email
+        );
+        res.redirect(`/client/${updatedClient.clientId}`);
       }
     } catch (error) {
       console.error("Error updating client profile:", error);
@@ -896,13 +858,27 @@ const clientController = {
       }
 
       const clientId = req.params.id;
+      let client = null;
+      let isOwnProfile = false;
 
       // Role-based access control
-      if (req.session.user.role === "client") {
+      if (req.session.user.role === "admin") {
+        // Admins can view any client
+        client = await ClientService.getByIdWithProjects(clientId);
+
+        if (!client) {
+          return res.status(404).render("error", {
+            title: "Client Not Found",
+            message: "The requested client could not be found.",
+            user: req.session.user,
+          });
+        }
+      } else if (req.session.user.role === "client") {
         // Clients can only view their own profile
         const userClient = await ClientService.findByEmail(
           req.session.user.email
         );
+
         if (!userClient || userClient.clientId !== Number(clientId)) {
           return res.status(403).render("error", {
             title: "Access Denied",
@@ -910,8 +886,12 @@ const clientController = {
             user: req.session.user,
           });
         }
-      } else if (req.session.user.role !== "admin") {
-        // Only admins and clients (with restrictions) can view client details
+
+        client = await ClientService.getByIdWithProjects(clientId);
+        isOwnProfile = true;
+      } else if (req.session.user.role === "registered") {
+        return res.redirect("/client/setup");
+      } else {
         return res.status(403).render("error", {
           title: "Access Denied",
           message: "You don't have permission to view client details.",
@@ -919,56 +899,59 @@ const clientController = {
         });
       }
 
-      const client = await ClientService.getByIdWithProjects(clientId);
+      let summary = null;
 
-      if (!client) {
-        return res.status(404).render("error", {
-          title: "Client Not Found",
-          message: "The requested client could not be found.",
-          user: req.session.user,
+      if (client) {
+        // Calculate project summaries
+        let totalProjects = client.projects.length;
+        let totalValue = 0;
+        let totalPaid = 0;
+        let projectsByStatus = {
+          RECEIVED: 0,
+          IN_PROGRESS: 0,
+          COMPLETED: 0,
+          DELIVERED: 0,
+        };
+
+        client.projects.forEach((project) => {
+          totalValue += Number(project.totalAmount);
+          const paidAmount = project.payments.reduce(
+            (sum, payment) => sum + Number(payment.paidAmount),
+            0
+          );
+          totalPaid += paidAmount;
+          projectsByStatus[project.jobStatus]++;
+
+          project.paidAmount = paidAmount;
         });
-      }
 
-      // Calculate project summaries
-      let totalProjects = client.projects.length;
-      let totalValue = 0;
-      let totalPaid = 0;
-      let projectsByStatus = {
-        RECEIVED: 0,
-        IN_PROGRESS: 0,
-        COMPLETED: 0,
-        DELIVERED: 0,
-      };
-
-      client.projects.forEach((project) => {
-        totalValue += Number(project.totalAmount);
-        const paidAmount = project.payments.reduce(
-          (sum, payment) => sum + Number(payment.paidAmount),
-          0
-        );
-        totalPaid += paidAmount;
-        projectsByStatus[project.jobStatus]++;
-
-        // Add calculated paid amount to project
-        project.paidAmount = paidAmount;
-      });
-
-      res.render("client-detail", {
-        title: `${
-          client.isCompany
-            ? client.companyName
-            : client.firstName + " " + client.lastName
-        } - Client Details`,
-        client: client,
-        user: req.session.user,
-        summary: {
+        summary = {
           totalProjects,
           totalValue,
           totalPaid,
           totalOutstanding: totalValue - totalPaid,
           projectsByStatus,
-        },
+        };
+      }
+
+      const title = client
+        ? `${
+            client.isCompany
+              ? client.companyName
+              : client.firstName + " " + client.lastName
+          } - Client Details`
+        : "Complete Your Profile";
+
+      res.render("client-detail", {
+        title,
+        client,
+        user: req.session.user,
+        summary,
+        isOwnProfile,
+        successMessage: req.session.successMessage || null,
       });
+
+      delete req.session.successMessage;
     } catch (error) {
       console.error("Error fetching client details:", error);
       res.status(500).render("error", {

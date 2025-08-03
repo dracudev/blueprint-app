@@ -9,14 +9,40 @@ const {
 router.get("/setup", clientController.showSetup);
 router.post("/setup", validateClientSetup, clientController.processSetup);
 
-router.get("/profile", clientController.showProfile);
-router.post("/profile", validateClientUpdate, clientController.updateProfile);
-router.get("/profile/edit", clientController.showEdit);
+router.get("/profile", async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/auth/login");
+  }
 
-router.get("/:id", clientController.showClientDetail);
+  if (req.session.user.role === "registered") {
+    return res.redirect("/client/setup");
+  }
+
+  if (req.session.user.role === "admin") {
+    return res.redirect("/dashboard?tab=clients");
+  }
+
+  if (req.session.user.role === "client") {
+    try {
+      const ClientService = require("../services/ClientService");
+      const client = await ClientService.findByEmail(req.session.user.email);
+
+      if (client) {
+        return res.redirect(`/client/${client.clientId}`);
+      } else {
+        return res.redirect("/client/setup");
+      }
+    } catch (error) {
+      console.error("Error redirecting to profile:", error);
+      return res.redirect("/client/setup");
+    }
+  }
+
+  return res.redirect("/dashboard");
+});
 
 router.get("/data", clientController.getClientData);
-router.put("/edit", validateClientUpdate, clientController.updateProfile);
-router.post("/edit", validateClientUpdate, clientController.updateProfile);
+
+router.get("/:id", clientController.showClientDetail);
 
 module.exports = router;

@@ -95,8 +95,8 @@ const crudFormConfigs = {
         name: "services",
         label: "Services",
         type: "service-selector",
-        required: false,
-        help: "Add services to this project with quantities and custom pricing",
+        required: true,
+        help: "Select services for this project with quantities",
         services: [],
       },
       {
@@ -107,7 +107,7 @@ const crudFormConfigs = {
         pattern: "^\\d+(\\.\\d{1,2})?$",
         step: "0.01",
         min: "0",
-        help: "Calculated automatically from project items",
+        help: "Calculated automatically from selected services",
         readonly: true,
       },
       {

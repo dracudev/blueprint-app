@@ -51,7 +51,14 @@
             </li>
             <% } %>
             <% if (user) { %>
-               <% if (user.role === 'registered' || user.role === 'client') { %>
+               <% if (user.role === 'registered') { %>
+            <li class="nav-item">
+                <a href="/client/setup" class="nav-link">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="nav-text">Setup Profile</span>
+                </a>
+            </li>
+            <% } else if (user.role === 'client') { %>
             <li class="nav-item">
                 <a href="/client/profile" class="nav-link">
                     <i class="fas fa-user"></i>

@@ -212,28 +212,62 @@ const projectController = {
     const ClientService = require("../services/ClientService");
     const ServiceService = require("../services/ServiceService");
     const crudFormConfigs = require("../config/crudFormConfigs");
+    const { getDashboardPermissions } = require("../middleware/auth");
 
-    const clients = await ClientService.getAll();
-    const services = await ServiceService.getAll();
-    const projects = await ProjectService.getAll();
+    let clients, services, projects;
+    let userClient = null;
+
+    if (req.user.role === "admin") {
+      clients = await ClientService.getAll();
+      services = await ServiceService.getAll();
+      projects = await ProjectService.getAll();
+    } else {
+      clients = await ClientService.getByUser(req.user);
+      services = await ServiceService.getByUser(req.user);
+      projects = await ProjectService.getByUser(req.user);
+
+      // Get the client record for the current user
+      try {
+        userClient = await ClientService.findByEmail(req.user.email);
+      } catch (error) {
+        console.log("No client found for user email:", req.user.email);
+      }
+    }
 
     const crudForm = { ...crudFormConfigs.project };
+    crudForm.entity = "project";
     crudForm.formData = req.body;
     crudForm.errors = errors;
 
+    crudForm.fields = crudForm.fields.map((f) => {
+      if (f.name === "client_id") {
+        return {
+          ...f,
+          options: clients.map((c) => ({
+            value: c.clientId,
+            label: c.isCompany ? c.companyName : `${c.firstName} ${c.lastName}`,
+          })),
+        };
+      } else if (f.name === "services") {
+        return {
+          ...f,
+          services: services,
+        };
+      }
+      return f;
+    });
+
+    const permissions = getDashboardPermissions(req.user);
+
     return res.status(400).render("dashboard", {
       title: "Create Project",
-      user: {
-        ...req.user,
-        canCreateProjects: true,
-        canEditProjects: true,
-        canDeleteProjects: true,
-      },
+      user: { ...req.user, ...permissions },
       clients,
       services,
       projects,
       currentTab: "projects",
       crudForm,
+      userClient,
     });
   },
 
@@ -241,31 +275,64 @@ const projectController = {
     const ClientService = require("../services/ClientService");
     const ServiceService = require("../services/ServiceService");
     const crudFormConfigs = require("../config/crudFormConfigs");
+    const { getDashboardPermissions } = require("../middleware/auth");
 
-    const clients = await ClientService.getAll();
-    const services = await ServiceService.getAll();
-    const projects = await ProjectService.getAll();
+    let clients, services, projects;
+    let userClient = null;
+
+    if (req.user.role === "admin") {
+      clients = await ClientService.getAll();
+      services = await ServiceService.getAll();
+      projects = await ProjectService.getAll();
+    } else {
+      clients = await ClientService.getByUser(req.user);
+      services = await ServiceService.getByUser(req.user);
+      projects = await ProjectService.getByUser(req.user);
+
+      try {
+        userClient = await ClientService.findByEmail(req.user.email);
+      } catch (error) {
+        console.log("No client found for user email:", req.user.email);
+      }
+    }
 
     const crudForm = { ...crudFormConfigs.project };
+    crudForm.entity = "project";
     crudForm.isEdit = true;
     crudForm.projectId = projectId;
     crudForm.cancelUrl = "/dashboard?tab=projects";
     crudForm.formData = req.body;
     crudForm.errors = errors;
 
+    crudForm.fields = crudForm.fields.map((f) => {
+      if (f.name === "client_id") {
+        return {
+          ...f,
+          options: clients.map((c) => ({
+            value: c.clientId,
+            label: c.isCompany ? c.companyName : `${c.firstName} ${c.lastName}`,
+          })),
+        };
+      } else if (f.name === "services") {
+        return {
+          ...f,
+          services: services,
+        };
+      }
+      return f;
+    });
+
+    const permissions = getDashboardPermissions(req.user);
+
     return res.status(400).render("dashboard", {
       title: "Edit Project",
-      user: {
-        ...req.user,
-        canCreateProjects: true,
-        canEditProjects: true,
-        canDeleteProjects: true,
-      },
+      user: { ...req.user, ...permissions },
       clients,
       services,
       projects,
       currentTab: "projects",
       crudForm,
+      userClient,
     });
   },
 

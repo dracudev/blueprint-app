@@ -36,13 +36,18 @@
   <% } %>
   
   <!-- Auto-assign client for non-admin users creating projects -->
-  <% if (typeof entity !== 'undefined' && entity === 'project' && typeof user !== 'undefined' && user.role !== 'admin' && typeof userClient !== 'undefined' && userClient) { %>
-    <input type="hidden" name="client_id" value="<%= userClient.clientId %>" />
+  <% if (typeof entity !== 'undefined' && entity === 'project' && typeof user !== 'undefined' && user.role !== 'admin') { %>
+    <% var clientIdToAssign = ''; %>
+    <% if (typeof userClient !== 'undefined' && userClient && userClient.clientId) { %>
+      <% clientIdToAssign = userClient.clientId; %>
+    <% } else if (typeof user !== 'undefined' && user.clientId) { %>
+      <% clientIdToAssign = user.clientId; %>
+    <% } %>
+    
+    <% if (clientIdToAssign) { %>
+      <input type="hidden" name="client_id" value="<%= clientIdToAssign %>" />
+    <% } %>
     <input type="hidden" name="job_status" value="RECEIVED" />
-  <% } %>
-
-  <% if (typeof entity !== 'undefined' && entity === 'project' && typeof user !== 'undefined' && user.role !== 'admin' && typeof user.clientId !== 'undefined') { %>
-    <input type="hidden" name="client_id" value="<%= user.clientId %>" />
   <% } %>
   
   <!-- Error container for AJAX form errors -->
@@ -103,26 +108,33 @@
             />
           <% } %>
         <% } else if (field.type === 'text' || field.type === 'email' || field.type === 'password' || field.type === 'number') { %>
-          <% var isReadonly = field.readonly || (field.name === 'total_amount') || (field.name === 'price' && typeof user !== 'undefined' && user.role !== 'admin'); %>
-          <input
-            type="<%= field.type || 'text' %>"
-            id="<%= field.name %>"
-            name="<%= field.name %>"
-            class="form-control"
-            value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
-            placeholder="<%= field.placeholder || '' %>"
-            <%= field.required ? 'required' : '' %>
-            <%= isReadonly ? 'readonly' : '' %>
-            <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
-            <%= field.step ? 'step="' + field.step + '"' : '' %>
-            <%= field.min ? 'min="' + field.min + '"' : '' %>
-            <%= field.max ? 'max="' + field.max + '"' : '' %>
-          />
-          <% if (field.name === 'total_amount') { %>
-            <small class="form-text text-muted">This amount is calculated automatically from the selected services</small>
+          <% var shouldShowField = true; %>
+          <% if (field.adminOnly && typeof user !== 'undefined' && user.role !== 'admin') { %>
+            <% shouldShowField = false; %>
           <% } %>
-          <% if (field.name === 'price' && typeof user !== 'undefined' && user.role !== 'admin') { %>
-            <small class="form-text text-muted">Service prices can only be modified by administrators</small>
+          
+          <% if (shouldShowField) { %>
+            <% var isReadonly = field.readonly || (field.name === 'total_amount') || (field.name === 'price' && typeof user !== 'undefined' && user.role !== 'admin'); %>
+            <input
+              type="<%= field.type || 'text' %>"
+              id="<%= field.name %>"
+              name="<%= field.name %>"
+              class="form-control"
+              value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
+              placeholder="<%= field.placeholder || '' %>"
+              <%= field.required ? 'required' : '' %>
+              <%= isReadonly ? 'readonly' : '' %>
+              <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
+              <%= field.step ? 'step="' + field.step + '"' : '' %>
+              <%= field.min ? 'min="' + field.min + '"' : '' %>
+              <%= field.max ? 'max="' + field.max + '"' : '' %>
+            />
+            <% if (field.name === 'total_amount') { %>
+              <small class="form-text text-muted">This amount is calculated automatically from the selected services</small>
+            <% } %>
+            <% if (field.name === 'price' && typeof user !== 'undefined' && user.role !== 'admin') { %>
+              <small class="form-text text-muted">Service prices can only be modified by administrators</small>
+            <% } %>
           <% } %>
         <% } else if (field.type === 'select') { %>
           <% var shouldShowField = true; %>
@@ -139,12 +151,21 @@
             </select>
           <% } else { %>
             <!-- Hidden field for non-admin users -->
-            <% if (field.name === 'client_id' && typeof user !== 'undefined' && user.clientId) { %>
-              <input type="hidden" name="client_id" value="<%= user.clientId %>" />
-              <div class="form-control-static">
-                <strong>Your Project</strong>
-                <p class="text-muted">This project will be associated with your account</p>
-              </div>
+            <% if (field.name === 'client_id') { %>
+              <% var clientIdValue = ''; %>
+              <% if (typeof userClient !== 'undefined' && userClient && userClient.clientId) { %>
+                <% clientIdValue = userClient.clientId; %>
+              <% } else if (typeof user !== 'undefined' && user.clientId) { %>
+                <% clientIdValue = user.clientId; %>
+              <% } %>
+              
+              <% if (clientIdValue) { %>
+                <input type="hidden" name="client_id" value="<%= clientIdValue %>" />
+                <div class="form-control-static">
+                  <strong>Your Project</strong>
+                  <p class="text-muted">This project will be associated with your account</p>
+                </div>
+              <% } %>
             <% } else if (field.name === 'job_status') { %>
               <input type="hidden" name="job_status" value="RECEIVED" />
               <div class="form-control-static">
@@ -162,20 +183,27 @@
             <!-- Service selector will be dynamically generated by JavaScript -->
           </div>
         <% } else { %>
-          <input
-            type="<%= field.type || 'text' %>"
-            id="<%= field.name %>"
-            name="<%= field.name %>"
-            class="form-control"
-            value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
-            placeholder="<%= field.placeholder || '' %>"
-            <%= field.required ? 'required' : '' %>
-            <%= field.readonly ? 'readonly' : '' %>
-            <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
-            <%= field.step ? 'step="' + field.step + '"' : '' %>
-            <%= field.min ? 'min="' + field.min + '"' : '' %>
-            <%= field.max ? 'max="' + field.max + '"' : '' %>
-          />
+          <% var shouldShowField = true; %>
+          <% if (field.adminOnly && typeof user !== 'undefined' && user.role !== 'admin') { %>
+            <% shouldShowField = false; %>
+          <% } %>
+          
+          <% if (shouldShowField) { %>
+            <input
+              type="<%= field.type || 'text' %>"
+              id="<%= field.name %>"
+              name="<%= field.name %>"
+              class="form-control"
+              value="<%= (formData && typeof formData[field.name] !== 'undefined') ? formData[field.name] : '' %>"
+              placeholder="<%= field.placeholder || '' %>"
+              <%= field.required ? 'required' : '' %>
+              <%= field.readonly ? 'readonly' : '' %>
+              <%= field.pattern ? 'pattern="' + field.pattern + '"' : '' %>
+              <%= field.step ? 'step="' + field.step + '"' : '' %>
+              <%= field.min ? 'min="' + field.min + '"' : '' %>
+              <%= field.max ? 'max="' + field.max + '"' : '' %>
+            />
+          <% } %>
         <% } %>
         <% if (field.help) { %>
           <small class="form-help"><%= field.help %></small>
