@@ -111,39 +111,6 @@ After seeding, you can log in with:
 - Email: <user@user.com>
 - Password: user
 
-**Client User (after completing profile):**
-
-- Any registered user becomes a client after completing their profile setup
-
-## User Workflow
-
-1. **Registration**: Users sign up and receive `registered` role
-2. **Profile Setup**: Registered users complete client profile setup
-3. **Role Upgrade**: After profile completion, users become `client` role
-4. **Dashboard Access**: Clients can access dashboard to manage their projects
-5. **Admin Management**: Admins can manage all clients, services, and projects
-
-## Role-Based Permissions
-
-### Registered Users
-
-- Complete profile setup
-- View home page and services
-
-### Client Users
-
-- View and edit their own profile
-- Create and edit their own projects
-- View their project history and payment status
-- Access dashboard with project management
-
-### Admin Users
-
-- Full CRUD operations on clients, services, and projects
-- Access to all client data and projects
-- Manage service catalog and pricing
-- View comprehensive dashboard analytics
-
 ## API Routes
 
 ### Authentication
