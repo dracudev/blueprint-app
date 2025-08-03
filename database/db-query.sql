@@ -1,6 +1,6 @@
 -- Create the database
-CREATE DATABASE codecost;
-USE codecost;
+CREATE DATABASE blueprint;
+USE blueprint;
 -- Users table
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
