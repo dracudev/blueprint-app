@@ -5,7 +5,7 @@ const configureSession = () => {
     name: "session",
     keys: [process.env.SESSION_SECRET || "default_secret"],
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
     sameSite: "lax",
   });

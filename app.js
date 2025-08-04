@@ -9,6 +9,9 @@ const { helmetMiddleware, limiter } = require("./src/middleware/security");
 const database = require("./database");
 const routes = require("./src/routes/index");
 
+// Config for limiter on Vercel
+app.set("trust proxy", true);
+
 // Configure EJS
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src", "views"));
