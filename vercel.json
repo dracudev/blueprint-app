@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "npm run vercel-build",
   "builds": [
     {
       "src": "app.js",
@@ -16,14 +15,9 @@
       "dest": "app.js"
     }
   ],
-  "env": {
-    "NODE_ENV": "production",
-    "VERCEL": "1"
-  },
   "functions": {
     "app.js": {
       "maxDuration": 30
     }
-  },
-  "installCommand": "npm install && npx prisma generate --schema=database/prisma/schema.prisma"
+  }
 }

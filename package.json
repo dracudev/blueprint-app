@@ -1,6 +1,6 @@
 {
   "name": "blueprint",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "App for web development budgeting",
   "author": "dracudev",
   "license": "ISC",
@@ -40,6 +40,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "prisma": {
     "seed": "node database/prisma/seed.js"
