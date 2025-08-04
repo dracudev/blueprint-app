@@ -9,8 +9,8 @@ const { helmetMiddleware, limiter } = require("./src/middleware/security");
 const database = require("./database");
 const routes = require("./src/routes/index");
 
-// Config for limiter on Vercel
-app.set("trust proxy", true);
+// Config for limiter on Vercel - set trust proxy before any middleware
+app.set("trust proxy", 1);
 
 // Configure EJS
 app.set("view engine", "ejs");
@@ -44,10 +44,16 @@ async function startServer() {
     await database.connect();
     const port = process.env.PORT || 3000;
 
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`✅ Server listening on port ${port}`);
+    // In serverless environments like Vercel, we don't need to explicitly listen
+    if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+      app.listen(port, "0.0.0.0", () => {
+        console.log(`✅ Server listening on port ${port}`);
+        console.log(`🌐 Environment: ${process.env.NODE_ENV || "development"}`);
+      });
+    } else {
+      console.log(`✅ Server configured for serverless deployment`);
       console.log(`🌐 Environment: ${process.env.NODE_ENV || "development"}`);
-    });
+    }
   } catch (error) {
     console.error("❌ Unable to connect to the database:", error);
     process.exit(1);
@@ -55,6 +61,9 @@ async function startServer() {
 }
 
 startServer();
+
+// For serverless environments, we need to export the app
+module.exports = app;
 
 process.on("SIGINT", async () => {
   console.log("🛑 Shutting down gracefully...");
