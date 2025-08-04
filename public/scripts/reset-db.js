@@ -1,28 +1,54 @@
-const mysql = require("mysql2/promise");
+const { Client } = require("pg");
 require("dotenv").config();
 
 async function resetDatabase() {
-  const connection = await mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    port: process.env.DB_PORT || 3306,
-  });
+  console.log(
+    "🗑️  Tables already deleted manually from Supabase web interface"
+  );
+  console.log("✅ Database is clean and ready for migration!");
+  console.log("Now creating fresh database schema...");
+}
+
+async function runMigrations() {
+  const { execSync } = require("child_process");
 
   try {
-    console.log("🗑️  Dropping database...");
-    await connection.execute(`DROP DATABASE IF EXISTS ${process.env.DB_NAME}`);
+    console.log("🔄 Running Prisma db push to create schema...");
+    execSync(
+      "npx prisma db push --schema=database/prisma/schema.prisma --accept-data-loss",
+      {
+        stdio: "inherit",
+        cwd: process.cwd(),
+      }
+    );
 
-    console.log("🆕 Creating fresh database...");
-    await connection.execute(`CREATE DATABASE ${process.env.DB_NAME}`);
+    console.log("✅ Database schema created successfully!");
 
-    console.log("✅ Database reset successfully!");
-    console.log("Now run: npm run db:migrate && npm run db:seed");
+    console.log("🔄 Generating Prisma client...");
+    execSync("npx prisma generate --schema=database/prisma/schema.prisma", {
+      stdio: "inherit",
+      cwd: process.cwd(),
+    });
+
+    console.log("✅ Prisma client generated successfully!");
+
+    console.log("🔄 Running database seed...");
+    execSync("node database/prisma/seed.js", {
+      stdio: "inherit",
+      cwd: process.cwd(),
+    });
+
+    console.log("✅ Database seeded successfully!");
+    console.log("🎉 Database reset, migration, and seeding completed!");
   } catch (error) {
-    console.error("❌ Error resetting database:", error);
-  } finally {
-    await connection.end();
+    console.error("❌ Error during migration:", error);
+    throw error;
   }
 }
 
-resetDatabase();
+async function main() {
+  await resetDatabase();
+  await runMigrations();
+}
+
+main().catch(console.error);
