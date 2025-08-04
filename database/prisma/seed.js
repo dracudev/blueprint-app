@@ -1,9 +1,5 @@
-const {
-  PrismaClient,
-  Role,
-  JobStatus,
-  PaymentStatus,
-} = require("@prisma/client");
+const { PrismaClient, Role } = require("@prisma/client");
+
 const prisma = new PrismaClient();
 
 const bcrypt = require("bcrypt");

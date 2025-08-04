@@ -25,7 +25,7 @@ router.get("/", function (req, res) {
   });
 });
 
-// Health check endpoint for deployment monitoring
+// Health check endpoint
 router.get("/health", function (req, res) {
   res.status(200).json({
     status: "OK",

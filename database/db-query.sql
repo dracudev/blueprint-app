@@ -1,4 +1,4 @@
--- Create the database (Note: In Supabase, database is already created)
+-- Create the database
 -- CREATE DATABASE blueprint_app; -- Not needed for Supabase
 -- USE blueprint_app; -- Not needed for PostgreSQL
 -- Users table
