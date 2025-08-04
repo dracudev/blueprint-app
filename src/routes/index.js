@@ -25,6 +25,16 @@ router.get("/", function (req, res) {
   });
 });
 
+// Health check endpoint for deployment monitoring
+router.get("/health", function (req, res) {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || "development",
+    version: require("../../package.json").version,
+  });
+});
+
 router.use("/auth", authRoutes);
 router.use("/client", jwtAuth, clientRoutes);
 router.use("/dashboard", dashboardRoutes);

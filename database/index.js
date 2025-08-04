@@ -8,9 +8,7 @@ class DatabaseAdapter {
       const prismaConfig = require("./config/prisma");
       this.orm = prismaConfig.prisma;
 
-      // In serverless environments, we don't need explicit connection
-      // Prisma handles connections automatically
-      if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+      if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
         await this.orm.$connect();
         console.log("✅ Database connected successfully.");
       } else {
@@ -26,9 +24,11 @@ class DatabaseAdapter {
 
   async disconnect() {
     try {
-      // In serverless environments, we don't manually disconnect
-      // Let Prisma handle connection lifecycle
-      if (this.orm && this.orm.$disconnect && (process.env.NODE_ENV !== 'production' || !process.env.VERCEL)) {
+      if (
+        this.orm &&
+        this.orm.$disconnect &&
+        (process.env.NODE_ENV !== "production" || !process.env.VERCEL)
+      ) {
         console.log("🛑 Closing database connection...");
         await this.orm.$disconnect();
       }
@@ -39,7 +39,6 @@ class DatabaseAdapter {
 
   getORM() {
     if (!this.orm) {
-      // If ORM isn't loaded yet, try to load it synchronously
       try {
         const prismaConfig = require("./config/prisma");
         this.orm = prismaConfig.prisma;

@@ -6,7 +6,7 @@ module.exports = {
     return safeQueryExecution(() => models.Client.findMany());
   },
   async getById(clientId) {
-    return safeQueryExecution(() => 
+    return safeQueryExecution(() =>
       models.Client.findFirst({ where: { clientId: Number(clientId) } })
     );
   },

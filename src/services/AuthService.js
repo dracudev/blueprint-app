@@ -4,7 +4,7 @@ const { safeQueryExecution } = require("../../database/utils/serverless");
 
 module.exports = {
   findUserByEmail: async (email) => {
-    return safeQueryExecution(() => 
+    return safeQueryExecution(() =>
       models.User.findFirst({ where: { email } })
     );
   },

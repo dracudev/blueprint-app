@@ -11,15 +11,8 @@ const limiter = rateLimit({
   max: 100, // 100 requests per window
   standardHeaders: true,
   legacyHeaders: false,
-  // Skip rate limiting in serverless environments where trust proxy is enabled
   skip: (req) => {
-    // Skip rate limiting for serverless environments to avoid proxy issues
-    return process.env.NODE_ENV === 'production' && process.env.VERCEL;
-  },
-  // Custom key generator that works with proxies
-  keyGenerator: (req) => {
-    // Use the real IP from X-Forwarded-For if available, otherwise fallback to req.ip
-    return req.ip || req.connection.remoteAddress || 'unknown';
+    return process.env.NODE_ENV === "production" && process.env.VERCEL;
   },
   handler: (req, res, next) => {
     res.status(429);

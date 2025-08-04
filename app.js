@@ -9,7 +9,7 @@ const { helmetMiddleware, limiter } = require("./src/middleware/security");
 const database = require("./database");
 const routes = require("./src/routes/index");
 
-// Config for limiter on Vercel - set trust proxy before any middleware
+// Config for limiter on Vercel
 app.set("trust proxy", 1);
 
 // Configure EJS
@@ -45,7 +45,7 @@ async function startServer() {
     const port = process.env.PORT || 3000;
 
     // In serverless environments like Vercel, we don't need to explicitly listen
-    if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
       app.listen(port, "0.0.0.0", () => {
         console.log(`✅ Server listening on port ${port}`);
         console.log(`🌐 Environment: ${process.env.NODE_ENV || "development"}`);
