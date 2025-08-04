@@ -38,35 +38,34 @@ app.use(limiter);
 // Routes
 app.use("/", routes);
 
-// Database connection
-async function startServer() {
-  try {
-    await database.connect();
-    const port = process.env.PORT || 3000;
+if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
+  async function startServer() {
+    try {
+      await database.connect();
+      const port = process.env.PORT || 3000;
 
-    // In serverless environments like Vercel, we don't need to explicitly listen
-    if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
       app.listen(port, "0.0.0.0", () => {
         console.log(`✅ Server listening on port ${port}`);
         console.log(`🌐 Environment: ${process.env.NODE_ENV || "development"}`);
       });
-    } else {
-      console.log(`✅ Server configured for serverless deployment`);
-      console.log(`🌐 Environment: ${process.env.NODE_ENV || "development"}`);
+    } catch (error) {
+      console.error("❌ Unable to connect to the database:", error);
+      process.exit(1);
     }
-  } catch (error) {
-    console.error("❌ Unable to connect to the database:", error);
-    process.exit(1);
   }
+
+  startServer();
+
+  process.on("SIGINT", async () => {
+    console.log("🛑 Shutting down gracefully...");
+    await database.disconnect();
+    process.exit(0);
+  });
+} else {
+  database.connect().catch((err) => {
+    console.error("❌ Database connection warning in serverless:", err);
+  });
 }
 
-startServer();
-
-// For serverless environments, we need to export the app
+// Export the app for serverless environments
 module.exports = app;
-
-process.on("SIGINT", async () => {
-  console.log("🛑 Shutting down gracefully...");
-  await database.disconnect();
-  process.exit(0);
-});
