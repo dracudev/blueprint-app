@@ -1,5 +1,12 @@
 # Blueprint | Web Development Budgeting
 
+![Blueprint](public/images/mockup.png)
+
+> A comprehensive web development project management and client budgeting platform designed for professional service providers and development agencies.
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-bulueprint--app.vercel.app-blue?style=for-the-badge&logo=vercel)](https://dracudev-blueprint-app.vercel.app/)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=for-the-badge)](LICENSE.md)
+
 ## Table of Contents
 
 - [Description](#description)
@@ -22,17 +29,17 @@ The application supports both individual and company clients, tracks projects wi
 
 ## Features
 
-- 🔑 JWT authentication (secure API/session tokens)
-- 👥 Role-based access control (registered, client, admin)
-- 🏢 Client management (company/individual clients)
-- 📋 Project, Client and Service management system
-- 💸 Payment tracking system
-- 📊 Job status tracking (Received, In Progress, Completed, Delivered)
-- 🗄️ Database abstraction layer (easy ORM switching)
-- 🛡️ Security middleware: helmet, express-rate-limit
-- 🎨 Responsive dashboard with CRUD operations
-- 📱 Mobile-friendly design
-- 🔄 Real-time project status updates
+- JWT authentication (secure API/session tokens)
+- Role-based access control (registered, client, admin)
+- Client management (company/individual clients)
+- Project, Client and Service management system
+- Payment tracking system
+- Job status tracking (Received, In Progress, Completed, Delivered)
+- Database abstraction layer (easy ORM switching)
+- Security middleware: helmet, express-rate-limit
+- Responsive dashboard with CRUD operations
+- Mobile-friendly design
+- Real-time project status updates
 
 ## Technologies Used
 
