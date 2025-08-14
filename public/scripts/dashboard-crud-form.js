@@ -89,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let servicesData = [];
     let existingServices = [];
+    let userRole = "client";
 
     try {
       servicesData = JSON.parse(serviceContainer.dataset.services || "[]");
@@ -106,6 +107,8 @@ document.addEventListener("DOMContentLoaded", function () {
       existingServices = [];
     }
 
+    userRole = serviceContainer.dataset.userRole || "client";
+
     console.log("Services data:", servicesData);
     console.log("Existing services:", existingServices);
 
@@ -121,16 +124,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let selectedServices = [...existingServices];
 
-    createServiceSelectorUI(serviceContainer, servicesData, selectedServices);
+    createServiceSelectorUI(
+      serviceContainer,
+      servicesData,
+      selectedServices,
+      userRole
+    );
   }
 
-  /**
-   * Create service selector UI
-   */
   function createServiceSelectorUI(
     container,
     availableServices,
-    selectedServices
+    selectedServices,
+    userRole = "client"
   ) {
     console.log("Creating service selector UI with:", {
       availableServices,
@@ -220,9 +226,10 @@ document.addEventListener("DOMContentLoaded", function () {
               <div class="service-price">
                 <label>Unit Price:</label>
                 <input type="number" class="form-control price-input" 
-                       value="${
-                         service.unitPrice
-                       }" min="0" step="0.01" data-index="${index}" />
+                       value="${service.unitPrice}" min="0" step="0.01" 
+                       data-index="${index}" ${
+              userRole !== "admin" ? "readonly" : ""
+            } />
               </div>
               <div class="service-total">
                 ${(service.quantity * service.unitPrice).toFixed(2)}€
@@ -244,9 +251,12 @@ document.addEventListener("DOMContentLoaded", function () {
           input.addEventListener("change", handleQuantityChange);
         });
 
-        servicesList.querySelectorAll(".price-input").forEach((input) => {
-          input.addEventListener("change", handlePriceChange);
-        });
+        // Only allow price changes for admin users
+        if (userRole === "admin") {
+          servicesList.querySelectorAll(".price-input").forEach((input) => {
+            input.addEventListener("change", handlePriceChange);
+          });
+        }
 
         servicesList.querySelectorAll(".remove-service-btn").forEach((btn) => {
           btn.addEventListener("click", handleRemoveService);
