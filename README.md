@@ -279,14 +279,6 @@ After seeding, you can log in with:
 | paid_amount    | Decimal  |                                    |
 | payment_date   | DateTime |                                    |
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run the tests
-5. Submit a pull request
-
 ## License
 
 This project is licensed under the ISC License - see the [LICENSE](LICENSE.md) file for details.
