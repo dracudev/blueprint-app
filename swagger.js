@@ -33,7 +33,12 @@ const options = {
 const swaggerSpec = swaggerJSDoc(options);
 
 function setupSwagger(app) {
+  // Serve Swagger UI static files explicitly for Vercel/serverless
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use(
+    "/api-docs/static",
+    express.static(path.join(__dirname, "node_modules", "swagger-ui-dist"))
+  );
 }
 
 module.exports = { swaggerSpec, setupSwagger };
