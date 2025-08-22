@@ -11,6 +11,7 @@
  *     description: Service management
  *   - name: Projects
  *     description: Project management
+ */
 
 /**
  * @swagger
@@ -38,7 +39,10 @@
  *     responses:
  *       201:
  *         description: Client created
- *
+ */
+
+/**
+ * @swagger
  * /api/clients/{id}:
  *   put:
  *     summary: Update client
@@ -76,7 +80,10 @@
  *     responses:
  *       204:
  *         description: Client deleted
- *
+ */
+
+/**
+ * @swagger
  * /api/services:
  *   get:
  *     summary: List services (role-based)
@@ -98,7 +105,10 @@
  *     responses:
  *       201:
  *         description: Service created
- *
+ */
+
+/**
+ * @swagger
  * /api/services/{id}:
  *   put:
  *     summary: Update service (admin only)
@@ -136,7 +146,10 @@
  *     responses:
  *       204:
  *         description: Service deleted
- *
+ */
+
+/**
+ * @swagger
  * /api/projects:
  *   get:
  *     summary: List projects (role-based)
@@ -158,7 +171,10 @@
  *     responses:
  *       201:
  *         description: Project created
- *
+ */
+
+/**
+ * @swagger
  * /api/projects/{id}:
  *   put:
  *     summary: Update project
@@ -196,7 +212,10 @@
  *     responses:
  *       204:
  *         description: Project deleted
- *
+ */
+
+/**
+ * @swagger
  * /:
  *   get:
  *     summary: Home page
@@ -232,7 +251,10 @@
  *     responses:
  *       201:
  *         description: User created
- *
+ */
+
+/**
+ * @swagger
  * /auth/login:
  *   get:
  *     summary: Login form
@@ -257,7 +279,10 @@
  *     responses:
  *       200:
  *         description: Authenticated
- *
+ */
+
+/**
+ * @swagger
  * /auth/logout:
  *   get:
  *     summary: Logout user
@@ -265,7 +290,10 @@
  *     responses:
  *       200:
  *         description: Logged out
- *
+ */
+
+/**
+ * @swagger
  * /client/setup:
  *   get:
  *     summary: Client setup form
@@ -288,7 +316,10 @@
  *     responses:
  *       201:
  *         description: Client profile created/updated
- *
+ */
+
+/**
+ * @swagger
  * /client/profile:
  *   get:
  *     summary: Redirect to client profile
@@ -296,7 +327,10 @@
  *     responses:
  *       302:
  *         description: Redirect
- *
+ */
+
+/**
+ * @swagger
  * /client/data:
  *   get:
  *     summary: Get client data (API)
@@ -304,7 +338,10 @@
  *     responses:
  *       200:
  *         description: Client data
- *
+ */
+
+/**
+ * @swagger
  * /client/{id}:
  *   get:
  *     summary: View client details
@@ -319,7 +356,10 @@
  *     responses:
  *       200:
  *         description: Client details
- *
+ */
+
+/**
+ * @swagger
  * /dashboard:
  *   get:
  *     summary: Main dashboard (role-based access)
@@ -327,7 +367,10 @@
  *     responses:
  *       200:
  *         description: Dashboard
- *
+ */
+
+/**
+ * @swagger
  * /service:
  *   get:
  *     summary: Services information page
@@ -335,7 +378,10 @@
  *     responses:
  *       200:
  *         description: Services info
- *
+ */
+
+/**
+ * @swagger
  * /service/{id}:
  *   get:
  *     summary: View service details
@@ -350,7 +396,10 @@
  *     responses:
  *       200:
  *         description: Service details
- *
+ */
+
+/**
+ * @swagger
  * /project:
  *   get:
  *     summary: Redirects to dashboard projects tab
@@ -358,7 +407,10 @@
  *     responses:
  *       302:
  *         description: Redirect
- *
+ */
+
+/**
+ * @swagger
  * /project/{id}:
  *   get:
  *     summary: View project details
