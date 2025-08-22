@@ -29,7 +29,11 @@ const options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: ["./src/routes/*.js", "./src/routes/api/*.js", "./swagger-docs.js"], // Path to the API docs
+  apis: [
+    path.join(__dirname, "src", "routes", "*.js"),
+    path.join(__dirname, "src", "routes", "api", "*.js"),
+    path.join(__dirname, "swagger-docs.js"),
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);
