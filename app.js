@@ -1,5 +1,10 @@
 let express = require("express");
 let app = express();
+
+// Config for Swagger
+const { setupSwagger } = require("./swagger");
+setupSwagger(app);
+
 let path = require("path");
 let ejs = require("ejs");
 require("dotenv").config({ path: "./.env" });

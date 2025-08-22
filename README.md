@@ -120,62 +120,10 @@ After seeding, you can log in with:
 
 ## API Routes
 
-### Authentication
+Full API documentation is available at:
 
-- `GET /auth/signup` - Sign up form
-- `POST /auth/signup` - Create new user
-- `GET /auth/login` - Login form
-- `POST /auth/login` - Authenticate user
-- `GET /auth/logout` - Logout user
-
-### Client Management
-
-- `GET /client/setup` - Client setup form
-- `POST /client/setup` - Create/update client profile
-- `GET /client/profile` - Redirect to client profile
-- `GET /client/data` - Get client data (API)
-- `GET /client/:id` - View client details
-
-### Dashboard
-
-- `GET /dashboard` - Main dashboard (role-based access)
-
-### Services
-
-- `GET /service` - Services information page
-- `GET /service/:id` - View service details
-
-### Projects
-
-- `GET /project` - Redirects to dashboard projects tab
-- `GET /project/:id` - View project details
-
-### API Endpoints
-
-#### Client API
-
-- `GET /api/clients` - List clients (role-based)
-- `POST /api/clients` - Create client (admin only)
-- `PUT /api/clients/:id` - Update client
-- `DELETE /api/clients/:id` - Delete client (admin only)
-
-#### Service API
-
-- `GET /api/services` - List services (role-based)
-- `POST /api/services` - Create service (admin only)
-- `PUT /api/services/:id` - Update service (admin only)
-- `DELETE /api/services/:id` - Delete service (admin only)
-
-#### Project API
-
-- `GET /api/projects` - List projects (role-based)
-- `POST /api/projects` - Create project
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project (admin only)
-
-### General
-
-- `GET /` - Home page
+- [Local: http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+- [Production: https://dracudev-blueprint-app.vercel.app/api-docs](https://dracudev-blueprint-app.vercel.app/api-docs)
 
 ## Scripts
 
@@ -278,14 +226,6 @@ After seeding, you can log in with:
 | payment_status | Enum     | Paid, Partially Paid, Unpaid       |
 | paid_amount    | Decimal  |                                    |
 | payment_date   | DateTime |                                    |
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run the tests
-5. Submit a pull request
 
 ## License
 

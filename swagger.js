@@ -1,0 +1,39 @@
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Blueprint API",
+      version: "1.0.0",
+      description:
+        "API documentation for Blueprint web development budgeting app",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "Development server",
+      },
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
+  },
+  apis: ["./src/routes/*.js", "./src/routes/api/*.js", "./swagger-docs.js"], // Path to the API docs
+};
+
+const swaggerSpec = swaggerJSDoc(options);
+
+function setupSwagger(app) {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
+
+module.exports = { swaggerSpec, setupSwagger };
